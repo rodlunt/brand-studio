@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0C0B0A;
+  --s1:#131210;
+  --s2:#1A1917;
+  --s3:#232120;
+  --bd:#323028;
+  --bd2:#3E3C38;
+  --tx:#E8E2D9;
+  --tx2:#A09890;
+  --tx3:#635E58;
+  --am:#C8A45A;
+  --am2:#E2C07E;
+  --am3:#8C6E35;
+  --am4:rgba(200,164,90,0.1);
+  --red:#CC5F5F;
+  --grn:#5B9E7A;
+  --r:6px;
+  --rl:11px;
+  --ff-d:'Fraunces',Georgia,serif;
+  --ff-b:'Atkinson Hyperlegible',system-ui,sans-serif;
+  --ff-m:'JetBrains Mono',monospace;
+}
+
+html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:var(--bg);color:var(--tx);font-size:15px;line-height:1.7}
+
+/* LAYOUT */
+#app{display:flex;height:100%}
+
+/* SIDEBAR */
+#sidebar{
+  width:230px;min-width:230px;
+  background:var(--s1);
+  border-right:1px solid var(--bd);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+
+.sb-header{
+  padding:24px 20px 20px;
+  border-bottom:1px solid var(--bd);
+  flex-shrink:0;
+}
+.sb-eyebrow{
+  font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--am);font-weight:700;margin-bottom:8px;
+  font-family:var(--ff-m);
+}
+.sb-title{
+  font-family:var(--ff-d);
+  font-size:26px;font-weight:500;
+  line-height:1.1;color:var(--tx);
+}
+
+.sb-steps{flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:1px}
+.sb-steps::-webkit-scrollbar{width:3px}
+.sb-steps::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+
+.si{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:var(--r);
+  cursor:pointer;transition:all 0.15s;
+  color:var(--tx3);position:relative;
+}
+.si:hover{color:var(--tx2);background:var(--s2)}
+.si.active{color:var(--am);background:var(--am4)}
+.si.done{color:var(--tx2)}
+.si.optional{opacity:0.5}
+.si.optional.active{opacity:1}
+
+.si-num{
+  width:20px;height:20px;border-radius:50%;
+  border:1px solid currentColor;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;flex-shrink:0;
+  font-family:var(--ff-m);transition:all 0.15s;
+}
+.si.done .si-num{background:var(--am3);border-color:var(--am3);color:var(--bg)}
+.si.active .si-num{background:var(--am);border-color:var(--am);color:var(--bg)}
+.si-label{font-size:13px;font-weight:700;letter-spacing:0.01em}
+.si-book{font-size:10px;color:var(--tx3);margin-top:2px;font-family:var(--ff-m);line-height:1.4}
+
+.sb-footer{
+  padding:14px 16px;border-top:1px solid var(--bd);
+  font-size:11px;color:var(--tx3);line-height:1.6;flex-shrink:0;
+}
+
+/* MAIN */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+#topbar{
+  height:50px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;flex-shrink:0;
+}
+.tb-project{font-size:13px;color:var(--tx2);font-weight:400}
+.tb-project strong{color:var(--tx);margin-left:6px;font-weight:700}
+.tb-actions{display:flex;gap:6px}
+
+#content{flex:1;overflow-y:auto;padding:36px 44px;scroll-behavior:smooth}
+#content::-webkit-scrollbar{width:4px}
+#content::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+
+/* STEP PANELS */
+.sp{display:none;max-width:800px;animation:fadeUp 0.2s ease}
+.sp.visible{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.sp-head{margin-bottom:32px}
+.sp-head h2{
+  font-family:var(--ff-d);font-size:34px;font-weight:500;
+  letter-spacing:0.01em;margin-bottom:8px;line-height:1.15;
+}
+.sp-head p{color:var(--tx2);font-size:15px;line-height:1.7;max-width:580px;font-weight:400}
+.sp-head .book-ref{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:10px;padding:5px 12px;
+  background:var(--am4);border:1px solid rgba(200,164,90,0.2);
+  border-radius:20px;font-size:11px;font-family:var(--ff-m);
+  color:var(--am);letter-spacing:0.04em;font-weight:500;
+}
+
+/* FORMS */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.fg.full{grid-template-columns:1fr}
+.fg.tri{grid-template-columns:1fr 1fr 1fr}
+
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--tx2);font-family:var(--ff-m)}
+
+input,textarea,select{
+  background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);
+  color:var(--tx);font-family:var(--ff-b);font-size:15px;
+  padding:10px 13px;width:100%;transition:border-color 0.15s;outline:none;resize:vertical;
+  line-height:1.5;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--am3)}
+input::placeholder,textarea::placeholder{color:var(--tx3)}
+select option{background:var(--s2)}
+
+.toggle-row{display:flex;align-items:center;gap:10px;padding:10px 0}
+.toggle{
+  position:relative;width:36px;height:20px;
+  background:var(--s3);border:1px solid var(--bd2);
+  border-radius:10px;cursor:pointer;transition:all 0.2s;flex-shrink:0;
+}
+.toggle.on{background:var(--am3);border-color:var(--am3)}
+.toggle::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--tx2);transition:all 0.2s;
+}
+.toggle.on::after{left:18px;background:var(--tx)}
+.toggle-label{font-size:13px;color:var(--tx2);cursor:pointer}
+.toggle-label.on{color:var(--tx)}
+
+/* TAG INPUT */
+.tag-wrap{
+  display:flex;flex-wrap:wrap;gap:5px;align-items:center;
+  background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);
+  padding:6px 9px;min-height:40px;cursor:text;
+}
+.tag-wrap:focus-within{border-color:var(--am3)}
+.tag{
+  background:var(--am4);color:var(--am2);
+  padding:2px 7px;border-radius:20px;font-size:11px;
+  display:flex;align-items:center;gap:4px;font-weight:500;
+}
+.tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:13px;line-height:1;padding:0;opacity:0.5}
+.tag button:hover{opacity:1}
+.tag-wrap input{border:none;background:none;padding:0;width:auto;min-width:80px;flex:1;font-size:13px;color:var(--tx)}
+.tag-wrap input:focus{border:none;box-shadow:none}
+
+/* STYLE CARDS */
+.sc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:4px}
+.sc{
+  border:1px solid var(--bd);border-radius:var(--r);
+  padding:10px 6px;text-align:center;cursor:pointer;
+  transition:all 0.15s;font-size:11px;font-weight:600;
+  color:var(--tx2);user-select:none;
+}
+.sc:hover{border-color:var(--bd2);color:var(--tx)}
+.sc.sel{border-color:var(--am);background:var(--am4);color:var(--am)}
+.sc-icon{font-size:18px;margin-bottom:4px}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:var(--r);
+  font-family:var(--ff-b);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.15s;border:none;
+  letter-spacing:0.02em;white-space:nowrap;
+}
+.btn-am{background:var(--am);color:var(--bg)}
+.btn-am:hover{background:var(--am2)}
+.btn-out{background:transparent;border:1px solid var(--bd2);color:var(--tx2)}
+.btn-out:hover{border-color:var(--tx2);color:var(--tx)}
+.btn-ghost{background:transparent;color:var(--tx2);padding:9px 10px}
+.btn-ghost:hover{color:var(--tx);background:var(--s2)}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+
+/* GEN AREA */
+.gen-area{
+  background:var(--s1);border:1px solid var(--bd);
+  border-radius:var(--rl);overflow:hidden;margin-bottom:16px;
+}
+.gen-bar{
+  padding:16px 20px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.gen-bar-info{}
+.gen-bar-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.gen-bar-sub{font-size:11px;color:var(--tx3);font-family:var(--ff-m);line-height:1.5}
+.gen-body{padding:20px;min-height:60px}
+
+/* LOADING */
+.ld{display:inline-flex;gap:4px;align-items:center}
+.ld span{width:4px;height:4px;border-radius:50%;background:var(--am);animation:ldpulse 1.2s infinite}
+.ld span:nth-child(2){animation-delay:0.2s}
+.ld span:nth-child(3){animation-delay:0.4s}
+@keyframes ldpulse{0%,80%,100%{opacity:0.15}40%{opacity:1}}
+
+.gen-placeholder{color:var(--tx3);font-size:13px}
+
+/* OUTPUT COMPONENTS */
+.section-lbl{
+  font-size:11px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--am);
+  margin-bottom:8px;font-family:var(--ff-m);
+}
+.rule{height:1px;background:var(--bd);margin:20px 0}
+
+.quote-block{
+  font-family:var(--ff-d);font-size:20px;font-style:italic;
+  color:var(--tx);line-height:1.55;padding:16px 20px;
+  border-left:3px solid var(--am);background:var(--s2);
+  border-radius:0 var(--r) var(--r) 0;margin-bottom:12px;
+}
+
+.kv-list{display:flex;flex-direction:column;gap:7px}
+.kv-item{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:14.5px;line-height:1.65;color:var(--tx);font-weight:400;
+}
+.kv-item::before{content:'—';color:var(--am);flex-shrink:0;margin-top:3px;font-weight:700}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+.card{
+  background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--rl);padding:16px 18px;margin-bottom:12px;
+}
+
+/* NAMING SPECIFIC */
+.score-bar{
+  height:6px;background:var(--s3);border-radius:3px;
+  overflow:hidden;margin-top:6px;
+}
+.score-fill{height:100%;border-radius:3px;background:var(--am);transition:width 0.6s ease}
+.criteria-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.crit{
+  padding:10px 12px;background:var(--s3);border-radius:var(--r);
+  border-left:2px solid transparent;
+}
+.crit.pass{border-color:var(--grn)}
+.crit.fail{border-color:var(--red)}
+.crit.warn{border-color:var(--am)}
+.crit-name{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;font-family:var(--ff-m)}
+.crit.pass .crit-name{color:var(--grn)}
+.crit.fail .crit-name{color:var(--red)}
+.crit.warn .crit-name{color:var(--am)}
+.crit-text{font-size:12px;color:var(--tx2);line-height:1.5}
+
+/* COLOR SPECIFIC */
+.palette-bar{height:52px;display:flex;border-radius:var(--r);overflow:hidden;margin-bottom:16px;border:1px solid var(--bd)}
+.palette-bar div{flex:1}
+.color-list{display:flex;flex-direction:column;gap:10px}
+.color-row{display:flex;align-items:center;gap:12px}
+.swatch{width:48px;height:48px;border-radius:var(--r);flex-shrink:0;border:1px solid rgba(255,255,255,0.06)}
+.color-info{}
+.color-name{font-size:13px;font-weight:600;color:var(--tx)}
+.color-codes{font-family:var(--ff-m);font-size:11px;color:var(--tx2);cursor:pointer}
+.color-codes:hover{color:var(--am)}
+.color-role{font-size:11px;color:var(--tx3);margin-top:1px}
+
+.interaction-demo{
+  background:var(--s3);border-radius:var(--rl);padding:16px;
+  margin-top:12px;font-size:12px;color:var(--tx2);line-height:1.7;
+}
+
+/* LOGO SPECIFIC */
+.logo-previews{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.logo-prev{
+  border-radius:var(--rl);
+  display:flex;flex-direction:column;align-items:center;
+  overflow:hidden;
+}
+.logo-prev-canvas{
+  width:100%;min-height:160px;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+.logo-prev-canvas svg{max-width:100%;max-height:130px}
+.logo-prev-label{
+  font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--tx3);padding:6px;font-family:var(--ff-m);
+  width:100%;text-align:center;background:var(--s2);
+  border-top:1px solid var(--bd);
+}
+.logo-dark .logo-prev-canvas{background:#141416}
+.logo-light .logo-prev-canvas{background:#F4F1EC}
+.logo-mono .logo-prev-canvas{background:#FFFFFF}
+
+/* TYPOGRAPHY SPECIFIC */
+.type-card{
+  background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--rl);padding:20px;margin-bottom:10px;
+}
+.type-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.type-role{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--am);font-family:var(--ff-m)}
+.type-family{font-size:11px;color:var(--tx3);font-family:var(--ff-m)}
+.type-sample{color:var(--tx);line-height:1.3}
+.type-usage{font-size:11px;color:var(--tx3);margin-top:8px;line-height:1.5}
+
+.grid-visual{
+  margin:12px 0;display:grid;gap:1px;
+  background:var(--bd);border-radius:var(--r);overflow:hidden;border:1px solid var(--bd);
+}
+.grid-cell{background:var(--s2);height:32px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--tx3)}
+
+/* TOKEN SPECIFIC */
+.token-section{margin-bottom:20px}
+.token-grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.token-chip{
+  padding:6px 12px;background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r);font-family:var(--ff-m);font-size:11px;
+  color:var(--tx2);
+}
+.shadow-demo{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;
+}
+.shadow-item{
+  width:64px;height:64px;background:var(--s2);border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--tx3);font-family:var(--ff-m);
+}
+.motion-rule{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:10px 12px;background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r);margin-bottom:6px;
+  font-size:12.5px;color:var(--tx);line-height:1.6;
+}
+.motion-rule::before{content:'⏱';flex-shrink:0;font-size:14px}
+
+.code-block{
+  background:var(--bg);border:1px solid var(--bd);
+  border-radius:var(--r);padding:16px;
+  font-family:var(--ff-m);font-size:11px;color:var(--tx2);
+  line-height:1.8;overflow-x:auto;white-space:pre;margin-top:8px;
+}
+.code-block .var{color:var(--am)}
+.code-block .val{color:var(--grn)}
+.code-block .cmt{color:var(--tx3);font-style:italic}
+
+/* VOICE SPECIFIC */
+.tagline-option{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r);margin-bottom:6px;cursor:pointer;transition:all 0.15s;
+}
+.tagline-option:hover{border-color:var(--bd2)}
+.tagline-option.picked{border-color:var(--am);background:var(--am4)}
+.tl-num{font-family:var(--ff-m);font-size:9px;color:var(--tx3);flex-shrink:0;width:20px}
+.tl-text{font-family:var(--ff-d);font-size:18px;font-style:italic;color:var(--tx)}
+.ogilvy-rule{
+  padding:10px 14px 10px 12px;background:var(--s2);border:1px solid var(--bd);
+  border-left:2px solid var(--am);border-radius:0 var(--r) var(--r) 0;
+  margin-bottom:6px;font-size:12.5px;color:var(--tx);line-height:1.6;
+}
+
+/* ASSET GRID */
+.asset-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.a-check{
+  display:flex;align-items:center;gap:10px;
+  background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r);padding:11px 14px;cursor:pointer;
+  transition:all 0.15s;user-select:none;
+}
+.a-check:hover{border-color:var(--bd2)}
+.a-check.on{border-color:var(--am);background:var(--am4)}
+.a-box{
+  width:17px;height:17px;border-radius:3px;
+  border:1px solid var(--bd2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;transition:all 0.15s;
+}
+.a-check.on .a-box{background:var(--am);border-color:var(--am);color:var(--bg)}
+.a-name{font-size:12.5px;font-weight:600;color:var(--tx)}
+.a-desc{font-size:10px;color:var(--tx3)}
+
+/* BRAND GUIDE */
+#guide-out{
+  background:var(--s1);border:1px solid var(--bd);
+  border-radius:var(--rl);overflow:hidden;
+}
+.guide-cover{
+  padding:48px 52px;
+  background:linear-gradient(135deg,var(--s1) 0%,var(--s2) 100%);
+  border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+}
+.guide-cover-text{}
+.guide-eyebrow{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--am);margin-bottom:12px;font-family:var(--ff-m)}
+.guide-brand-name{font-family:var(--ff-d);font-size:52px;font-weight:400;line-height:1.05;color:var(--tx)}
+.guide-industry{color:var(--tx3);margin-top:8px;font-size:14px}
+.guide-cover-logo{max-width:220px;flex-shrink:0}
+.guide-cover-logo svg{max-width:100%;max-height:120px}
+
+.guide-section{padding:36px 44px;border-bottom:1px solid var(--bd)}
+.guide-section:last-child{border-bottom:none}
+.guide-section-title{
+  font-size:11px;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--am);
+  margin-bottom:24px;padding-bottom:12px;
+  border-bottom:1px solid var(--bd);font-family:var(--ff-m);
+}
+.guide-h3{font-family:var(--ff-d);font-size:24px;font-weight:500;margin-bottom:10px}
+
+/* NAV FOOTER */
+#foot{
+  border-top:1px solid var(--bd);padding:13px 44px;
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.foot-ind{font-family:var(--ff-m);font-size:12px;color:var(--tx3);font-weight:500}
+
+/* ALERTS */
+.alert{padding:11px 14px;border-radius:var(--r);font-size:13.5px;margin-bottom:12px;line-height:1.6}
+.alert-err{background:rgba(217,95,95,0.08);border:1px solid rgba(217,95,95,0.25);color:#E08888}
+.alert-info{background:var(--am4);border:1px solid rgba(200,164,90,0.2);color:var(--tx2)}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:20px;right:20px;z-index:999;
+  background:var(--s3);border:1px solid var(--bd2);color:var(--tx);
+  padding:9px 14px;border-radius:var(--r);font-size:12px;
+  opacity:0;transform:translateY(6px);transition:all 0.2s;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* PRINT */
+@media print{
+  #sidebar,#topbar,#foot{display:none!important}
+  #main{overflow:visible}
+  #content{overflow:visible;padding:0}
+  .sp{display:none!important}
+  #step-10{display:block!important}
+  #guide-out{border:none}
+  .guide-cover{background:white;color:black}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sb-header">
+    <div class="sb-eyebrow">Creative Studio</div>
+    <div class="sb-title">Brand<br>Studio</div>
+  </div>
+  <div class="sb-steps" id="sb-steps"></div>
+  <div class="sb-footer">12 book knowledge base · Powered by Claude</div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="topbar">
+    <div class="tb-project">Project:<strong id="proj-name">New Brand</strong></div>
+    <div class="tb-actions">
+      <button class="btn btn-out btn-sm" onclick="resetAll()">↺ Reset</button>
+      <button class="btn btn-out btn-sm" onclick="goToStep(10)">⊞ Guide</button>
+      <button class="btn btn-out btn-sm" onclick="window.print()">⎙ Print</button>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <!-- ══ STEP 1: BRIEF ══ -->
+    <div class="sp visible" id="step-1">
+      <div class="sp-head">
+        <h2>Brand Brief</h2>
+        <p>The foundation everything else builds on. Be specific — vague input produces generic output.</p>
+      </div>
+      <div class="fg">
+        <div class="fld"><label>Brand / Company Name</label><input id="b-name" placeholder="e.g. Apex Solar"/></div>
+        <div class="fld"><label>Industry / Category</label><input id="b-industry" placeholder="e.g. Residential solar installation"/></div>
+      </div>
+      <div class="fg full" style="margin-top:12px">
+        <div class="fld"><label>What it does &amp; for whom</label><input id="b-desc" placeholder="One sentence — what does this brand do, for whom, and why it matters?"/></div>
+      </div>
+      <div class="fg full" style="margin-top:12px">
+        <div class="fld"><label>Target Audience</label><textarea id="b-audience" rows="2" placeholder="Who are they? Role, mindset, what they care about, what they distrust..."></textarea></div>
+      </div>
+      <div class="fg" style="margin-top:12px">
+        <div class="fld">
+          <label>Brand Personality <span style="color:var(--tx3);font-weight:400">(Enter to add)</span></label>
+          <div class="tag-wrap" id="tw-personality"><input id="ti-personality" placeholder="e.g. confident, precise..."/></div>
+          <input type="hidden" id="b-personality"/>
+        </div>
+        <div class="fld">
+          <label>Key Competitors <span style="color:var(--tx3);font-weight:400">(Enter to add)</span></label>
+          <div class="tag-wrap" id="tw-competitors"><input id="ti-competitors" placeholder="e.g. Rexel, SunPower..."/></div>
+          <input type="hidden" id="b-competitors"/>
+        </div>
+      </div>
+      <div class="fg full" style="margin-top:12px">
+        <div class="fld"><label>What to Avoid</label><input id="b-avoid" placeholder="Colors, styles, associations, vibes you don't want"/></div>
+      </div>
+      <div style="margin-top:18px">
+        <div class="fld">
+          <label>Visual Direction</label>
+          <div class="sc-grid" id="sc-grid">
+            <div class="sc" data-v="Minimal & Clean"><div class="sc-icon">◻</div>Minimal</div>
+            <div class="sc" data-v="Bold & Strong"><div class="sc-icon">◼</div>Bold</div>
+            <div class="sc" data-v="Elegant & Refined"><div class="sc-icon">◈</div>Elegant</div>
+            <div class="sc" data-v="Technical & Precise"><div class="sc-icon">◧</div>Technical</div>
+            <div class="sc" data-v="Warm & Approachable"><div class="sc-icon">◉</div>Warm</div>
+          </div>
+          <input type="hidden" id="b-vdir"/>
+        </div>
+      </div>
+      <div style="margin-top:18px">
+        <div class="toggle-row">
+          <div class="toggle" id="tg-arch" onclick="toggleArch()"></div>
+          <div class="toggle-label" id="tl-arch" onclick="toggleArch()">This brand has multiple products or sub-brands (enables Brand Architecture step)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 2: NAMING ══ -->
+    <div class="sp" id="step-2">
+      <div class="sp-head">
+        <h2>Name Analysis</h2>
+        <p>Stress-test the brand name before any visual work begins. A strong name is the first brand asset.</p>
+        <div class="book-ref">📖 Hello, My Name Is Awesome — Alexandra Watkins</div>
+      </div>
+      <div class="gen-area">
+        <div class="gen-bar">
+          <div class="gen-bar-info">
+            <div class="gen-bar-title">Analyse Brand Name</div>
+            <div class="gen-bar-sub">SMILE test · SCRATCH test · Alternatives if needed</div>
+          </div>
+          <button class="btn btn-am" id="btn-naming" onclick="runNaming()">Analyse Name</button>
+        </div>
+        <div class="gen-body" id="out-naming"><div class="gen-placeholder">Name analysis will appear here.</div></div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 3: STRATEGY ══ -->
+    <div class="sp" id="step-3">
+      <div class="sp-head">
+        <h2>Brand Strategy</h2>
+        <p>Strategy must precede visual design. Design decorates strategy — never the other way around.</p>
+        <div class="book-ref">📖 The Brand Gap — Neumeier &nbsp;·&nbsp; Brand Bible — Millman</div>
+      </div>
+      <div class="gen-area">
+        <div class="gen-bar">
+          <div class="gen-bar-info">
+            <div class="gen-bar-title">Generate Strategy</div>
+            <div class="gen-bar-sub">Positioning · personality · promise · competitive difference</div>
+          </div>
+          <button class="btn btn-am" id="btn-strategy" onclick="runStrategy()">Generate Strategy</button>
+        </div>
+        <div class="gen-body" id="out-strategy"><div class="gen-placeholder">Brand strategy will appear here.</div></div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 4: LOGO ══ -->
+    <div class="sp" id="step-4">
+      <div class="sp-head">
+        <h2>Logo Design</h2>
+        <p>One strong idea, executed simply. The mark must work at 16px and at 16 metres.</p>
+        <div class="book-ref">📖 Logo Modernism — Müller &nbsp;·&nbsp; Logo Design Love — Airey &nbsp;·&nbsp; Identity Designed — Airey</div>
+      </div>
+      <div class="gen-area">
+        <div class="gen-bar">
+          <div class="gen-bar-info">
+            <div class="gen-bar-title">Generate Logo Concept</div>
+            <div class="gen-bar-sub">SVG output — scalable from favicon to billboard</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-out btn-sm" id="btn-regen-logo" style="display:none" onclick="runLogo()">↺ Regenerate</button>
+            <button class="btn btn-am" id="btn-logo" onclick="runLogo()">Generate Logo</button>
+          </div>
+        </div>
+        <div class="gen-body" id="out-logo"><div class="gen-placeholder">Logo will appear here.</div></div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 5: COLOR ══ -->
+    <div class="sp" id="step-5">
+      <div class="sp-head">
+        <h2>Color System</h2>
+        <p>Color is relative, not absolute. Every color is changed by what surrounds it — choose the system, not just the swatches.</p>
+        <div class="book-ref">📖 Interaction of Color — Josef Albers</div>
+      </div>
+      <div class="gen-area">
+        <div class="gen-bar">
+          <div class="gen-bar-info">
+            <div class="gen-bar-title">Generate Color System</div>
+            <div class="gen-bar-sub">Palette · interaction rules · accessibility · usage</div>
+          </div>
+          <button class="btn btn-am" id="btn-color" onclick="runColor()">Generate Colors</button>
+        </div>
+        <div class="gen-body" id="out-color"><div class="gen-placeholder">Color system will appear here.</div></div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 6: TYPOGRAPHY + GRID ══ -->
+    <div class="sp" id="step-6">
+      <div class="sp-head">
+        <h2>Typography &amp; Grid</h2>
+        <p>The grid is the invisible structure everything sits on. Typography is personality made visible before a word is read.</p>
+        <div class="book-ref">📖 Grid Systems — Müller-Brockmann &nbsp;·&nbsp; Refactoring UI — Wathan &amp; Schoger</div>
+      </div>
+      <div class="gen-area">
+        <div class="gen-bar">
+          <div class="gen-bar-info">
+            <div class="gen-bar-title">Generate Typography &amp; Grid System</div>
+            <div class="gen-bar-sub">Google Fonts · type scale · spacing grid · layout rules</div>
+          </div>
+          <button class="btn btn-am" id="btn-type" onclick="runType()">Generate System</button>
+        </div>
+        <div class="gen-body" id="out-type"><div class="gen-placeholder">Typography and grid system will appear here.</div></div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 7: UI TOKENS ══ -->
+    <div class="sp" id="step-7">
+      <div class="sp-head">
+        <h2>UI Design Tokens</h2>
+        <p>Translates the brand into a developer-ready token set — CSS variables, spacing scale, shadows, interactive states, and motion principles.</p>
+        <div class="book-ref">📖 Refactoring UI — Wathan &amp; Schoger &nbsp;·&nbsp; Designing Interface Animation — Val Head</div>
+      </div>
+      <div class="gen-area">
+        <div class="gen-bar">
+          <div class="gen-bar-info">
+            <div class="gen-bar-title">Generate UI Token Set</div>
+            <div class="gen-bar-sub">CSS variables · spacing · radius · shadows · motion</div>
+          </div>
+          <button class="btn btn-am" id="btn-tokens" onclick="runTokens()">Generate Tokens</button>
+        </div>
+        <div class="gen-body" id="out-tokens"><div class="gen-placeholder">UI token set will appear here.</div></div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 8: VOICE + COPY ══ -->
+    <div class="sp" id="step-8">
+      <div class="sp-head">
+        <h2>Voice &amp; Copy</h2>
+        <p>The consumer isn't a moron, she's your wife. Write to one person. Lead with the benefit, not the feature.</p>
+        <div class="book-ref">📖 Ogilvy on Advertising — David Ogilvy &nbsp;·&nbsp; Brand Bible — Millman</div>
+      </div>
+      <div class="gen-area">
+        <div class="gen-bar">
+          <div class="gen-bar-info">
+            <div class="gen-bar-title">Generate Voice &amp; Copy</div>
+            <div class="gen-bar-sub">Taglines · tone rules · headline formulas · dos &amp; don'ts</div>
+          </div>
+          <button class="btn btn-am" id="btn-voice" onclick="runVoice()">Generate Voice</button>
+        </div>
+        <div class="gen-body" id="out-voice"><div class="gen-placeholder">Voice and messaging will appear here.</div></div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 9: ASSETS ══ -->
+    <div class="sp" id="step-9">
+      <div class="sp-head">
+        <h2>Asset Selection</h2>
+        <p>Select what gets included in the brand guide and asset package. You can come back and change this at any time.</p>
+      </div>
+      <div class="asset-grid" id="asset-grid">
+        <label class="a-check on" data-asset="Logo — Full Lockup SVG">
+          <div class="a-box">✓</div>
+          <div><div class="a-name">Logo — Full Lockup</div><div class="a-desc">Icon + wordmark · SVG</div></div>
+        </label>
+        <label class="a-check on" data-asset="Logo — Icon Only SVG">
+          <div class="a-box">✓</div>
+          <div><div class="a-name">Logo — Icon Only</div><div class="a-desc">Symbol/mark · SVG</div></div>
+        </label>
+        <label class="a-check on" data-asset="Favicon Set (16×16, 32×32, 180×180px)">
+          <div class="a-box">✓</div>
+          <div><div class="a-name">Favicon Set</div><div class="a-desc">16 · 32 · 180px</div></div>
+        </label>
+        <label class="a-check on" data-asset="Social Profile Image (400×400px)">
+          <div class="a-box">✓</div>
+          <div><div class="a-name">Social Profile Image</div><div class="a-desc">400×400px</div></div>
+        </label>
+        <label class="a-check" data-asset="LinkedIn Banner (1584×396px)">
+          <div class="a-box"></div>
+          <div><div class="a-name">LinkedIn Banner</div><div class="a-desc">1584×396px</div></div>
+        </label>
+        <label class="a-check" data-asset="Twitter / X Banner (1500×500px)">
+          <div class="a-box"></div>
+          <div><div class="a-name">Twitter / X Banner</div><div class="a-desc">1500×500px</div></div>
+        </label>
+        <label class="a-check" data-asset="Facebook Cover (820×312px)">
+          <div class="a-box"></div>
+          <div><div class="a-name">Facebook Cover</div><div class="a-desc">820×312px</div></div>
+        </label>
+        <label class="a-check" data-asset="App Icon (1024×1024px)">
+          <div class="a-box"></div>
+          <div><div class="a-name">App Icon</div><div class="a-desc">1024×1024px — iOS/Android</div></div>
+        </label>
+        <label class="a-check" data-asset="Email Signature (HTML)">
+          <div class="a-box"></div>
+          <div><div class="a-name">Email Signature</div><div class="a-desc">HTML template</div></div>
+        </label>
+        <label class="a-check" data-asset="Letterhead (A4 — Word template)">
+          <div class="a-box"></div>
+          <div><div class="a-name">Letterhead</div><div class="a-desc">A4 · Word/print template</div></div>
+        </label>
+        <label class="a-check" data-asset="Business Card (85×55mm)">
+          <div class="a-box"></div>
+          <div><div class="a-name">Business Card</div><div class="a-desc">85×55mm · bleed included</div></div>
+        </label>
+        <label class="a-check" data-asset="PowerPoint Slide Template">
+          <div class="a-box"></div>
+          <div><div class="a-name">Slide Template</div><div class="a-desc">Title + content slides</div></div>
+        </label>
+        <label class="a-check" data-asset="CSS Design Tokens (variables)">
+          <div class="a-box"></div>
+          <div><div class="a-name">CSS Token File</div><div class="a-desc">:root variables · copy/paste</div></div>
+        </label>
+        <label class="a-check" data-asset="Brand Voice Cheat Sheet (1-pager)">
+          <div class="a-box"></div>
+          <div><div class="a-name">Voice Cheat Sheet</div><div class="a-desc">1-page tone reference</div></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ══ STEP 10: BRAND GUIDE ══ -->
+    <div class="sp" id="step-10">
+      <div class="sp-head">
+        <h2>Brand Guide</h2>
+        <p>The complete identity document. Build it, then use Print to export as PDF.</p>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:20px">
+        <button class="btn btn-am" onclick="buildGuide()">⟳ Build Brand Guide</button>
+        <button class="btn btn-out" onclick="window.print()">⎙ Export PDF</button>
+      </div>
+      <div id="guide-out">
+        <div style="padding:48px;text-align:center;color:var(--tx3);font-size:13px;">
+          Complete the steps above and click "Build Brand Guide" to compile your identity document.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 11: BRAND ARCHITECTURE (OPTIONAL) ══ -->
+    <div class="sp" id="step-11">
+      <div class="sp-head">
+        <h2>Brand Architecture</h2>
+        <p>When a parent brand has multiple products, sub-brands, or services — this defines how they relate, what equity they share, and where they stay separate.</p>
+        <div class="book-ref">📖 Brand Portfolio Strategy — David Aaker</div>
+      </div>
+      <div class="fg full">
+        <div class="fld">
+          <label>Sub-brands / Products <span style="color:var(--tx3);font-weight:400">(Enter to add)</span></label>
+          <div class="tag-wrap" id="tw-subbrand"><input id="ti-subbrand" placeholder="e.g. SolarGuard Pro, SolarGuard Home..."/></div>
+          <input type="hidden" id="b-subbrands"/>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="gen-area">
+          <div class="gen-bar">
+            <div class="gen-bar-info">
+              <div class="gen-bar-title">Generate Architecture Model</div>
+              <div class="gen-bar-sub">Branded house · house of brands · hybrid — with rationale</div>
+            </div>
+            <button class="btn btn-am" id="btn-arch" onclick="runArch()">Generate Model</button>
+          </div>
+          <div class="gen-body" id="out-arch"><div class="gen-placeholder">Brand architecture model will appear here.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <div id="foot">
+    <button class="btn btn-ghost" id="btn-back" onclick="prevStep()">← Back</button>
+    <div class="foot-ind" id="foot-ind">Step 1 of 10</div>
+    <button class="btn btn-am" id="btn-next" onclick="nextStep()">Continue →</button>
+  </div>
+</div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════
+// STEP DEFINITIONS
+// ═══════════════════════════════
+const STEPS = [
+  {n:1, label:'Brand Brief', book:''},
+  {n:2, label:'Name Analysis', book:'Watkins'},
+  {n:3, label:'Strategy', book:'Neumeier · Millman'},
+  {n:4, label:'Logo Design', book:'Müller · Airey'},
+  {n:5, label:'Color System', book:'Albers'},
+  {n:6, label:'Typography & Grid', book:'Müller-Brockmann'},
+  {n:7, label:'UI Tokens', book:'Refactoring UI · Head'},
+  {n:8, label:'Voice & Copy', book:'Ogilvy · Millman'},
+  {n:9, label:'Assets', book:''},
+  {n:10, label:'Brand Guide', book:''},
+  {n:11, label:'Brand Architecture', book:'Aaker', optional:true},
+];
+
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
+const S = {
+  step: 1,
+  maxSteps: 10,
+  archEnabled: false,
+  brief: {},
+  naming: null,
+  strategy: null,
+  logo: null,
+  logoSvg: null,
+  logoRationale: null,
+  colors: null,
+  typography: null,
+  grid: null,
+  tokens: null,
+  voice: null,
+  arch: null,
+};
+
+// ═══════════════════════════════
+// BOOK KNOWLEDGE SYSTEM PROMPTS
+// ═══════════════════════════════
+const SYS_BASE = `You are a professional brand identity designer and strategist. You have deep knowledge of:
+- Logo design principles (simplicity, distinctiveness, scalability, appropriateness, memorability)
+- Brand strategy (positioning, differentiation, personality)
+- Color theory and visual communication
+- Typography and layout
+- Digital product design
+Always return clean JSON when asked for structured data. Always return valid SVG when asked for logo output.`;
+
+const SYS_NAMING = SYS_BASE + `
+
+NAMING KNOWLEDGE (Hello, My Name Is Awesome — Alexandra Watkins):
+SMILE Test — the 5 qualities of a great brand name:
+  S — Suggestive: evokes the brand experience or benefit
+  M — Meaningful: resonates with the audience, communicates something
+  I — Imagery: is visually evocative, easy to picture
+  L — Legs: can extend into a tagline, campaigns, sub-brands
+  E — Emotional: triggers a positive feeling
+
+SCRATCH Test — the 7 deadly sins of naming (things to avoid):
+  S — Spelling-challenged: hard to spell when heard
+  C — Copycat: too similar to competitors
+  R — Restrictive: limits future growth or extension
+  A — Annoying: sounds unpleasant, awkward, or offensive
+  T — Tame: generic, forgettable, describes the category
+  C — Curse of Knowledge: only makes sense internally
+  H — Hard to pronounce: creates friction
+
+Score each criterion 1-5. A strong name scores 20+ on SMILE and under 10 on SCRATCH.
+If the name fails significantly, suggest 3 alternative names with rationale.`;
+
+const SYS_STRATEGY = SYS_BASE + `
+
+BRAND STRATEGY KNOWLEDGE:
+From The Brand Gap (Marty Neumeier):
+- A brand is not what you say it is — it's what they say it is
+- The brand gap is the distance between business strategy and customer experience
+- Five disciplines: Differentiate, Collaborate, Innovate, Validate, Cultivate
+- Differentiation is the single most important principle in branding
+- Clarity, authenticity, and consistency are non-negotiable
+- "When everyone zigs, zag"
+
+From Brand Bible (Debbie Millman):
+- Strategy defines the brand before design touches it
+- Brand attributes must be specific, not generic
+- Personality should be defined as how the brand would behave as a person
+- The brand promise is what customers can always expect — make it specific and deliverable
+- Tone of voice is a brand asset as valuable as the logo
+- A brand must stand for something specific, or it stands for nothing`;
+
+const SYS_LOGO = SYS_BASE + `
+
+LOGO DESIGN KNOWLEDGE:
+From Logo Modernism (Jens Müller / Taschen):
+- Great logos emerge from geometric reduction — strip the idea to its essential form
+- The history of great logos shows three forms: geometric, typographic, and pictorial marks
+- The functionalist approach: a logo must work before it looks beautiful
+- Systematic thinking: logos are part of an identity system, not isolated objects
+- Reduction is the highest form of design intelligence
+
+From Logo Design Love (David Airey):
+- The 7 qualities of a good logo: simple, memorable, timeless, versatile, appropriate, distinctive, single focused
+- Start with a strong concept before picking up a pencil
+- Sketching > software: idea development happens on paper
+- A logo must work in black and white first
+- Clear space rules protect the mark in any context
+- Avoid trends — design for 20 years, not 2
+
+From Identity Designed (David Airey):
+- The logo is the entry point to the brand system, not the brand itself
+- Horizontal, stacked, and icon-only versions all serve different contexts
+- Consider where the logo will live: screen, print, embroidery, signage, small sizes
+- Test the logo on real-world applications before finalising
+- Simplicity at conception = flexibility in application
+
+SVG OUTPUT RULES:
+- Use viewBox="0 0 400 120" for full lockup (icon left, wordmark right)
+- Icon/mark should be a clean geometric or symbolic form
+- Wordmark uses font-family text elements (not outlined paths)
+- Maximum 3 colors including black/white
+- No gradients, no drop shadows, no complex textures
+- Must look strong at small sizes`;
+
+const SYS_COLOR = SYS_BASE + `
+
+COLOR KNOWLEDGE (Interaction of Color — Josef Albers):
+Core principle: Color is the most relative medium in art. The same color looks completely different depending on what surrounds it.
+
+Key Albers principles to apply:
+1. SIMULTANEOUS CONTRAST: Colors influence each other at their boundaries. A mid-tone grey appears darker next to white and lighter next to black.
+2. COLOR RELATIVITY: There are no bad colors, only bad color relationships. Every decision must consider the relationship, not the color in isolation.
+3. AFTER-IMAGE: Strong colors create complementary after-images — design for sustained viewing, not just first impressions.
+4. TRANSPARENCY EFFECT: Overlapping colors can create the illusion of transparency through careful value selection.
+5. VIBRATING BOUNDARIES: Colors of similar value but different hue create uncomfortable vibration — use deliberate value contrast.
+
+Practical application:
+- Always define how colors work TOGETHER, not just individually
+- Specify which combinations work and which to avoid
+- Include contrast ratios for text legibility (WCAG AA = 4.5:1 for body text)
+- Provide both digital (hex/rgb) and print (CMYK/Pantone equivalent) references
+- Define the primary palette (3 colors) + neutrals + semantic colors (success, warning, error)`;
+
+const SYS_TYPE = SYS_BASE + `
+
+TYPOGRAPHY & GRID KNOWLEDGE:
+From Grid Systems in Graphic Design (Josef Müller-Brockmann):
+- The grid is not a cage — it is a structure that enables creative freedom
+- All grid systems begin with a base unit — typically the leading (line height) of the body text
+- Column grids: define content columns, gutters, and margins as a ratio system
+- Use the golden ratio (1:1.618) or modular scale for proportional relationships
+- The grid must be appropriate to the content — editorial, corporate, and product UIs each have different needs
+- Whitespace is not empty space — it is a deliberate design element
+- Consistency in the grid = confidence in the reader
+
+From Refactoring UI (Wathan & Schoger):
+- Use a 4px base grid for all spacing — every spacing value should be a multiple of 4
+- Define a limited spacing scale, not infinite options: 4, 8, 12, 16, 24, 32, 48, 64, 96, 128
+- Type scale: use a modular scale (1.25 or 1.333 ratio) rather than arbitrary sizes
+- Font size alone does not create hierarchy — use weight, color, and spacing together
+- Avoid using font sizes below 12px for any real content
+- Line length for body text: 45-75 characters per line is optimal
+- Use Google Fonts only — free, no licensing, good performance
+
+FONT PAIRING PRINCIPLES:
+- Contrast in classification: pair a serif with a sans-serif, or a display face with a neutral body face
+- Contrast in weight: if both fonts are similar weight, differentiate through other means
+- Similar x-heights improve harmony between paired fonts`;
+
+const SYS_TOKENS = SYS_BASE + `
+
+UI TOKEN KNOWLEDGE:
+From Refactoring UI (Wathan & Schoger):
+- Design tokens are the named entities that store visual design decisions
+- Use CSS custom properties (:root variables) for all token values
+- Spacing scale: 4px base. Values: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128
+- Border radius: define 3-4 values max (sm: 3px, md: 6px, lg: 12px, full: 9999px)
+- Shadows: use 3-4 levels (sm, md, lg, xl) — shadows should decrease in opacity and increase in blur, not just scale up
+- Interactive states for every interactive color: default, hover, active, disabled, focus-ring
+- Color tokens: semantic names (--color-primary, --color-danger) over descriptive names (--color-blue)
+- Z-index scale: define explicit levels (dropdown: 100, modal: 200, toast: 300)
+
+From Designing Interface Animation (Val Head):
+- Animation has purpose: provide feedback, orient the user, or create delight — never decoration
+- Duration: UI animations should be 200-500ms. Shorter for small elements, longer for large transitions.
+- Easing: ease-out for elements entering, ease-in for elements leaving, ease-in-out for position changes
+- 60fps is non-negotiable — use transform and opacity only (avoid animating layout properties)
+- The brand personality should be expressed through motion: a bold brand uses snappy, decisive transitions; a calm brand uses slower, smoother ones
+- Staggered animations: delay each element by 40-80ms for natural sequence reveals
+- Respect prefers-reduced-motion at all times`;
+
+const SYS_VOICE = SYS_BASE + `
+
+VOICE & COPYWRITING KNOWLEDGE:
+From Ogilvy on Advertising (David Ogilvy):
+- The consumer is not a moron. She is your wife. Don't insult her intelligence.
+- The most important word in advertising is "new" — followed by "free", "how to", "suddenly", "now", "announcing"
+- Specifics are more believable than generalities: "99.44% pure" beats "very pure"
+- Headlines: on average, 5x more people read the headline than the body copy — every headline must work in isolation
+- Long copy works when it's genuinely informative and the product warrants it
+- Never run an advertisement you wouldn't be comfortable showing to your family
+- Test everything — the most dangerous phrase in advertising is "we know what works"
+- Great advertising has a big idea you can see, feel, and understand in three seconds
+- Factual campaigns outperform emotional ones over the long term — unless your product is genuinely emotional
+
+Ogilvy headline formulas:
+- The "How to" headline: How to [achieve desired outcome]
+- The "Why" headline: Why [your product/service] [outperforms expectation]
+- The benefit-led: [Specific result]. [How you deliver it].
+- The challenge: Most [category] [do X wrong]. [Brand name] doesn't.
+
+From Brand Bible (Millman):
+- Tone of voice is a strategic asset — it should be distinctive enough that you'd recognise the brand without seeing the logo
+- Tone rules should be expressed as pairs: we are [X], not [Y]
+- Every brand touchpoint is a writing opportunity: 404 pages, confirmation emails, error messages all carry the brand voice`;
+
+const SYS_ARCH = SYS_BASE + `
+
+BRAND ARCHITECTURE KNOWLEDGE (Brand Portfolio Strategy — David Aaker):
+The three primary models:
+1. BRANDED HOUSE: One master brand, all products under it with descriptive sub-names. Apple, FedEx, Virgin. Maximises parent brand equity. Works when the parent is trusted and the portfolio is coherent.
+2. HOUSE OF BRANDS: Each product is a separate brand. P&G (Tide, Pampers, Gillette). Each brand can own a category. Works when products target different audiences or have conflicting personalities.
+3. HYBRID / ENDORSED: Sub-brands have own identities but are endorsed by the parent. Marriott Hotels endorses Courtyard by Marriott. Parent lends credibility; sub-brand owns the niche.
+
+Aaker's Brand Relationship Spectrum:
+- Driver brands: carry the purchase decision
+- Endorser brands: provide credibility
+- Linked brands: associated but distinct
+- Shadow endorsers: not visible but implied
+
+Brand equity considerations:
+- Does the extension strengthen or dilute the parent brand?
+- Is the sub-brand's promise compatible with the parent brand's promise?
+- Can the parent brand credibly deliver the sub-brand's promise?
+- What is the optimal level of visual and verbal connection between parent and sub-brands?`;
+
+// ═══════════════════════════════
+// API
+// ═══════════════════════════════
+async function claude(messages, sys=SYS_BASE, maxTok=2500){
+  const r = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTok,system:sys,messages})
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`API ${r.status}`)}
+  const d=await r.json();
+  return d.content.map(b=>b.text||'').join('');
+}
+
+function xJson(t){
+  const m=t.match(/```json\s*([\s\S]*?)\s*```/)||t.match(/(^\s*\{[\s\S]*\}\s*$)/m);
+  if(m){try{return JSON.parse(m[1])}catch{}}
+  try{return JSON.parse(t)}catch{}
+  return null;
+}
+
+function xSvg(t){
+  const m=t.match(/<svg[\s\S]*?<\/svg>/i);
+  return m?m[0]:null;
+}
+
+function brief(){
+  return{
+    name:document.getElementById('b-name').value.trim()||'New Brand',
+    industry:document.getElementById('b-industry').value.trim(),
+    desc:document.getElementById('b-desc').value.trim(),
+    audience:document.getElementById('b-audience').value.trim(),
+    personality:document.getElementById('b-personality').value,
+    competitors:document.getElementById('b-competitors').value,
+    avoid:document.getElementById('b-avoid').value.trim(),
+    vdir:document.getElementById('b-vdir').value,
+  };
+}
+
+// ═══════════════════════════════
+// GENERATORS
+// ═══════════════════════════════
+async function runNaming(){
+  const b=S.brief;
+  setLoading('btn-naming','out-naming','Analysing name...');
+  try{
+    const raw=await claude([{role:'user',content:`Analyse the brand name "${b.name}" for a ${b.industry} company.
+Brief: ${b.desc}
+Audience: ${b.audience}
+Personality: ${b.personality}
+
+Apply the SMILE test (score each 1-5: Suggestive, Meaningful, Imagery, Legs, Emotional) and SCRATCH test (score each 1-5 severity: Spelling-challenged, Copycat, Restrictive, Annoying, Tame, Curse-of-knowledge, Hard-to-pronounce).
+
+Return JSON:
+{
+  "smile_total": 0,
+  "scratch_total": 0,
+  "overall": "Strong|Acceptable|Weak",
+  "verdict": "2-3 sentence overall assessment",
+  "smile": [{"criterion":"Suggestive","score":4,"note":"explanation"},{"criterion":"Meaningful","score":4,"note":"..."},{"criterion":"Imagery","score":3,"note":"..."},{"criterion":"Legs","score":3,"note":"..."},{"criterion":"Emotional","score":4,"note":"..."}],
+  "scratch": [{"criterion":"Spelling-challenged","score":1,"note":"..."},{"criterion":"Copycat","score":1,"note":"..."},{"criterion":"Restrictive","score":2,"note":"..."},{"criterion":"Annoying","score":1,"note":"..."},{"criterion":"Tame","score":2,"note":"..."},{"criterion":"Curse-of-knowledge","score":1,"note":"..."},{"criterion":"Hard-to-pronounce","score":1,"note":"..."}],
+  "alternatives": [{"name":"AltName1","rationale":"why"},{"name":"AltName2","rationale":"why"},{"name":"AltName3","rationale":"why"}]
+}`}],SYS_NAMING,1500);
+    const d=xJson(raw);
+    if(!d)throw new Error('Parse failed');
+    S.naming=d;
+    renderNaming(d);
+    done(2);
+  }catch(e){showErr('out-naming',e.message)}
+  unload('btn-naming');
+}
+
+function renderNaming(d){
+  const smileBar=Math.min(100,(d.smile_total/25)*100);
+  const scratchBar=Math.min(100,(d.scratch_total/35)*100);
+  const overall=d.overall==='Strong'?'var(--grn)':d.overall==='Acceptable'?'var(--am)':'var(--red)';
+  const smileItems=d.smile.map(c=>{
+    const cls=c.score>=4?'pass':c.score>=3?'warn':'fail';
+    return`<div class="crit ${cls}"><div class="crit-name">${c.criterion} — ${c.score}/5</div><div class="crit-text">${c.note}</div></div>`;
+  }).join('');
+  const scratchItems=d.scratch.map(c=>{
+    const cls=c.score<=1?'pass':c.score<=2?'warn':'fail';
+    return`<div class="crit ${cls}"><div class="crit-name">${c.criterion} — ${c.score}/5</div><div class="crit-text">${c.note}</div></div>`;
+  }).join('');
+  const altItems=d.alternatives?d.alternatives.map(a=>`<div style="padding:10px 14px;background:var(--s3);border-radius:var(--r);margin-bottom:6px;"><span style="font-weight:700;color:var(--tx)">${a.name}</span><span style="color:var(--tx2);font-size:12px;margin-left:10px;">${a.rationale}</span></div>`).join(''):'';
+
+  document.getElementById('out-naming').innerHTML=`
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding:14px 16px;background:var(--s2);border-radius:var(--r);">
+      <div style="font-family:var(--ff-d);font-size:28px;color:var(--tx)">"${S.brief.name}"</div>
+      <div style="flex:1"></div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:${overall};background:rgba(0,0,0,0.2);padding:4px 12px;border-radius:20px;">${d.overall}</div>
+    </div>
+    <p style="font-size:13.5px;color:var(--tx);line-height:1.7;margin-bottom:16px;">${d.verdict}</p>
+    <div class="two-col" style="margin-bottom:16px">
+      <div>
+        <div class="section-lbl">SMILE Score — ${d.smile_total}/25</div>
+        <div class="score-bar"><div class="score-fill" style="width:${smileBar}%;background:var(--grn)"></div></div>
+        <div class="criteria-grid" style="margin-top:10px">${smileItems}</div>
+      </div>
+      <div>
+        <div class="section-lbl">SCRATCH Risk — ${d.scratch_total}/35</div>
+        <div class="score-bar"><div class="score-fill" style="width:${scratchBar}%;background:var(--red)"></div></div>
+        <div class="criteria-grid" style="margin-top:10px">${scratchItems}</div>
+      </div>
+    </div>
+    ${altItems?`<div class="section-lbl" style="margin-bottom:8px">Alternative Names</div>${altItems}`:''}
+  `;
+}
+
+async function runStrategy(){
+  const b=S.brief;
+  setLoading('btn-strategy','out-strategy','Developing strategy...');
+  try{
+    const raw=await claude([{role:'user',content:`Create a comprehensive brand strategy.
+Brand: ${b.name}
+Industry: ${b.industry}
+Description: ${b.desc}
+Audience: ${b.audience}
+Personality: ${b.personality}
+Competitors: ${b.competitors}
+Visual direction: ${b.vdir}
+
+Return JSON:
+{
+  "positioning": "Single compelling positioning statement",
+  "difference": "What makes this brand meaningfully different from ${b.competitors||'competitors'} — be specific",
+  "personality": ["trait 1","trait 2","trait 3","trait 4"],
+  "personality_as_person": "Describe the brand as if it were a person you'd meet at a dinner party — 2 sentences",
+  "audience_insight": "One sharp, non-obvious insight about the audience that changes how you'd design and communicate",
+  "tone_pairs": [{"we_are":"bold","not":"aggressive"},{"we_are":"expert","not":"exclusive"},{"we_are":"direct","not":"blunt"}],
+  "brand_promise": "The specific, deliverable promise to every customer",
+  "brand_truth": "The one thing that is undeniably, defensibly true about this brand"
+}`}],SYS_STRATEGY,1500);
+    const d=xJson(raw);
+    if(!d)throw new Error('Parse failed');
+    S.strategy=d;
+    renderStrategy(d);
+    done(3);
+  }catch(e){showErr('out-strategy',e.message)}
+  unload('btn-strategy');
+}
+
+function renderStrategy(d){
+  const toneItems=d.tone_pairs.map(p=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);">
+      <span style="flex:1;font-weight:600;color:var(--grn);font-size:13px;">${p.we_are}</span>
+      <span style="color:var(--tx3);font-size:11px;font-family:var(--ff-m)">not</span>
+      <span style="flex:1;color:var(--red);font-size:13px;text-decoration:line-through;opacity:0.7">${p.not}</span>
+    </div>`).join('');
+
+  document.getElementById('out-strategy').innerHTML=`
+    <div class="quote-block">${d.positioning}</div>
+    <div class="two-col" style="margin-bottom:16px">
+      <div>
+        <div class="section-lbl">Point of Difference</div>
+        <p style="font-size:13.5px;color:var(--tx);line-height:1.7">${d.difference}</p>
+        <div class="section-lbl" style="margin-top:14px">Brand Truth</div>
+        <p style="font-size:13.5px;color:var(--tx);line-height:1.7">${d.brand_truth}</p>
+      </div>
+      <div>
+        <div class="section-lbl">Brand Promise</div>
+        <p style="font-size:13.5px;color:var(--tx);line-height:1.7">${d.brand_promise}</p>
+        <div class="section-lbl" style="margin-top:14px">Brand as a Person</div>
+        <p style="font-size:13.5px;color:var(--tx);line-height:1.7;font-style:italic">${d.personality_as_person}</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="section-lbl">Personality</div>
+        <ul class="kv-list">${d.personality.map(p=>`<li class="kv-item">${p}</li>`).join('')}</ul>
+      </div>
+      <div>
+        <div class="section-lbl">Tone — We Are / Not</div>
+        ${toneItems}
+      </div>
+    </div>
+    <div class="section-lbl" style="margin-top:14px">Audience Insight</div>
+    <div class="card" style="border-color:var(--am3)">${d.audience_insight}</div>
+  `;
+}
+
+async function runLogo(){
+  const b=S.brief;
+  const strat=S.strategy;
+  setLoading('btn-logo','out-logo','Designing logo...');
+  try{
+    const personalityStr=strat?strat.personality.join(', '):b.personality;
+    const svgRaw=await claude([{role:'user',content:`Design a professional SVG logo for "${b.name}" (${b.industry}).
+Brand personality: ${personalityStr}
+Visual direction: ${b.vdir}
+Positioning: ${strat?.positioning||b.desc}
+Avoid: ${b.avoid||'nothing specific'}
+
+CRITICAL REQUIREMENTS:
+- Full lockup: viewBox="0 0 400 120"
+- Icon/mark on the LEFT, brand name wordmark on the RIGHT
+- Icon must be a clean geometric shape, abstract symbol, or strong letterform
+- Wordmark uses <text> elements with font-family (not outlined paths)
+- Maximum 3 colors — must work in mono
+- No gradients, no drop shadows, no complex fills
+- Strong at small sizes — the icon should read clearly at 20px
+
+Return ONLY the SVG code. Nothing else. Start with <svg and end with </svg>`}],SYS_LOGO,1200);
+
+    const svg=xSvg(svgRaw);
+    if(!svg)throw new Error('Could not extract SVG');
+
+    // Rationale
+    const rRaw=await claude([{role:'user',content:`For the logo you designed for "${b.name}" (${b.industry}) with personality "${personalityStr}", explain:
+1. The core visual concept and why it suits the brand (2 sentences)
+2. Three specific design decisions made
+
+Return JSON: {"concept":"...","decisions":["...","...","..."]}`}],SYS_LOGO,600);
+    const rat=xJson(rRaw);
+
+    S.logoSvg=svg;
+    S.logoRationale=rat;
+    renderLogo(svg,rat);
+    document.getElementById('btn-regen-logo').style.display='inline-flex';
+    done(4);
+  }catch(e){showErr('out-logo',e.message)}
+  unload('btn-logo');
+}
+
+function renderLogo(svg,rat){
+  document.getElementById('out-logo').innerHTML=`
+    <div class="logo-previews">
+      <div class="logo-prev logo-dark">
+        <div class="logo-prev-canvas">${svg}</div>
+        <div class="logo-prev-label">Dark background</div>
+      </div>
+      <div class="logo-prev logo-light">
+        <div class="logo-prev-canvas">${svg}</div>
+        <div class="logo-prev-label">Light background</div>
+      </div>
+    </div>
+    ${rat?`
+    <div class="card" style="margin-bottom:10px">
+      <div class="section-lbl">Design Rationale</div>
+      <p style="font-size:13.5px;color:var(--tx);line-height:1.7;margin-bottom:10px">${rat.concept}</p>
+      <ul class="kv-list">${rat.decisions.map(d=>`<li class="kv-item">${d}</li>`).join('')}</ul>
+    </div>`:''}
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-out btn-sm" onclick="dlSvg()">↓ Download SVG</button>
+      <button class="btn btn-ghost btn-sm" onclick="copySvg()">⎘ Copy SVG Code</button>
+    </div>
+  `;
+}
+
+async function runColor(){
+  const b=S.brief;
+  const strat=S.strategy;
+  setLoading('btn-color','out-color','Building color system...');
+  try{
+    const raw=await claude([{role:'user',content:`Create a professional color system for "${b.name}" (${b.industry}).
+Personality: ${strat?strat.personality.join(', '):b.personality}
+Visual direction: ${b.vdir}
+Avoid: ${b.avoid}
+
+Apply Albers' principles — define not just the colors but how they interact, which combinations to use and avoid, and the reasoning behind each relationship.
+
+Return JSON:
+{
+  "palette": [
+    {"role":"Primary","name":"color name","hex":"#XXXXXX","rgb":"r,g,b","cmyk":"c,m,y,k","usage":"what this color is for"},
+    {"role":"Secondary","name":"...","hex":"#XXXXXX","rgb":"r,g,b","cmyk":"c,m,y,k","usage":"..."},
+    {"role":"Accent","name":"...","hex":"#XXXXXX","rgb":"r,g,b","cmyk":"c,m,y,k","usage":"..."},
+    {"role":"Dark","name":"...","hex":"#XXXXXX","rgb":"r,g,b","cmyk":"c,m,y,k","usage":"..."},
+    {"role":"Light","name":"...","hex":"#XXXXXX","rgb":"r,g,b","cmyk":"c,m,y,k","usage":"..."}
+  ],
+  "semantic": [
+    {"role":"Success","hex":"#XXXXXX"},
+    {"role":"Warning","hex":"#XXXXXX"},
+    {"role":"Error","hex":"#XXXXXX"},
+    {"role":"Info","hex":"#XXXXXX"}
+  ],
+  "interactions": [
+    {"combination":"Primary on Dark","works":true,"contrast_ratio":"X:1","note":"Albers principle applied"},
+    {"combination":"Primary on Light","works":true,"contrast_ratio":"X:1","note":"..."},
+    {"combination":"Accent on Primary","works":false,"note":"Why this combination creates problems and what to use instead"}
+  ],
+  "albers_note": "2-sentence note on the most important color interaction principle to observe in this specific palette"
+}`}],SYS_COLOR,1500);
+    const d=xJson(raw);
+    if(!d)throw new Error('Parse failed');
+    S.colors=d;
+    renderColor(d);
+    loadFonts([]);
+    done(5);
+  }catch(e){showErr('out-color',e.message)}
+  unload('btn-color');
+}
+
+function renderColor(d){
+  const bars=d.palette.map(c=>`<div style="background:${c.hex}" title="${c.name}"></div>`).join('');
+  const rows=d.palette.map(c=>`
+    <div class="color-row">
+      <div class="swatch" style="background:${c.hex}"></div>
+      <div class="color-info">
+        <div class="color-name">${c.name} <span style="color:var(--tx3);font-weight:400;font-size:11px">— ${c.role}</span></div>
+        <div class="color-codes" onclick="cp('${c.hex}')" title="Click to copy">${c.hex} · rgb(${c.rgb}) · cmyk(${c.cmyk})</div>
+        <div class="color-role">${c.usage}</div>
+      </div>
+    </div>`).join('');
+
+  const semRows=d.semantic.map(s=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 0">
+      <div style="width:28px;height:28px;border-radius:4px;background:${s.hex};border:1px solid rgba(255,255,255,0.08)"></div>
+      <span style="font-size:12px;color:var(--tx2)">${s.role} — <span style="font-family:var(--ff-m);color:var(--tx3)">${s.hex}</span></span>
+    </div>`).join('');
+
+  const interRows=d.interactions.map(i=>`
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:${i.works?'rgba(91,158,122,0.08)':'rgba(217,95,95,0.08)'};border-radius:var(--r);margin-bottom:5px;border-left:2px solid ${i.works?'var(--grn)':'var(--red)'}">
+      <span style="font-size:10px;flex-shrink:0;margin-top:2px">${i.works?'✓':'✗'}</span>
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:2px">${i.combination}${i.contrast_ratio?` — ${i.contrast_ratio}`:''}</div>
+        <div style="font-size:11px;color:var(--tx2);line-height:1.5">${i.note}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('out-color').innerHTML=`
+    <div class="palette-bar">${bars}</div>
+    <div class="color-list" style="margin-bottom:18px">${rows}</div>
+    <div class="rule"></div>
+    <div class="two-col">
+      <div>
+        <div class="section-lbl">Semantic Colors</div>
+        ${semRows}
+      </div>
+      <div>
+        <div class="section-lbl">Color Interactions (Albers)</div>
+        ${interRows}
+      </div>
+    </div>
+    <div class="interaction-demo">
+      <div class="section-lbl" style="margin-bottom:6px">Key Interaction Note</div>
+      ${d.albers_note}
+    </div>
+  `;
+}
+
+async function runType(){
+  const b=S.brief;
+  const strat=S.strategy;
+  setLoading('btn-type','out-type','Building type system...');
+  try{
+    const raw=await claude([{role:'user',content:`Create a typography and grid system for "${b.name}" (${b.industry}).
+Personality: ${strat?strat.personality.join(', '):b.personality}
+Visual direction: ${b.vdir}
+
+Use ONLY Google Fonts. Apply Müller-Brockmann grid principles and Refactoring UI type scale principles.
+
+Return JSON:
+{
+  "fonts": [
+    {"role":"Display","name":"Google Font Name","weights":"400;700","sample":"Brand name or hero statement","usage":"Hero sections, large statements, brand moments"},
+    {"role":"Heading","name":"Google Font Name","weights":"600;700","sample":"Section heading example","usage":"All headings, sub-headings, UI labels"},
+    {"role":"Body","name":"Google Font Name","weights":"400;500","sample":"Body copy reads clearly at smaller sizes and maintains legibility across all applications and contexts.","usage":"All body copy, descriptions, long-form text"},
+    {"role":"Mono","name":"Google Font Name","weights":"400","sample":"Code · Data · Labels · 12px","usage":"Code, data tables, technical references, captions"}
+  ],
+  "scale": [
+    {"name":"Display","size":"56px","line_height":"1.05","weight":"400","usage":"Hero headlines only"},
+    {"name":"H1","size":"40px","line_height":"1.15","weight":"700","usage":"Page titles"},
+    {"name":"H2","size":"28px","line_height":"1.25","weight":"600","usage":"Section headings"},
+    {"name":"H3","size":"20px","line_height":"1.35","weight":"600","usage":"Sub-sections, card titles"},
+    {"name":"Body","size":"16px","line_height":"1.65","weight":"400","usage":"All body text"},
+    {"name":"Small","size":"13px","line_height":"1.55","weight":"500","usage":"Captions, metadata"},
+    {"name":"Caption","size":"11px","line_height":"1.5","weight":"500","usage":"Labels, legal, footnotes"}
+  ],
+  "grid": {
+    "base_unit":"4px",
+    "spacing_scale":[4,8,12,16,24,32,48,64,96,128],
+    "columns_desktop":12,
+    "columns_tablet":8,
+    "columns_mobile":4,
+    "gutter":"24px",
+    "margin_desktop":"80px",
+    "max_width":"1280px",
+    "line_length":"65 characters for body text"
+  },
+  "grid_rationale":"1-2 sentences on the grid choices and the Müller-Brockmann principle applied"
+}`}],SYS_TYPE,1800);
+    const d=xJson(raw);
+    if(!d)throw new Error('Parse failed');
+    S.typography=d;
+    loadFonts(d.fonts.map(f=>f.name));
+    renderType(d);
+    done(6);
+  }catch(e){showErr('out-type',e.message)}
+  unload('btn-type');
+}
+
+function renderType(d){
+  const fontCards=d.fonts.map(f=>`
+    <div class="type-card">
+      <div class="type-meta">
+        <span class="type-role">${f.role}</span>
+        <span class="type-family">${f.name} · ${f.weights}</span>
+      </div>
+      <div class="type-sample" style="font-family:'${f.name}',serif;font-size:${f.role==='Display'?'32px':f.role==='Heading'?'22px':f.role==='Body'?'15px':'12px'};line-height:1.3">${f.sample}</div>
+      <div class="type-usage">${f.usage}</div>
+    </div>`).join('');
+
+  const scaleRows=d.scale.map(s=>`
+    <div style="display:flex;align-items:baseline;gap:16px;padding:8px 0;border-bottom:1px solid var(--bd)">
+      <span style="font-family:var(--ff-m);font-size:9px;color:var(--tx3);width:60px;flex-shrink:0">${s.name}</span>
+      <span style="font-family:var(--ff-m);font-size:10px;color:var(--am);width:40px;flex-shrink:0">${s.size}</span>
+      <span style="font-size:11px;color:var(--tx3)">${s.usage}</span>
+    </div>`).join('');
+
+  const spacingChips=d.grid.spacing_scale.map(v=>`<div class="token-chip">${v}px</div>`).join('');
+
+  document.getElementById('out-type').innerHTML=`
+    ${fontCards}
+    <div class="rule"></div>
+    <div class="two-col">
+      <div>
+        <div class="section-lbl">Type Scale</div>
+        ${scaleRows}
+      </div>
+      <div>
+        <div class="section-lbl">Grid System</div>
+        <div style="font-size:12.5px;color:var(--tx);line-height:1.8">
+          <div>Base unit: <strong>${d.grid.base_unit}</strong></div>
+          <div>Columns: <strong>${d.grid.columns_desktop}</strong> desktop · <strong>${d.grid.columns_tablet}</strong> tablet · <strong>${d.grid.columns_mobile}</strong> mobile</div>
+          <div>Gutter: <strong>${d.grid.gutter}</strong></div>
+          <div>Margin: <strong>${d.grid.margin_desktop}</strong></div>
+          <div>Max width: <strong>${d.grid.max_width}</strong></div>
+          <div>Line length: <strong>${d.grid.line_length}</strong></div>
+        </div>
+        <div class="section-lbl" style="margin-top:12px">Spacing Scale</div>
+        <div class="token-grid">${spacingChips}</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--tx2);line-height:1.6;font-style:italic">${d.grid.grid_rationale}</div>
+      </div>
+    </div>
+  `;
+}
+
+async function runTokens(){
+  const b=S.brief;
+  const strat=S.strategy;
+  const cols=S.colors;
+  const type=S.typography;
+
+  setLoading('btn-tokens','out-tokens','Generating token set...');
+  try{
+    const colRef=cols?`Colors: Primary=${cols.palette[0].hex}, Secondary=${cols.palette[1].hex}, Accent=${cols.palette[2].hex}, Dark=${cols.palette[3].hex}, Light=${cols.palette[4].hex}`:'No colors yet';
+    const typeRef=type?`Fonts: Display=${type.fonts[0]?.name}, Body=${type.fonts[2]?.name}`:'No typography yet';
+
+    const raw=await claude([{role:'user',content:`Create a complete CSS design token set for "${b.name}".
+${colRef}
+${typeRef}
+Personality: ${strat?strat.personality.join(', '):b.personality}
+Visual direction: ${b.vdir}
+
+Based on Refactoring UI principles (4px base grid, spacing scale, shadow system, interactive states) and Val Head motion principles.
+
+Return JSON:
+{
+  "css_root": "/* Brand: ${b.name} — Design Tokens */\n:root {\n  /* Colors */\n  --color-primary: #hex;\n  --color-primary-hover: #hex;\n  --color-primary-active: #hex;\n  --color-secondary: #hex;\n  --color-accent: #hex;\n  --color-dark: #hex;\n  --color-light: #hex;\n  --color-success: #hex;\n  --color-warning: #hex;\n  --color-error: #hex;\n  --color-surface: #hex;\n  --color-surface-2: #hex;\n  --color-border: #hex;\n  --color-text: #hex;\n  --color-text-secondary: #hex;\n  --color-text-disabled: #hex;\n\n  /* Spacing (4px base) */\n  --space-1: 4px;\n  --space-2: 8px;\n  --space-3: 12px;\n  --space-4: 16px;\n  --space-6: 24px;\n  --space-8: 32px;\n  --space-12: 48px;\n  --space-16: 64px;\n\n  /* Typography */\n  --font-display: 'FontName', serif;\n  --font-body: 'FontName', sans-serif;\n  --font-mono: 'FontName', monospace;\n\n  /* Radius */\n  --radius-sm: 3px;\n  --radius-md: 6px;\n  --radius-lg: 12px;\n  --radius-full: 9999px;\n\n  /* Shadows */\n  --shadow-sm: 0 1px 2px rgba(0,0,0,0.X);\n  --shadow-md: 0 4px 8px rgba(0,0,0,0.X), 0 1px 3px rgba(0,0,0,0.X);\n  --shadow-lg: 0 8px 24px rgba(0,0,0,0.X), 0 2px 6px rgba(0,0,0,0.X);\n  --shadow-xl: 0 20px 48px rgba(0,0,0,0.X);\n\n  /* Motion */\n  --duration-fast: 150ms;\n  --duration-base: 250ms;\n  --duration-slow: 400ms;\n  --ease-out: cubic-bezier(0.0, 0, 0.2, 1);\n  --ease-in: cubic-bezier(0.4, 0, 1, 1);\n  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);\n\n  /* Z-index */\n  --z-dropdown: 100;\n  --z-modal: 200;\n  --z-toast: 300;\n}",
+  "shadow_demos": [
+    {"name":"sm","value":"0 1px 2px rgba(0,0,0,0.08)"},
+    {"name":"md","value":"0 4px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08)"},
+    {"name":"lg","value":"0 8px 24px rgba(0,0,0,0.16), 0 2px 6px rgba(0,0,0,0.10)"},
+    {"name":"xl","value":"0 20px 48px rgba(0,0,0,0.20)"}
+  ],
+  "motion_principles": [
+    "Enter animations use ease-out — elements decelerate as they arrive, feeling purposeful",
+    "Exit animations use ease-in — elements accelerate as they leave, feeling intentional",
+    "Duration reflects element size: small components 150ms, large modals 350ms",
+    "Stagger list items by 40ms per item — maximum 6 items, after that animate as a group",
+    "Brand personality expressed in motion: [specific note based on brand personality]"
+  ]
+}`}],SYS_TOKENS,2000);
+    const d=xJson(raw);
+    if(!d)throw new Error('Parse failed');
+    S.tokens=d;
+    renderTokens(d);
+    done(7);
+  }catch(e){showErr('out-tokens',e.message)}
+  unload('btn-tokens');
+}
+
+function renderTokens(d){
+  const shadowDemos=d.shadow_demos.map(s=>`
+    <div class="shadow-item" style="box-shadow:${s.value}">
+      <span>${s.name}</span>
+    </div>`).join('');
+
+  const motionItems=d.motion_principles.map(p=>`<div class="motion-rule">${p}</div>`).join('');
+
+  const cssHighlighted=d.css_root
+    .replace(/(--[\w-]+)/g,'<span class="var">$1</span>')
+    .replace(/(:\s*)([^;\/\n]+)(;)/g,'$1<span class="val">$2</span>$3')
+    .replace(/(\/\*.*?\*\/)/g,'<span class="cmt">$1</span>');
+
+  document.getElementById('out-tokens').innerHTML=`
+    <div class="two-col" style="margin-bottom:16px">
+      <div>
+        <div class="section-lbl">Shadow Scale</div>
+        <div class="shadow-demo">${shadowDemos}</div>
+        <div style="margin-top:12px">
+          <div class="section-lbl">Motion Principles</div>
+          ${motionItems}
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div class="section-lbl" style="margin:0">CSS Token File</div>
+          <button class="btn btn-out btn-sm" onclick="cp(document.getElementById('css-raw').textContent)">⎘ Copy</button>
+        </div>
+        <div class="code-block" id="css-raw">${cssHighlighted}</div>
+      </div>
+    </div>
+  `;
+}
+
+async function runVoice(){
+  const b=S.brief;
+  const strat=S.strategy;
+  setLoading('btn-voice','out-voice','Writing voice...');
+  try{
+    const raw=await claude([{role:'user',content:`Create brand voice and copywriting guidelines for "${b.name}" (${b.industry}).
+Positioning: ${strat?.positioning||b.desc}
+Personality: ${strat?strat.personality.join(', '):b.personality}
+Tone: ${strat?strat.tone_pairs.map(t=>`${t.we_are} not ${t.not}`).join(', '):''}
+Audience: ${b.audience}
+
+Apply Ogilvy principles: specificity over generality, headline-first thinking, consumer is not a moron.
+
+Return JSON:
+{
+  "taglines": [
+    {"text":"Tagline option 1","style":"Ogilvy-formula used, e.g. benefit-led"},
+    {"text":"Tagline option 2","style":"formula"},
+    {"text":"Tagline option 3","style":"formula"},
+    {"text":"Tagline option 4","style":"formula"}
+  ],
+  "headline_formulas": [
+    {"formula":"How to [specific benefit]","example":"Real example for ${b.name}"},
+    {"formula":"Why [brand] [specific outcome]","example":"Real example"},
+    {"formula":"[Specific result]. [How].","example":"Real example"}
+  ],
+  "dos": ["Do this 1","Do this 2","Do this 3","Do this 4"],
+  "donts": ["Don't do this 1","Don't do this 2","Don't do this 3"],
+  "elevator_pitch": "One paragraph (3-4 sentences) written in the brand's voice for a stranger at an event",
+  "example_copy": [
+    {"context":"Website hero headline","copy":"The actual copy"},
+    {"context":"Email subject line","copy":"The actual copy"},
+    {"context":"Social post","copy":"The actual copy"},
+    {"context":"Error message (404)","copy":"The actual copy — shows voice even in edge cases"}
+  ]
+}`}],SYS_VOICE,1800);
+    const d=xJson(raw);
+    if(!d)throw new Error('Parse failed');
+    S.voice=d;
+    renderVoice(d);
+    done(8);
+  }catch(e){showErr('out-voice',e.message)}
+  unload('btn-voice');
+}
+
+function renderVoice(d){
+  const taglines=d.taglines.map((t,i)=>`
+    <div class="tagline-option" onclick="this.classList.toggle('picked')">
+      <div class="tl-num">0${i+1}</div>
+      <div>
+        <div class="tl-text">"${t.text}"</div>
+        <div style="font-size:10px;color:var(--tx3);font-family:var(--ff-m);margin-top:2px">${t.style}</div>
+      </div>
+    </div>`).join('');
+
+  const formulas=d.headline_formulas.map(f=>`
+    <div style="margin-bottom:10px">
+      <div style="font-size:10px;font-family:var(--ff-m);color:var(--am);margin-bottom:3px">${f.formula}</div>
+      <div class="ogilvy-rule">${f.example}</div>
+    </div>`).join('');
+
+  const exCopy=d.example_copy.map(e=>`
+    <div style="padding:10px 14px;background:var(--s2);border-radius:var(--r);margin-bottom:6px">
+      <div style="font-size:9px;font-family:var(--ff-m);color:var(--tx3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">${e.context}</div>
+      <div style="font-size:13.5px;color:var(--tx)">${e.copy}</div>
+    </div>`).join('');
+
+  document.getElementById('out-voice').innerHTML=`
+    <div class="section-lbl">Taglines — click to shortlist</div>
+    ${taglines}
+    <div class="rule"></div>
+    <div class="two-col" style="margin-bottom:16px">
+      <div>
+        <div class="section-lbl">Headline Formulas (Ogilvy)</div>
+        ${formulas}
+      </div>
+      <div>
+        <div class="section-lbl">Tone — Do</div>
+        <ul class="kv-list" style="margin-bottom:14px">${d.dos.map(x=>`<li class="kv-item">${x}</li>`).join('')}</ul>
+        <div class="section-lbl">Tone — Don't</div>
+        <ul class="kv-list">${d.donts.map(x=>`<li class="kv-item" style="--am:var(--red)">${x}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <div class="section-lbl">Elevator Pitch</div>
+    <div class="quote-block" style="font-family:var(--ff-b);font-style:normal;font-size:14px;line-height:1.7">${d.elevator_pitch}</div>
+    <div class="section-lbl" style="margin-top:14px">Example Copy</div>
+    ${exCopy}
+  `;
+}
+
+async function runArch(){
+  const b=S.brief;
+  const strat=S.strategy;
+  const subs=document.getElementById('b-subbrands').value;
+  setLoading('btn-arch','out-arch','Modelling architecture...');
+  try{
+    const raw=await claude([{role:'user',content:`Create a brand architecture model for "${b.name}" (${b.industry}).
+Sub-brands / products: ${subs}
+Parent brand positioning: ${strat?.positioning||b.desc}
+Parent personality: ${strat?strat.personality.join(', '):b.personality}
+
+Apply Aaker's Brand Portfolio Strategy framework.
+
+Return JSON:
+{
+  "recommended_model": "Branded House|House of Brands|Hybrid Endorsed",
+  "rationale": "2-3 sentences explaining why this model fits this specific brand situation",
+  "sub_brands": [
+    {"name":"sub-brand name","role":"driver|endorser|linked","relationship":"How it relates to parent","visual_connection":"strong|moderate|minimal","notes":"specific guidance"}
+  ],
+  "naming_convention": "How sub-brand names should be structured e.g. [Parent] + [Descriptor]",
+  "visual_rules": ["Rule 1 for visual consistency","Rule 2","Rule 3"],
+  "equity_risk": "Key risk to monitor — when does this architecture create brand dilution?"
+}`}],SYS_ARCH,1200);
+    const d=xJson(raw);
+    if(!d)throw new Error('Parse failed');
+    S.arch=d;
+    renderArch(d);
+    done(11);
+  }catch(e){showErr('out-arch',e.message)}
+  unload('btn-arch');
+}
+
+function renderArch(d){
+  const modelColor=d.recommended_model==='Branded House'?'var(--grn)':d.recommended_model==='House of Brands'?'var(--am)':'#8B7CF6';
+  const subRows=d.sub_brands.map(s=>`
+    <div style="padding:12px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <strong style="color:var(--tx)">${s.name}</strong>
+        <span style="font-size:9px;background:var(--s3);color:var(--tx3);padding:2px 7px;border-radius:20px;font-family:var(--ff-m)">${s.role}</span>
+        <span style="font-size:9px;color:var(--tx3);font-family:var(--ff-m)">Visual: ${s.visual_connection}</span>
+      </div>
+      <div style="font-size:12px;color:var(--tx2)">${s.relationship}</div>
+      <div style="font-size:11px;color:var(--tx3);margin-top:3px">${s.notes}</div>
+    </div>`).join('');
+
+  document.getElementById('out-arch').innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--s2);border-radius:var(--r);margin-bottom:14px">
+      <div style="font-family:var(--ff-d);font-size:24px;color:${modelColor}">${d.recommended_model}</div>
+      <div style="font-size:13px;color:var(--tx2);flex:1">${d.rationale}</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="section-lbl">Sub-brands</div>
+        ${subRows}
+        <div class="section-lbl" style="margin-top:10px">Naming Convention</div>
+        <div class="ogilvy-rule">${d.naming_convention}</div>
+      </div>
+      <div>
+        <div class="section-lbl">Visual Rules</div>
+        <ul class="kv-list" style="margin-bottom:14px">${d.visual_rules.map(r=>`<li class="kv-item">${r}</li>`).join('')}</ul>
+        <div class="section-lbl">Equity Risk</div>
+        <div class="card" style="border-color:var(--red)">${d.equity_risk}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════
+// BRAND GUIDE BUILDER
+// ═══════════════════════════════
+function buildGuide(){
+  const b=S.brief;
+  if(!b.name){toast('Complete the Brief step first');return}
+  const assets=Array.from(document.querySelectorAll('.a-check.on')).map(el=>el.dataset.asset);
+
+  const stratSection=S.strategy?`
+    <div class="guide-section">
+      <div class="guide-section-title">02 — Brand Strategy</div>
+      <div class="quote-block">${S.strategy.positioning}</div>
+      <div class="two-col" style="margin-top:16px">
+        <div>
+          <div class="section-lbl">Brand Promise</div>
+          <p style="font-size:14px;color:var(--tx);line-height:1.7">${S.strategy.brand_promise}</p>
+          <div class="section-lbl" style="margin-top:12px">Brand Truth</div>
+          <p style="font-size:14px;color:var(--tx);line-height:1.7">${S.strategy.brand_truth}</p>
+        </div>
+        <div>
+          <div class="section-lbl">Personality</div>
+          <ul class="kv-list">${S.strategy.personality.map(p=>`<li class="kv-item">${p}</li>`).join('')}</ul>
+          <div class="section-lbl" style="margin-top:12px">Tone</div>
+          ${S.strategy.tone_pairs.map(t=>`<div style="font-size:13px;padding:4px 0;border-bottom:1px solid var(--bd);color:var(--tx)"><span style="color:var(--grn)">${t.we_are}</span> <span style="color:var(--tx3);font-size:11px">not</span> <span style="color:var(--red);text-decoration:line-through;opacity:0.6">${t.not}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>`:'';
+
+  const logoSection=S.logoSvg?`
+    <div class="guide-section">
+      <div class="guide-section-title">03 — Logo System</div>
+      ${S.logoRationale?`<p style="font-size:14px;color:var(--tx2);line-height:1.7;margin-bottom:18px">${S.logoRationale.concept}</p>`:''}
+      <div class="logo-previews" style="margin-bottom:16px">
+        <div class="logo-prev logo-dark"><div class="logo-prev-canvas">${S.logoSvg}</div><div class="logo-prev-label">Dark background</div></div>
+        <div class="logo-prev logo-light"><div class="logo-prev-canvas">${S.logoSvg}</div><div class="logo-prev-label">Light background</div></div>
+      </div>
+      <div class="card">
+        <div class="section-lbl">Logo Usage Rules</div>
+        <ul class="kv-list">
+          <li class="kv-item">Maintain clear space equal to the icon height on all sides</li>
+          <li class="kv-item">Never stretch, rotate, recolor, or add effects to the logo</li>
+          <li class="kv-item">Minimum digital size: 120px wide — minimum print size: 30mm</li>
+          <li class="kv-item">Use full lockup as primary; icon-only in constrained spaces (favicons, avatars)</li>
+          <li class="kv-item">The logo always appears in its approved colors or solid black/white — never tints or transparencies</li>
+        </ul>
+      </div>
+    </div>`:'';
+
+  const colorSection=S.colors?`
+    <div class="guide-section">
+      <div class="guide-section-title">04 — Color System</div>
+      <div class="palette-bar" style="margin-bottom:18px">${S.colors.palette.map(c=>`<div style="background:${c.hex}"></div>`).join('')}</div>
+      <div class="color-list" style="margin-bottom:16px">${S.colors.palette.map(c=>`
+        <div class="color-row">
+          <div class="swatch" style="background:${c.hex};width:52px;height:52px"></div>
+          <div><div class="color-name">${c.name} — ${c.role}</div><div class="color-codes">${c.hex} · rgb(${c.rgb}) · cmyk(${c.cmyk})</div><div class="color-role">${c.usage}</div></div>
+        </div>`).join('')}
+      </div>
+      <div class="interaction-demo"><div class="section-lbl" style="margin-bottom:6px">Color Interaction Note (Albers)</div>${S.colors.albers_note}</div>
+    </div>`:'';
+
+  const typeSection=S.typography?`
+    <div class="guide-section">
+      <div class="guide-section-title">05 — Typography & Grid</div>
+      ${S.typography.fonts.map(f=>`
+        <div style="padding:16px 0;border-bottom:1px solid var(--bd)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <span class="section-lbl" style="margin:0">${f.role}</span>
+            <span style="font-family:var(--ff-m);font-size:10px;color:var(--tx3)">${f.name} · ${f.weights}</span>
+          </div>
+          <div style="font-family:'${f.name}',serif;font-size:${f.role==='Display'?'36px':f.role==='Heading'?'24px':f.role==='Body'?'15px':'12px'};color:var(--tx);line-height:1.3">${f.sample}</div>
+          <div style="font-size:11px;color:var(--tx3);margin-top:6px">${f.usage}</div>
+        </div>`).join('')}
+      <div style="margin-top:16px">
+        <div class="section-lbl">Grid — ${S.typography.grid.base_unit} base unit · ${S.typography.grid.columns_desktop} columns · ${S.typography.grid.gutter} gutter</div>
+        <div style="font-size:12px;color:var(--tx2);line-height:1.7">${S.typography.grid.grid_rationale}</div>
+      </div>
+    </div>`:'';
+
+  const voiceSection=S.voice?`
+    <div class="guide-section">
+      <div class="guide-section-title">06 — Voice & Copy</div>
+      <div class="section-lbl">Taglines</div>
+      ${S.voice.taglines.map(t=>`<div style="font-family:var(--ff-d);font-size:20px;font-style:italic;padding:8px 0;border-bottom:1px solid var(--bd)">"${t.text}"</div>`).join('')}
+      <div class="two-col" style="margin-top:16px">
+        <div>
+          <div class="section-lbl">Do</div>
+          <ul class="kv-list">${S.voice.dos.map(x=>`<li class="kv-item">${x}</li>`).join('')}</ul>
+        </div>
+        <div>
+          <div class="section-lbl">Don't</div>
+          <ul class="kv-list">${S.voice.donts.map(x=>`<li class="kv-item">${x}</li>`).join('')}</ul>
+        </div>
+      </div>
+      <div class="section-lbl" style="margin-top:14px">Elevator Pitch</div>
+      <div class="quote-block" style="font-family:var(--ff-b);font-style:normal;font-size:14px;line-height:1.7">${S.voice.elevator_pitch}</div>
+    </div>`:'';
+
+  const tokenSection=S.tokens?`
+    <div class="guide-section">
+      <div class="guide-section-title">07 — UI Design Tokens</div>
+      <div class="section-lbl">Motion Principles</div>
+      ${S.tokens.motion_principles.map(p=>`<div class="motion-rule">${p}</div>`).join('')}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;margin-bottom:6px">
+        <div class="section-lbl" style="margin:0">CSS Token File</div>
+        <button class="btn btn-out btn-sm" onclick="cp(S.tokens.css_root)">⎘ Copy</button>
+      </div>
+      <div class="code-block" style="font-size:10px;max-height:300px;overflow-y:auto">${S.tokens.css_root.replace(/</g,'&lt;')}</div>
+    </div>`:'';
+
+  const assetsSection=assets.length?`
+    <div class="guide-section">
+      <div class="guide-section-title">08 — Asset Specifications</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        ${assets.map(a=>`<div style="padding:10px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);font-size:13px;color:var(--tx)">${a}</div>`).join('')}
+      </div>
+    </div>`:'';
+
+  const archSection=(S.arch&&S.archEnabled)?`
+    <div class="guide-section">
+      <div class="guide-section-title">09 — Brand Architecture</div>
+      <div style="font-size:18px;font-family:var(--ff-d);color:var(--am);margin-bottom:8px">${S.arch.recommended_model}</div>
+      <p style="font-size:14px;color:var(--tx2);line-height:1.7;margin-bottom:14px">${S.arch.rationale}</p>
+      <div class="section-lbl">Visual Rules</div>
+      <ul class="kv-list">${S.arch.visual_rules.map(r=>`<li class="kv-item">${r}</li>`).join('')}</ul>
+    </div>`:'';
+
+  document.getElementById('guide-out').innerHTML=`
+    <div class="guide-cover">
+      <div class="guide-cover-text">
+        <div class="guide-eyebrow">Brand Identity Guidelines</div>
+        <div class="guide-brand-name">${b.name}</div>
+        <div class="guide-industry">${b.industry||''}</div>
+        <div style="margin-top:20px;font-size:11px;font-family:var(--ff-m);color:var(--tx3)">Produced with Brand Studio · ${new Date().toLocaleDateString('en-AU',{year:'numeric',month:'long'})}</div>
+      </div>
+      ${S.logoSvg?`<div class="guide-cover-logo">${S.logoSvg}</div>`:''}
+    </div>
+    ${b.desc?`
+    <div class="guide-section">
+      <div class="guide-section-title">01 — About ${b.name}</div>
+      <p style="font-size:15px;color:var(--tx);line-height:1.75">${b.desc}</p>
+    </div>`:''}
+    ${stratSection}
+    ${logoSection}
+    ${colorSection}
+    ${typeSection}
+    ${voiceSection}
+    ${tokenSection}
+    ${assetsSection}
+    ${archSection}
+  `;
+  toast('Brand guide built');
+}
+
+// ═══════════════════════════════
+// UTILITIES
+// ═══════════════════════════════
+function setLoading(btnId, outId, msg){
+  const btn=document.getElementById(btnId);
+  if(btn)btn.disabled=true;
+  document.getElementById(outId).innerHTML=`<div style="display:flex;align-items:center;gap:10px;color:var(--tx2);font-size:13px">${msg} <div class="ld"><span></span><span></span><span></span></div></div>`;
+}
+function unload(btnId){const btn=document.getElementById(btnId);if(btn)btn.disabled=false}
+function showErr(outId,msg){document.getElementById(outId).innerHTML=`<div class="alert alert-err">Error: ${msg}</div>`}
+function done(n){document.querySelector(`.si[data-n="${n}"]`)?.classList.add('done')}
+function cp(t){navigator.clipboard.writeText(t).then(()=>toast('Copied'))}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+
+function dlSvg(){
+  if(!S.logoSvg)return;
+  const blob=new Blob([S.logoSvg],{type:'image/svg+xml'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`${(S.brief.name||'logo').toLowerCase().replace(/\s+/g,'-')}-logo.svg`;
+  a.click();URL.revokeObjectURL(url);toast('SVG downloaded');
+}
+function copySvg(){if(S.logoSvg)cp(S.logoSvg)}
+
+function loadFonts(names){
+  names=names.filter(Boolean);
+  if(!names.length)return;
+  const url=`https://fonts.googleapis.com/css2?${names.map(n=>`family=${encodeURIComponent(n)}:wght@300;400;500;600;700`).join('&')}&display=swap`;
+  if(!document.querySelector(`link[href="${url}"]`)){
+    const l=document.createElement('link');l.rel='stylesheet';l.href=url;document.head.appendChild(l);
+  }
+}
+
+function toggleArch(){
+  S.archEnabled=!S.archEnabled;
+  document.getElementById('tg-arch').classList.toggle('on',S.archEnabled);
+  document.getElementById('tl-arch').classList.toggle('on',S.archEnabled);
+  const si=document.querySelector('.si[data-n="11"]');
+  if(si)si.classList.toggle('optional',!S.archEnabled);
+  if(S.archEnabled)S.maxSteps=11;
+  else{S.maxSteps=10;if(S.step===11)goToStep(10)}
+  updateFoot();
+}
+
+// ═══════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════
+function goToStep(n){
+  if(n<1||n>11)return;
+  if(n===11&&!S.archEnabled)return;
+  document.querySelectorAll('.sp').forEach(p=>p.classList.remove('visible'));
+  document.getElementById(`step-${n}`).classList.add('visible');
+  S.step=n;
+  document.querySelectorAll('.si').forEach(el=>el.classList.remove('active'));
+  document.querySelector(`.si[data-n="${n}"]`)?.classList.add('active');
+  updateFoot();
+  document.getElementById('content').scrollTo(0,0);
+}
+
+function nextStep(){
+  if(S.step===1){
+    S.brief=brief();
+    document.getElementById('proj-name').textContent=S.brief.name||'New Brand';
+    if(!S.brief.name){toast('Enter a brand name first');return}
+  }
+  const next=S.step===10&&S.archEnabled?11:S.step+1;
+  if(next>11)return;
+  if(next===11&&!S.archEnabled)return;
+  goToStep(next);
+}
+
+function prevStep(){
+  const prev=S.step===11?10:S.step-1;
+  if(prev<1)return;
+  goToStep(prev);
+}
+
+function updateFoot(){
+  const total=S.archEnabled?11:10;
+  document.getElementById('foot-ind').textContent=`Step ${S.step} of ${total}`;
+  document.getElementById('btn-back').style.visibility=S.step>1?'visible':'hidden';
+  const isLast=(S.step===10&&!S.archEnabled)||(S.step===11);
+  document.getElementById('btn-next').textContent=isLast?'Done ✓':'Continue →';
+}
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+function initSidebar(){
+  document.getElementById('sb-steps').innerHTML=STEPS.map(s=>`
+    <div class="si${s.n===1?' active':''}${s.optional?' optional':''}" data-n="${s.n}" onclick="goToStep(${s.n})">
+      <div class="si-num">${s.n}</div>
+      <div>
+        <div class="si-label">${s.label}</div>
+        ${s.book?`<div class="si-book">${s.book}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function initTagInput(wrapId,inputId,hiddenId){
+  const wrap=document.getElementById(wrapId);
+  const inp=document.getElementById(inputId);
+  const hid=document.getElementById(hiddenId);
+  const tags=[];
+  function add(v){
+    v=v.trim();if(!v||tags.includes(v))return;
+    tags.push(v);
+    const t=document.createElement('div');t.className='tag';
+    t.innerHTML=`${v}<button>×</button>`;
+    t.querySelector('button').onclick=()=>{tags.splice(tags.indexOf(v),1);t.remove();hid.value=tags.join(', ')};
+    wrap.insertBefore(t,inp);hid.value=tags.join(', ');inp.value='';
+  }
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===','){e.preventDefault();add(inp.value)}});
+  inp.addEventListener('blur',()=>{if(inp.value.trim())add(inp.value)});
+  wrap.addEventListener('click',()=>inp.focus());
+}
+
+function initStyleCards(){
+  document.querySelectorAll('.sc').forEach(c=>{
+    c.onclick=()=>{
+      document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+      document.getElementById('b-vdir').value=c.dataset.v;
+    };
+  });
+}
+
+function initAssets(){
+  document.querySelectorAll('.a-check').forEach(el=>{
+    el.onclick=()=>{
+      el.classList.toggle('on');
+      el.querySelector('.a-box').textContent=el.classList.contains('on')?'✓':'';
+    };
+  });
+}
+
+function resetAll(){
+  if(!confirm('Reset everything and start over?'))return;
+  Object.assign(S,{step:1,brief:{},naming:null,strategy:null,logo:null,logoSvg:null,logoRationale:null,colors:null,typography:null,grid:null,tokens:null,voice:null,arch:null});
+  ['naming','strategy','logo','color','type','tokens','voice','arch'].forEach(id=>{
+    const el=document.getElementById(`out-${id}`);
+    if(el)el.innerHTML='<div class="gen-placeholder">Content will appear here.</div>';
+  });
+  document.getElementById('guide-out').innerHTML='<div style="padding:48px;text-align:center;color:var(--tx3);font-size:13px;">Complete the steps above and click "Build Brand Guide" to compile your identity document.</div>';
+  document.querySelectorAll('.si').forEach(el=>el.classList.remove('done'));
+  document.getElementById('btn-regen-logo').style.display='none';
+  document.getElementById('proj-name').textContent='New Brand';
+  goToStep(1);
+}
+
+// Boot
+initSidebar();
+initTagInput('tw-personality','ti-personality','b-personality');
+initTagInput('tw-competitors','ti-competitors','b-competitors');
+initTagInput('tw-subbrand','ti-subbrand','b-subbrands');
+initStyleCards();
+initAssets();
+updateFoot();
+</script>
+</body>
+</html>

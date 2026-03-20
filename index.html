@@ -738,6 +738,7 @@ select option{background:var(--s2)}
       <button class="btn btn-out btn-sm" onclick="resetAll()">↺ Reset</button>
       <button class="btn btn-out btn-sm" onclick="goToStep(10)">⊞ Guide</button>
       <button class="btn btn-out btn-sm" onclick="window.print()">⎙ Print</button>
+      <button class="btn btn-ghost btn-sm" onclick="openSettings()" title="API Key Settings">⚙</button>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)"/>
@@ -1118,6 +1119,26 @@ select option{background:var(--s2)}
 </div>
 
 <div id="toast"></div>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center">
+  <div style="background:var(--s1);border:1px solid var(--bd);border-radius:var(--rl);padding:28px 32px;max-width:500px;width:90%;box-shadow:0 20px 48px rgba(0,0,0,0.4)">
+    <div style="font-family:var(--ff-d);font-size:1.5rem;margin-bottom:4px;color:var(--tx)">API Key Settings</div>
+    <p style="font-size:0.875rem;color:var(--tx2);line-height:1.7;margin-bottom:16px">Keys are saved to <strong style="color:var(--tx)">.env</strong> on your machine. They never leave your server. You only need one provider.</p>
+    <div style="display:flex;flex-direction:column;gap:10px" id="settings-fields">
+      <div class="fld"><label>Anthropic (Claude) <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener" style="color:var(--am);font-weight:400;text-transform:none;letter-spacing:0">Get key →</a></label><input id="sk-anthropic" type="password" placeholder="sk-ant-..." style="font-family:var(--ff-m);font-size:0.875rem"/></div>
+      <div class="fld"><label>OpenAI (ChatGPT) <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" style="color:var(--am);font-weight:400;text-transform:none;letter-spacing:0">Get key →</a></label><input id="sk-openai" type="password" placeholder="sk-..." style="font-family:var(--ff-m);font-size:0.875rem"/></div>
+      <div class="fld"><label>Gemini <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--am);font-weight:400;text-transform:none;letter-spacing:0">Free key →</a></label><input id="sk-gemini" type="password" placeholder="AI..." style="font-family:var(--ff-m);font-size:0.875rem"/></div>
+      <div class="fld"><label>DeepSeek <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener" style="color:var(--am);font-weight:400;text-transform:none;letter-spacing:0">Very cheap →</a></label><input id="sk-deepseek" type="password" placeholder="sk-..." style="font-family:var(--ff-m);font-size:0.875rem"/></div>
+      <div class="fld"><label>Groq <a href="https://console.groq.com/keys" target="_blank" rel="noopener" style="color:var(--am);font-weight:400;text-transform:none;letter-spacing:0">Free key →</a></label><input id="sk-groq" type="password" placeholder="gsk_..." style="font-family:var(--ff-m);font-size:0.875rem"/></div>
+    </div>
+    <div id="settings-msg" style="display:none;font-size:0.875rem;margin-top:10px;padding:8px 12px;border-radius:var(--r)"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+      <button class="btn btn-out btn-sm" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-am" onclick="saveSettings()">Save Keys</button>
+    </div>
+  </div>
+</div>
 
 
 <script>
@@ -2555,6 +2576,53 @@ function dlSvg(){
   a.click();URL.revokeObjectURL(url);toast('SVG downloaded');
 }
 function copySvg(){if(S.logoSvg)cp(S.logoSvg)}
+
+// ═══════════════════════════════
+// SETTINGS
+// ═══════════════════════════════
+function openSettings(){
+  const modal=document.getElementById('settings-modal');
+  modal.style.display='flex';
+  document.getElementById('settings-msg').style.display='none';
+  // Load current key status (show masked hints, not actual keys)
+  fetch('/api/health').then(r=>r.json()).then(d=>{
+    const providers=['anthropic','openai','gemini','deepseek','groq'];
+    providers.forEach(p=>{
+      const inp=document.getElementById('sk-'+p);
+      if(inp){
+        inp.value='';
+        inp.placeholder=d.providers[p]?'••••••••  (key configured)':inp.placeholder;
+      }
+    });
+  }).catch(()=>{});
+}
+
+function closeSettings(){document.getElementById('settings-modal').style.display='none'}
+
+async function saveSettings(){
+  const keys={};
+  const providers=['anthropic','openai','gemini','deepseek','groq'];
+  let hasNew=false;
+  providers.forEach(p=>{
+    const val=document.getElementById('sk-'+p).value.trim();
+    if(val){keys[p]=val;hasNew=true}
+  });
+  if(!hasNew){toast('Enter at least one key');return}
+  const msg=document.getElementById('settings-msg');
+  try{
+    const r=await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({keys})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error?.message||'Failed to save');
+    msg.textContent='Keys saved — active immediately. No restart needed.';
+    msg.style.display='block';msg.style.background='rgba(106,174,136,0.15)';msg.style.color='var(--grn)';
+    // Refresh provider indicators
+    _proxyInfo=null;checkProxy();
+    setTimeout(closeSettings,1500);
+  }catch(e){
+    msg.textContent=e.message;
+    msg.style.display='block';msg.style.background='rgba(212,106,106,0.15)';msg.style.color='var(--red)';
+  }
+}
 
 function exportPdf(){
   const el=document.getElementById('guide-out');

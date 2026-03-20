@@ -39,6 +39,48 @@ const OPENAI_COMPAT = {
 app.use(express.json({ limit: '1mb' }));
 app.use(express.static('.'));
 
+// Save API keys — writes to .env file
+app.post('/api/settings', (req, res) => {
+  const { keys } = req.body;
+  if (!keys || typeof keys !== 'object') return res.status(400).json({ error: { message: 'Invalid request' } });
+
+  // Read existing .env or start fresh
+  const fs = require('fs');
+  const path = require('path');
+  const envPath = path.join(__dirname, '.env');
+  let env = {};
+  try {
+    const existing = fs.readFileSync(envPath, 'utf8');
+    existing.split('\n').forEach(line => {
+      const match = line.match(/^([^#=]+)=(.*)$/);
+      if (match) env[match[1].trim()] = match[2].trim();
+    });
+  } catch {}
+
+  // Update with new keys (only non-empty values)
+  const keyMap = { anthropic: 'ANTHROPIC_API_KEY', openai: 'OPENAI_API_KEY', gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY', groq: 'GROQ_API_KEY' };
+  for (const [provider, envName] of Object.entries(keyMap)) {
+    if (keys[provider] !== undefined) {
+      if (keys[provider]) env[envName] = keys[provider];
+      else delete env[envName];
+    }
+  }
+  if (!env.PORT) env.PORT = '3000';
+
+  // Write .env
+  const content = Object.entries(env).map(([k, v]) => `${k}=${v}`).join('\n') + '\n';
+  try {
+    fs.writeFileSync(envPath, content);
+    // Reload keys in memory
+    for (const [provider, envName] of Object.entries(keyMap)) {
+      KEYS[provider] = env[envName] || '';
+    }
+    res.json({ ok: true, message: 'Keys saved. Changes are active immediately.' });
+  } catch (err) {
+    res.status(500).json({ error: { message: 'Could not write .env: ' + err.message } });
+  }
+});
+
 // Health check — tells the client which providers are available
 app.get('/api/health', (_req, res) => {
   res.json({

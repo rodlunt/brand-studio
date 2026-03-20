@@ -15,9 +15,12 @@ npm start                   # http://localhost:3000
 ```
 
 You need at least one API key in `.env`. Get one from:
+
 - **Claude** — https://console.anthropic.com/settings/keys
 - **ChatGPT** — https://platform.openai.com/api-keys
-- **Gemini** — https://aistudio.google.com/apikey (free)
+- **Gemini** — https://aistudio.google.com/apikey (free tier)
+- **DeepSeek** — https://platform.deepseek.com/api_keys (very cheap)
+- **Groq** — https://console.groq.com/keys (free tier, fastest)
 
 ---
 
@@ -44,7 +47,13 @@ Work through 10 steps to produce a complete brand identity guide:
 ## Features
 
 ### Multi-Provider AI
-Switch between Claude, ChatGPT, and Gemini from the toolbar. Choose model tier (cheap/mid/pricey) per provider. API keys stay in `.env` — never touch the browser.
+Switch between 5 providers from the toolbar. Choose model tier per provider. API keys stay in `.env` — never touch the browser.
+
+- **Claude** (Anthropic) — Haiku, Sonnet, Opus
+- **ChatGPT** (OpenAI) — 4.1 Nano through 4.1
+- **Gemini** (Google) — 2.0 Flash through 2.5 Pro (free tier available)
+- **DeepSeek** — V3 Chat and R1 Reasoner (~90% cheaper than Claude)
+- **Groq** — Llama 3.1/3.3/4, Qwen3 (free tier, ultra-fast inference)
 
 ### Project Management
 - **Save/Load** — named projects in localStorage
@@ -97,8 +106,10 @@ brand-studio/
 ANTHROPIC_API_KEY=sk-ant-...
 OPENAI_API_KEY=sk-...
 GEMINI_API_KEY=AI...
+DEEPSEEK_API_KEY=sk-...
+GROQ_API_KEY=gsk_...
 
-# Default provider shown in UI (anthropic | openai | gemini)
+# Default provider shown in UI (anthropic | openai | gemini | deepseek | groq)
 DEFAULT_PROVIDER=anthropic
 
 # Server port
@@ -107,11 +118,13 @@ PORT=3000
 
 ### Models per provider
 
-| Provider | Cheap | Mid | Pricey |
-|----------|-------|-----|--------|
-| Claude | Haiku 4.5 | Sonnet 4 | Opus 4 |
-| ChatGPT | 4.1 Nano | 4.1 Mini / 4o Mini | 4o / 4.1 |
-| Gemini | 2.0 Flash | 2.5 Flash | 2.5 Pro |
+| Provider | Models | Cost |
+|----------|--------|------|
+| Claude | Haiku 4.5 / Sonnet 4 / Opus 4 | cheap → pricey |
+| ChatGPT | 4.1 Nano / 4.1 Mini / 4o Mini / 4o / 4.1 | cheap → pricey |
+| Gemini | 2.0 Flash / 2.5 Flash / 2.5 Pro | cheap → pricey |
+| DeepSeek | V3 Chat / R1 Reasoner | cheap / mid |
+| Groq | Llama 3.1 8B / 3.3 70B / 4 Scout / Qwen3 32B | free |
 
 ---
 

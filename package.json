@@ -1,0 +1,14 @@
+{
+  "name": "brand-studio",
+  "version": "1.0.0",
+  "description": "AI-powered brand identity tool — powered by Claude",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}

@@ -4,26 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brand Studio</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
   --bg:#0C0B0A;
-  --s1:#131210;
-  --s2:#1A1917;
-  --s3:#232120;
-  --bd:#323028;
-  --bd2:#3E3C38;
-  --tx:#E8E2D9;
-  --tx2:#A09890;
-  --tx3:#635E58;
-  --am:#C8A45A;
-  --am2:#E2C07E;
-  --am3:#8C6E35;
-  --am4:rgba(200,164,90,0.1);
-  --red:#CC5F5F;
-  --grn:#5B9E7A;
+  --s1:#141311;
+  --s2:#1C1B18;
+  --s3:#262523;
+  --bd:#363430;
+  --bd2:#45433E;
+  --tx:#F0ECE4;
+  --tx2:#B8B0A4;
+  --tx3:#7A756E;
+  --am:#D4AE5E;
+  --am2:#E8C882;
+  --am3:#9A7A3C;
+  --am4:rgba(212,174,94,0.12);
+  --red:#D46A6A;
+  --grn:#6AAE88;
   --r:6px;
   --rl:11px;
   --ff-d:'Fraunces',Georgia,serif;
@@ -31,7 +34,9 @@
   --ff-m:'JetBrains Mono',monospace;
 }
 
-html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:var(--bg);color:var(--tx);font-size:15px;line-height:1.7}
+html,body{height:100%;margin:0}
+html{font-size:16px}
+body{overflow:hidden;font-family:var(--ff-b);background:var(--bg);color:var(--tx);font-size:1.25rem;line-height:1.8}
 
 /* LAYOUT */
 #app{display:flex;height:100%}
@@ -51,13 +56,13 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:var(--b
   flex-shrink:0;
 }
 .sb-eyebrow{
-  font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;
   color:var(--am);font-weight:700;margin-bottom:8px;
   font-family:var(--ff-m);
 }
 .sb-title{
   font-family:var(--ff-d);
-  font-size:26px;font-weight:500;
+  font-size:1.875rem;font-weight:500;
   line-height:1.1;color:var(--tx);
 }
 
@@ -78,20 +83,22 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:var(--b
 .si.optional.active{opacity:1}
 
 .si-num{
-  width:20px;height:20px;border-radius:50%;
-  border:1px solid currentColor;
+  width:24px;height:24px;border-radius:50%;
+  border:1.5px solid currentColor;
   display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:700;flex-shrink:0;
+  font-size:0.75rem;font-weight:700;flex-shrink:0;
   font-family:var(--ff-m);transition:all 0.15s;
+  line-height:1;
 }
 .si.done .si-num{background:var(--am3);border-color:var(--am3);color:var(--bg)}
 .si.active .si-num{background:var(--am);border-color:var(--am);color:var(--bg)}
-.si-label{font-size:13px;font-weight:700;letter-spacing:0.01em}
-.si-book{font-size:10px;color:var(--tx3);margin-top:2px;font-family:var(--ff-m);line-height:1.4}
+.si-label{font-size:1rem;font-weight:700;letter-spacing:0.01em}
+.si-book{font-size:0.75rem;color:var(--tx3);margin-top:2px;font-family:var(--ff-m);line-height:1.4}
+.si-book a:hover{color:var(--am)!important;text-decoration:underline!important}
 
 .sb-footer{
   padding:14px 16px;border-top:1px solid var(--bd);
-  font-size:11px;color:var(--tx3);line-height:1.6;flex-shrink:0;
+  font-size:0.875rem;color:var(--tx3);line-height:1.6;flex-shrink:0;
 }
 
 /* MAIN */
@@ -102,7 +109,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:var(--b
   display:flex;align-items:center;justify-content:space-between;
   padding:0 28px;flex-shrink:0;
 }
-.tb-project{font-size:13px;color:var(--tx2);font-weight:400}
+.tb-project{font-size:1rem;color:var(--tx2);font-weight:400}
 .tb-project strong{color:var(--tx);margin-left:6px;font-weight:700}
 .tb-actions{display:flex;gap:6px}
 
@@ -117,17 +124,19 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:var(--b
 
 .sp-head{margin-bottom:32px}
 .sp-head h2{
-  font-family:var(--ff-d);font-size:34px;font-weight:500;
+  font-family:var(--ff-d);font-size:2.25rem;font-weight:500;
   letter-spacing:0.01em;margin-bottom:8px;line-height:1.15;
 }
-.sp-head p{color:var(--tx2);font-size:15px;line-height:1.7;max-width:580px;font-weight:400}
+.sp-head p{color:var(--tx2);font-size:1.125rem;line-height:1.8;max-width:620px;font-weight:400}
 .sp-head .book-ref{
-  display:inline-flex;align-items:center;gap:6px;
+  display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;
   margin-top:10px;padding:5px 12px;
   background:var(--am4);border:1px solid rgba(200,164,90,0.2);
-  border-radius:20px;font-size:11px;font-family:var(--ff-m);
+  border-radius:20px;font-size:0.875rem;font-family:var(--ff-m);
   color:var(--am);letter-spacing:0.04em;font-weight:500;
 }
+.sp-head .book-ref a{color:var(--am);text-decoration:none;transition:color 0.15s}
+.sp-head .book-ref a:hover{color:var(--am2);text-decoration:underline}
 
 /* FORMS */
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
@@ -135,11 +144,11 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:var(--b
 .fg.tri{grid-template-columns:1fr 1fr 1fr}
 
 .fld{display:flex;flex-direction:column;gap:5px}
-.fld label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--tx2);font-family:var(--ff-m)}
+.fld label{font-size:0.875rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--tx2);font-family:var(--ff-m)}
 
 input,textarea,select{
   background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);
-  color:var(--tx);font-family:var(--ff-b);font-size:15px;
+  color:var(--tx);font-family:var(--ff-b);font-size:1.125rem;
   padding:10px 13px;width:100%;transition:border-color 0.15s;outline:none;resize:vertical;
   line-height:1.5;
 }
@@ -160,7 +169,7 @@ select option{background:var(--s2)}
   background:var(--tx2);transition:all 0.2s;
 }
 .toggle.on::after{left:18px;background:var(--tx)}
-.toggle-label{font-size:13px;color:var(--tx2);cursor:pointer}
+.toggle-label{font-size:1rem;color:var(--tx2);cursor:pointer}
 .toggle-label.on{color:var(--tx)}
 
 /* TAG INPUT */
@@ -172,12 +181,12 @@ select option{background:var(--s2)}
 .tag-wrap:focus-within{border-color:var(--am3)}
 .tag{
   background:var(--am4);color:var(--am2);
-  padding:2px 7px;border-radius:20px;font-size:11px;
+  padding:2px 7px;border-radius:20px;font-size:0.875rem;
   display:flex;align-items:center;gap:4px;font-weight:500;
 }
-.tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:13px;line-height:1;padding:0;opacity:0.5}
+.tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;line-height:1;padding:0;opacity:0.5}
 .tag button:hover{opacity:1}
-.tag-wrap input{border:none;background:none;padding:0;width:auto;min-width:80px;flex:1;font-size:13px;color:var(--tx)}
+.tag-wrap input{border:none;background:none;padding:0;width:auto;min-width:80px;flex:1;font-size:1rem;color:var(--tx)}
 .tag-wrap input:focus{border:none;box-shadow:none}
 
 /* STYLE CARDS */
@@ -185,18 +194,18 @@ select option{background:var(--s2)}
 .sc{
   border:1px solid var(--bd);border-radius:var(--r);
   padding:10px 6px;text-align:center;cursor:pointer;
-  transition:all 0.15s;font-size:11px;font-weight:600;
+  transition:all 0.15s;font-size:0.875rem;font-weight:600;
   color:var(--tx2);user-select:none;
 }
 .sc:hover{border-color:var(--bd2);color:var(--tx)}
 .sc.sel{border-color:var(--am);background:var(--am4);color:var(--am)}
-.sc-icon{font-size:18px;margin-bottom:4px}
+.sc-icon{font-size:1.25rem;margin-bottom:4px}
 
 /* BUTTONS */
 .btn{
   display:inline-flex;align-items:center;gap:6px;
   padding:9px 18px;border-radius:var(--r);
-  font-family:var(--ff-b);font-size:13px;font-weight:700;
+  font-family:var(--ff-b);font-size:1rem;font-weight:700;
   cursor:pointer;transition:all 0.15s;border:none;
   letter-spacing:0.02em;white-space:nowrap;
 }
@@ -206,7 +215,7 @@ select option{background:var(--s2)}
 .btn-out:hover{border-color:var(--tx2);color:var(--tx)}
 .btn-ghost{background:transparent;color:var(--tx2);padding:9px 10px}
 .btn-ghost:hover{color:var(--tx);background:var(--s2)}
-.btn-sm{padding:6px 13px;font-size:12px}
+.btn-sm{padding:6px 13px;font-size:0.875rem}
 .btn:disabled{opacity:0.4;cursor:not-allowed}
 
 /* GEN AREA */
@@ -220,8 +229,8 @@ select option{background:var(--s2)}
   flex-wrap:wrap;gap:10px;
 }
 .gen-bar-info{}
-.gen-bar-title{font-size:14px;font-weight:700;margin-bottom:3px}
-.gen-bar-sub{font-size:11px;color:var(--tx3);font-family:var(--ff-m);line-height:1.5}
+.gen-bar-title{font-size:1rem;font-weight:700;margin-bottom:3px}
+.gen-bar-sub{font-size:0.875rem;color:var(--tx3);font-family:var(--ff-m);line-height:1.5}
 .gen-body{padding:20px;min-height:60px}
 
 /* LOADING */
@@ -231,18 +240,18 @@ select option{background:var(--s2)}
 .ld span:nth-child(3){animation-delay:0.4s}
 @keyframes ldpulse{0%,80%,100%{opacity:0.15}40%{opacity:1}}
 
-.gen-placeholder{color:var(--tx3);font-size:13px}
+.gen-placeholder{color:var(--tx3);font-size:1rem}
 
 /* OUTPUT COMPONENTS */
 .section-lbl{
-  font-size:11px;font-weight:700;letter-spacing:0.1em;
+  font-size:0.875rem;font-weight:700;letter-spacing:0.1em;
   text-transform:uppercase;color:var(--am);
   margin-bottom:8px;font-family:var(--ff-m);
 }
 .rule{height:1px;background:var(--bd);margin:20px 0}
 
 .quote-block{
-  font-family:var(--ff-d);font-size:20px;font-style:italic;
+  font-family:var(--ff-d);font-size:1.25rem;font-style:italic;
   color:var(--tx);line-height:1.55;padding:16px 20px;
   border-left:3px solid var(--am);background:var(--s2);
   border-radius:0 var(--r) var(--r) 0;margin-bottom:12px;
@@ -251,7 +260,7 @@ select option{background:var(--s2)}
 .kv-list{display:flex;flex-direction:column;gap:7px}
 .kv-item{
   display:flex;align-items:flex-start;gap:10px;
-  font-size:14.5px;line-height:1.65;color:var(--tx);font-weight:400;
+  font-size:1rem;line-height:1.65;color:var(--tx);font-weight:400;
 }
 .kv-item::before{content:'—';color:var(--am);flex-shrink:0;margin-top:3px;font-weight:700}
 
@@ -276,11 +285,11 @@ select option{background:var(--s2)}
 .crit.pass{border-color:var(--grn)}
 .crit.fail{border-color:var(--red)}
 .crit.warn{border-color:var(--am)}
-.crit-name{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;font-family:var(--ff-m)}
+.crit-name{font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;font-family:var(--ff-m)}
 .crit.pass .crit-name{color:var(--grn)}
 .crit.fail .crit-name{color:var(--red)}
 .crit.warn .crit-name{color:var(--am)}
-.crit-text{font-size:12px;color:var(--tx2);line-height:1.5}
+.crit-text{font-size:0.875rem;color:var(--tx2);line-height:1.5}
 
 /* COLOR SPECIFIC */
 .palette-bar{height:52px;display:flex;border-radius:var(--r);overflow:hidden;margin-bottom:16px;border:1px solid var(--bd)}
@@ -289,15 +298,43 @@ select option{background:var(--s2)}
 .color-row{display:flex;align-items:center;gap:12px}
 .swatch{width:48px;height:48px;border-radius:var(--r);flex-shrink:0;border:1px solid rgba(255,255,255,0.06)}
 .color-info{}
-.color-name{font-size:13px;font-weight:600;color:var(--tx)}
-.color-codes{font-family:var(--ff-m);font-size:11px;color:var(--tx2);cursor:pointer}
+.color-name{font-size:1rem;font-weight:600;color:var(--tx)}
+.color-codes{font-family:var(--ff-m);font-size:0.875rem;color:var(--tx2);cursor:pointer}
 .color-codes:hover{color:var(--am)}
-.color-role{font-size:11px;color:var(--tx3);margin-top:1px}
+.color-role{font-size:0.875rem;color:var(--tx3);margin-top:1px}
 
 .interaction-demo{
   background:var(--s3);border-radius:var(--rl);padding:16px;
-  margin-top:12px;font-size:12px;color:var(--tx2);line-height:1.7;
+  margin-top:12px;font-size:0.875rem;color:var(--tx2);line-height:1.7;
 }
+
+/* LOGO EXPLORE */
+.logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.logo-card{
+  background:var(--s2);border:2px solid var(--bd);border-radius:var(--rl);
+  overflow:hidden;transition:border-color 0.2s;position:relative;
+}
+.logo-card.liked{border-color:var(--grn)}
+.logo-card.disliked{border-color:var(--red);opacity:0.45}
+.logo-card-canvas{
+  min-height:140px;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:#141416;
+}
+.logo-card-canvas svg{max-width:100%;max-height:110px}
+.logo-card-info{padding:10px 12px;border-top:1px solid var(--bd);font-size:0.75rem;color:var(--tx2);line-height:1.5}
+.logo-card-dir{font-family:var(--ff-m);font-size:0.75rem;color:var(--tx3);margin-bottom:4px}
+.logo-card-actions{
+  display:flex;gap:4px;padding:8px 12px;border-top:1px solid var(--bd);
+}
+.logo-card-actions button{
+  flex:1;background:none;border:1px solid var(--bd);border-radius:var(--r);
+  padding:6px;cursor:pointer;font-size:0.875rem;transition:all 0.15s;color:var(--tx2);
+}
+.logo-card-actions button:hover{border-color:var(--bd2);color:var(--tx)}
+.logo-card-actions .lk-btn.active{background:rgba(106,174,136,0.15);border-color:var(--grn);color:var(--grn)}
+.logo-card-actions .dk-btn.active{background:rgba(212,106,106,0.15);border-color:var(--red);color:var(--red)}
+.logo-card-actions .use-btn{color:var(--am)}
+.logo-card-actions .use-btn:hover{border-color:var(--am);background:var(--am4)}
 
 /* LOGO SPECIFIC */
 .logo-previews{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
@@ -311,9 +348,11 @@ select option{background:var(--s2)}
   display:flex;align-items:center;justify-content:center;
   padding:24px;
 }
-.logo-prev-canvas svg{max-width:100%;max-height:130px}
+.logo-prev-canvas svg,.logo-prev-canvas img{max-width:100%;max-height:130px;object-fit:contain}
+.logo-dark .logo-prev-canvas img{background:#141416;border-radius:4px}
+.logo-light .logo-prev-canvas img{background:#F4F1EC;border-radius:4px}
 .logo-prev-label{
-  font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+  font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;
   color:var(--tx3);padding:6px;font-family:var(--ff-m);
   width:100%;text-align:center;background:var(--s2);
   border-top:1px solid var(--bd);
@@ -331,23 +370,23 @@ select option{background:var(--s2)}
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:12px;
 }
-.type-role{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--am);font-family:var(--ff-m)}
-.type-family{font-size:11px;color:var(--tx3);font-family:var(--ff-m)}
+.type-role{font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--am);font-family:var(--ff-m)}
+.type-family{font-size:0.875rem;color:var(--tx3);font-family:var(--ff-m)}
 .type-sample{color:var(--tx);line-height:1.3}
-.type-usage{font-size:11px;color:var(--tx3);margin-top:8px;line-height:1.5}
+.type-usage{font-size:0.875rem;color:var(--tx3);margin-top:8px;line-height:1.5}
 
 .grid-visual{
   margin:12px 0;display:grid;gap:1px;
   background:var(--bd);border-radius:var(--r);overflow:hidden;border:1px solid var(--bd);
 }
-.grid-cell{background:var(--s2);height:32px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--tx3)}
+.grid-cell{background:var(--s2);height:32px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:var(--tx3)}
 
 /* TOKEN SPECIFIC */
 .token-section{margin-bottom:20px}
 .token-grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .token-chip{
   padding:6px 12px;background:var(--s2);border:1px solid var(--bd);
-  border-radius:var(--r);font-family:var(--ff-m);font-size:11px;
+  border-radius:var(--r);font-family:var(--ff-m);font-size:0.875rem;
   color:var(--tx2);
 }
 .shadow-demo{
@@ -356,20 +395,20 @@ select option{background:var(--s2)}
 .shadow-item{
   width:64px;height:64px;background:var(--s2);border-radius:var(--r);
   display:flex;align-items:center;justify-content:center;
-  font-size:9px;color:var(--tx3);font-family:var(--ff-m);
+  font-size:0.75rem;color:var(--tx3);font-family:var(--ff-m);
 }
 .motion-rule{
   display:flex;align-items:flex-start;gap:8px;
   padding:10px 12px;background:var(--s2);border:1px solid var(--bd);
   border-radius:var(--r);margin-bottom:6px;
-  font-size:12.5px;color:var(--tx);line-height:1.6;
+  font-size:0.875rem;color:var(--tx);line-height:1.6;
 }
-.motion-rule::before{content:'⏱';flex-shrink:0;font-size:14px}
+.motion-rule::before{content:'⏱';flex-shrink:0;font-size:1rem}
 
 .code-block{
   background:var(--bg);border:1px solid var(--bd);
   border-radius:var(--r);padding:16px;
-  font-family:var(--ff-m);font-size:11px;color:var(--tx2);
+  font-family:var(--ff-m);font-size:0.875rem;color:var(--tx2);
   line-height:1.8;overflow-x:auto;white-space:pre;margin-top:8px;
 }
 .code-block .var{color:var(--am)}
@@ -384,12 +423,12 @@ select option{background:var(--s2)}
 }
 .tagline-option:hover{border-color:var(--bd2)}
 .tagline-option.picked{border-color:var(--am);background:var(--am4)}
-.tl-num{font-family:var(--ff-m);font-size:9px;color:var(--tx3);flex-shrink:0;width:20px}
-.tl-text{font-family:var(--ff-d);font-size:18px;font-style:italic;color:var(--tx)}
+.tl-num{font-family:var(--ff-m);font-size:0.75rem;color:var(--tx3);flex-shrink:0;width:20px}
+.tl-text{font-family:var(--ff-d);font-size:1.25rem;font-style:italic;color:var(--tx)}
 .ogilvy-rule{
   padding:10px 14px 10px 12px;background:var(--s2);border:1px solid var(--bd);
   border-left:2px solid var(--am);border-radius:0 var(--r) var(--r) 0;
-  margin-bottom:6px;font-size:12.5px;color:var(--tx);line-height:1.6;
+  margin-bottom:6px;font-size:0.875rem;color:var(--tx);line-height:1.6;
 }
 
 /* ASSET GRID */
@@ -406,11 +445,11 @@ select option{background:var(--s2)}
   width:17px;height:17px;border-radius:3px;
   border:1px solid var(--bd2);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:10px;transition:all 0.15s;
+  font-size:0.75rem;transition:all 0.15s;
 }
 .a-check.on .a-box{background:var(--am);border-color:var(--am);color:var(--bg)}
-.a-name{font-size:12.5px;font-weight:600;color:var(--tx)}
-.a-desc{font-size:10px;color:var(--tx3)}
+.a-name{font-size:0.875rem;font-weight:600;color:var(--tx)}
+.a-desc{font-size:0.75rem;color:var(--tx3)}
 
 /* BRAND GUIDE */
 #guide-out{
@@ -424,31 +463,31 @@ select option{background:var(--s2)}
   display:flex;align-items:center;justify-content:space-between;gap:24px;
 }
 .guide-cover-text{}
-.guide-eyebrow{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--am);margin-bottom:12px;font-family:var(--ff-m)}
-.guide-brand-name{font-family:var(--ff-d);font-size:52px;font-weight:400;line-height:1.05;color:var(--tx)}
-.guide-industry{color:var(--tx3);margin-top:8px;font-size:14px}
-.guide-cover-logo{max-width:220px;flex-shrink:0}
-.guide-cover-logo svg{max-width:100%;max-height:120px}
+.guide-eyebrow{font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--am);margin-bottom:12px;font-family:var(--ff-m)}
+.guide-brand-name{font-family:var(--ff-d);font-size:3.375rem;font-weight:400;line-height:1.05;color:var(--tx)}
+.guide-industry{color:var(--tx3);margin-top:8px;font-size:1rem}
+.guide-cover-logo{max-width:320px;flex-shrink:0}
+.guide-cover-logo svg,.guide-cover-logo img{max-width:100%;height:auto;object-fit:contain}
 
 .guide-section{padding:36px 44px;border-bottom:1px solid var(--bd)}
 .guide-section:last-child{border-bottom:none}
 .guide-section-title{
-  font-size:11px;font-weight:700;letter-spacing:0.12em;
+  font-size:0.875rem;font-weight:700;letter-spacing:0.12em;
   text-transform:uppercase;color:var(--am);
   margin-bottom:24px;padding-bottom:12px;
   border-bottom:1px solid var(--bd);font-family:var(--ff-m);
 }
-.guide-h3{font-family:var(--ff-d);font-size:24px;font-weight:500;margin-bottom:10px}
+.guide-h3{font-family:var(--ff-d);font-size:1.5rem;font-weight:500;margin-bottom:10px}
 
 /* NAV FOOTER */
 #foot{
   border-top:1px solid var(--bd);padding:13px 44px;
   display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
 }
-.foot-ind{font-family:var(--ff-m);font-size:12px;color:var(--tx3);font-weight:500}
+.foot-ind{font-family:var(--ff-m);font-size:0.875rem;color:var(--tx3);font-weight:500}
 
 /* ALERTS */
-.alert{padding:11px 14px;border-radius:var(--r);font-size:13.5px;margin-bottom:12px;line-height:1.6}
+.alert{padding:11px 14px;border-radius:var(--r);font-size:1rem;margin-bottom:12px;line-height:1.6}
 .alert-err{background:rgba(217,95,95,0.08);border:1px solid rgba(217,95,95,0.25);color:#E08888}
 .alert-info{background:var(--am4);border:1px solid rgba(200,164,90,0.2);color:var(--tx2)}
 
@@ -456,21 +495,204 @@ select option{background:var(--s2)}
 #toast{
   position:fixed;bottom:20px;right:20px;z-index:999;
   background:var(--s3);border:1px solid var(--bd2);color:var(--tx);
-  padding:9px 14px;border-radius:var(--r);font-size:12px;
+  padding:9px 14px;border-radius:var(--r);font-size:0.875rem;
   opacity:0;transform:translateY(6px);transition:all 0.2s;pointer-events:none;
 }
 #toast.show{opacity:1;transform:translateY(0)}
 
+/* PROJECT MENU */
+.proj-trigger{cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:var(--r);transition:background 0.15s}
+.proj-trigger:hover{background:var(--s2)}
+.proj-trigger::after{content:'▾';font-size:0.75rem;color:var(--tx3);margin-left:2px}
+.proj-menu{
+  position:absolute;top:44px;left:0;z-index:500;
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--rl);
+  width:300px;box-shadow:0 12px 32px rgba(0,0,0,0.4);
+  display:none;
+}
+.proj-menu.open{display:block}
+.proj-menu-hd{padding:12px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.proj-menu-hd span{font-size:0.875rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--tx3);font-family:var(--ff-m)}
+.proj-list{max-height:220px;overflow-y:auto;padding:4px}
+.proj-list::-webkit-scrollbar{width:3px}
+.proj-list::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+.proj-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 10px;border-radius:var(--r);cursor:pointer;transition:background 0.1s;
+}
+.proj-item:hover{background:var(--s2)}
+.proj-item.active{background:var(--am4);color:var(--am)}
+.proj-item-name{font-size:1rem;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.proj-item-date{font-size:0.75rem;color:var(--tx3);font-family:var(--ff-m);margin:0 8px;flex-shrink:0}
+.proj-item-del{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem;padding:0 2px;opacity:0;transition:opacity 0.1s}
+.proj-item:hover .proj-item-del{opacity:1}
+.proj-item-del:hover{color:var(--red)}
+.proj-menu-acts{padding:8px;border-top:1px solid var(--bd);display:flex;gap:4px;flex-wrap:wrap}
+.proj-empty{padding:16px;text-align:center;font-size:0.875rem;color:var(--tx3)}
+
 /* PRINT */
 @media print{
-  #sidebar,#topbar,#foot{display:none!important}
-  #main{overflow:visible}
-  #content{overflow:visible;padding:0}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+
+  /* Base: white background, dark text, no page breaks */
+  html{font-size:11px!important}
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#1a1a1a!important}
+  #app{display:block!important;height:auto!important}
+
+  /* Hide all UI chrome */
+  #sidebar,#topbar,#foot,#toast,.btn,.alert-info,.proj-menu,.toggle-row,
+  .sp-head,.gen-area,.gen-bar,.fg,.book-ref,#logo-actions,#logo-refine-area,
+  #logo-upload-area,.logo-card-actions,.tb-actions,.sb-footer,
+  [style*="position:sticky"]{display:none!important}
+
+  #main{overflow:visible!important;display:block!important}
+  #content{overflow:visible!important;padding:0!important;height:auto!important}
+
+  /* Only show the brand guide */
   .sp{display:none!important}
   #step-10{display:block!important}
-  #guide-out{border:none}
-  .guide-cover{background:white;color:black}
+  #step-10 .sp-head{display:none!important}
+
+  /* Guide container */
+  #guide-out{border:none!important;box-shadow:none!important;background:#fff!important}
+
+  /* Cover — light theme */
+  .guide-cover{
+    background:linear-gradient(135deg,#f8f8f6 0%,#eeeee8 100%)!important;
+    color:#1a1a1a!important;border-bottom:2px solid #ddd!important;
+    padding:36px 40px!important;
+  }
+  .guide-brand-name{color:#1a1a1a!important}
+  .guide-eyebrow{color:#8B7340!important}
+  .guide-industry{color:#666!important}
+  .guide-cover-logo{background:#fff!important;border-radius:6px!important;padding:12px!important}
+  .guide-cover-logo img,.guide-cover-logo svg{max-height:none!important;height:auto!important;max-width:100%!important}
+
+  /* Sections — light backgrounds, no page breaks */
+  .guide-section{
+    padding:24px 32px!important;border-bottom:1px solid #ddd!important;
+    background:#fff!important;page-break-inside:auto!important;
+  }
+  .guide-section-title{color:#8B7340!important;border-bottom-color:#ddd!important}
+  .guide-h3{color:#1a1a1a!important}
+
+  /* Typography */
+  .section-lbl{color:#8B7340!important}
+  p,li,.kv-item,.color-role,.type-usage,.crit-text,.ogilvy-rule,.motion-rule{color:#333!important}
+  .kv-item::before{color:#8B7340!important}
+  strong{color:#1a1a1a!important}
+
+  /* Cards and blocks */
+  .card{border:1px solid #ddd!important;background:#fafafa!important;color:#333!important}
+  .quote-block{border-left:3px solid #8B7340!important;background:#f8f7f4!important;color:#1a1a1a!important}
+  .interaction-demo{background:#f5f5f3!important;color:#333!important}
+
+  /* Colors */
+  .palette-bar{border:1px solid #ddd!important}
+  .swatch{border:1px solid #ddd!important}
+  .color-name{color:#1a1a1a!important}
+  .color-codes{color:#555!important}
+  .color-role{color:#777!important}
+
+  /* Logo previews */
+  .logo-previews{gap:8px!important}
+  .logo-prev-canvas{padding:16px!important}
+  .logo-dark .logo-prev-canvas{background:#1a1a1a!important}
+  .logo-light .logo-prev-canvas{background:#f4f1ec!important}
+  .logo-prev-label{color:#999!important;background:#f5f5f5!important;border-top:1px solid #ddd!important}
+
+  /* Code block */
+  .code-block{
+    white-space:pre-wrap!important;word-break:break-all!important;
+    max-height:none!important;overflow:visible!important;
+    border:1px solid #ddd!important;background:#f8f8f6!important;color:#333!important;
+    font-size:9px!important;line-height:1.6!important;
+  }
+  .code-block .var{color:#7C3AED!important}
+  .code-block .val{color:#047857!important}
+  .code-block .cmt{color:#9CA3AF!important}
+
+  /* Criteria and scores */
+  .crit{background:#f5f5f3!important;border-left-width:3px!important}
+  .crit.pass .crit-name{color:#15803D!important}
+  .crit.fail .crit-name{color:#DC2626!important}
+  .crit.warn .crit-name{color:#B45309!important}
+  .score-bar{background:#e5e5e5!important}
+
+  /* Voice */
+  .tagline-option{background:#fafafa!important;border:1px solid #ddd!important;color:#1a1a1a!important}
+  .tl-text{color:#1a1a1a!important}
+
+  /* Two columns */
+  .two-col{gap:12px!important}
+
+  /* Tokens */
+  .shadow-item{background:#fafafa!important;border:1px solid #ddd!important;color:#666!important}
+  .token-chip{background:#f5f5f3!important;border:1px solid #ddd!important;color:#333!important}
+
+  /* Motion rules */
+  .motion-rule{background:#f8f7f4!important;border:1px solid #ddd!important;color:#333!important}
+  .motion-rule::before{color:#8B7340!important}
+
+
+  /* Continuous flow — avoid page breaks splitting content */
+  #guide-out{break-inside:auto}
+  .guide-cover{break-after:auto!important;page-break-after:auto!important}
+  .guide-section{break-inside:avoid-page;page-break-inside:avoid}
+
+  /* Links — print as plain text */
+  a{color:inherit!important;text-decoration:none!important}
 }
+
+@page{
+  size:A4;
+  margin:10mm;
+}
+
+/* PDF export light theme (applied via JS during html2pdf capture) */
+#guide-out.pdf-export{background:#fff!important;color:#1a1a1a!important;border:none!important}
+#guide-out.pdf-export .guide-cover{background:linear-gradient(135deg,#f8f8f6,#eeeee8)!important;color:#1a1a1a!important;border-bottom:2px solid #ddd!important}
+#guide-out.pdf-export .guide-brand-name{color:#1a1a1a!important}
+#guide-out.pdf-export .guide-eyebrow{color:#8B7340!important}
+#guide-out.pdf-export .guide-industry{color:#666!important}
+#guide-out.pdf-export .guide-cover-logo{background:#fff!important;border-radius:6px!important;padding:12px!important;max-width:320px!important}
+#guide-out.pdf-export .guide-cover-logo img,#guide-out.pdf-export .guide-cover-logo svg{max-height:none!important;height:auto!important;max-width:100%!important}
+#guide-out.pdf-export .guide-section{background:#fff!important;border-bottom:1px solid #ddd!important}
+#guide-out.pdf-export .guide-section-title{color:#8B7340!important;border-bottom-color:#ddd!important}
+#guide-out.pdf-export .guide-h3{color:#1a1a1a!important}
+#guide-out.pdf-export .section-lbl{color:#8B7340!important}
+#guide-out.pdf-export p,#guide-out.pdf-export li,#guide-out.pdf-export .kv-item,
+#guide-out.pdf-export .color-role,#guide-out.pdf-export .type-usage,
+#guide-out.pdf-export .crit-text,#guide-out.pdf-export .ogilvy-rule,
+#guide-out.pdf-export .motion-rule{color:#333!important}
+#guide-out.pdf-export .motion-rule{background:#f8f7f4!important;border:1px solid #ddd!important}
+#guide-out.pdf-export .kv-item::before{color:#8B7340!important}
+#guide-out.pdf-export .card{background:#fafafa!important;border:1px solid #ddd!important;color:#333!important}
+#guide-out.pdf-export .quote-block{border-left:3px solid #8B7340!important;background:#f8f7f4!important;color:#1a1a1a!important}
+#guide-out.pdf-export .swatch{border:1px solid #ddd!important}
+#guide-out.pdf-export .color-name{color:#1a1a1a!important}
+#guide-out.pdf-export .color-codes{color:#555!important}
+#guide-out.pdf-export .interaction-demo{background:#f5f5f3!important;color:#333!important}
+#guide-out.pdf-export .palette-bar{border:1px solid #ddd!important}
+#guide-out.pdf-export .logo-dark .logo-prev-canvas{background:#1a1a1a!important}
+#guide-out.pdf-export .logo-light .logo-prev-canvas{background:#f4f1ec!important}
+#guide-out.pdf-export .logo-prev-label{color:#999!important;background:#f5f5f5!important;border-top:1px solid #ddd!important}
+#guide-out.pdf-export .code-block{background:#f8f8f6!important;color:#333!important;border:1px solid #ddd!important;white-space:pre-wrap!important;word-break:break-all!important;max-height:none!important;overflow:visible!important;font-size:9px!important}
+#guide-out.pdf-export .code-block .var{color:#7C3AED!important}
+#guide-out.pdf-export .code-block .val{color:#047857!important}
+#guide-out.pdf-export .code-block .cmt{color:#9CA3AF!important}
+#guide-out.pdf-export .shadow-item{background:#fafafa!important;border:1px solid #ddd!important;color:#666!important}
+#guide-out.pdf-export .token-chip{background:#f5f5f3!important;border:1px solid #ddd!important;color:#333!important}
+#guide-out.pdf-export .tagline-option{background:#fafafa!important;border:1px solid #ddd!important}
+#guide-out.pdf-export .tl-text{color:#1a1a1a!important}
+#guide-out.pdf-export .crit{background:#f5f5f3!important}
+#guide-out.pdf-export .crit.pass .crit-name{color:#15803D!important}
+#guide-out.pdf-export .crit.fail .crit-name{color:#DC2626!important}
+#guide-out.pdf-export .crit.warn .crit-name{color:#B45309!important}
+#guide-out.pdf-export .score-bar{background:#e5e5e5!important}
+#guide-out.pdf-export .btn{display:none!important}
+#guide-out.pdf-export .alert-info{display:none!important}
+#guide-out.pdf-export a{color:inherit!important;text-decoration:none!important}
 </style>
 </head>
 <body>
@@ -489,13 +711,34 @@ select option{background:var(--s2)}
 <!-- MAIN -->
 <div id="main">
   <div id="topbar">
-    <div class="tb-project">Project:<strong id="proj-name">New Brand</strong></div>
+    <div style="position:relative">
+      <div class="tb-project proj-trigger" onclick="toggleProjectMenu()">Project:<strong id="proj-name">New Brand</strong></div>
+      <div class="proj-menu" id="proj-menu">
+        <div class="proj-menu-hd">
+          <span>Projects</span>
+          <button class="btn btn-am btn-sm" onclick="newProject()">+ New</button>
+        </div>
+        <div class="proj-list" id="proj-list"></div>
+        <div class="proj-menu-acts">
+          <button class="btn btn-ghost btn-sm" onclick="exportProject()">↓ Export JSON</button>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('import-file').click()">↑ Import JSON</button>
+        </div>
+      </div>
+    </div>
     <div class="tb-actions">
+      <select id="provider-sel" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--ff-m);font-size:0.875rem;padding:5px 8px;cursor:pointer;outline:none" onchange="setProvider(this.value)" title="AI Provider">
+        <option value="anthropic">Claude</option>
+        <option value="openai">ChatGPT</option>
+        <option value="gemini">Gemini</option>
+      </select>
+      <select id="model-sel" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--ff-m);font-size:0.875rem;padding:5px 26px 5px 8px;cursor:pointer;outline:none" onchange="setModel(this.value)" title="Model"></select>
+      <button class="btn btn-out btn-sm" onclick="saveCurrentProject();toast('Project saved')">💾 Save</button>
       <button class="btn btn-out btn-sm" onclick="resetAll()">↺ Reset</button>
       <button class="btn btn-out btn-sm" onclick="goToStep(10)">⊞ Guide</button>
       <button class="btn btn-out btn-sm" onclick="window.print()">⎙ Print</button>
     </div>
   </div>
+  <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)"/>
 
   <div id="content">
 
@@ -556,7 +799,7 @@ select option{background:var(--s2)}
       <div class="sp-head">
         <h2>Name Analysis</h2>
         <p>Stress-test the brand name before any visual work begins. A strong name is the first brand asset.</p>
-        <div class="book-ref">📖 Hello, My Name Is Awesome — Alexandra Watkins</div>
+        <div class="book-ref">📖 <a href="https://www.amazon.com/Hello-My-Name-Awesome-Create/dp/1626564728" target="_blank" rel="noopener">Hello, My Name Is Awesome — Alexandra Watkins</a></div>
       </div>
       <div class="gen-area">
         <div class="gen-bar">
@@ -575,7 +818,7 @@ select option{background:var(--s2)}
       <div class="sp-head">
         <h2>Brand Strategy</h2>
         <p>Strategy must precede visual design. Design decorates strategy — never the other way around.</p>
-        <div class="book-ref">📖 The Brand Gap — Neumeier &nbsp;·&nbsp; Brand Bible — Millman</div>
+        <div class="book-ref">📖 <a href="https://www.booktopia.com.au/brand-gap-the-marty-neumeier/book/9780321348104.html" target="_blank" rel="noopener">The Brand Gap — Neumeier</a> &nbsp;·&nbsp; <a href="https://www.booktopia.com.au/brand-bible-debbie-millman/book/9781592537266.html" target="_blank" rel="noopener">Brand Bible — Millman</a></div>
       </div>
       <div class="gen-area">
         <div class="gen-bar">
@@ -589,25 +832,22 @@ select option{background:var(--s2)}
       </div>
     </div>
 
-    <!-- ══ STEP 4: LOGO ══ -->
+    <!-- ══ STEP 4: VOICE + COPY ══ -->
     <div class="sp" id="step-4">
       <div class="sp-head">
-        <h2>Logo Design</h2>
-        <p>One strong idea, executed simply. The mark must work at 16px and at 16 metres.</p>
-        <div class="book-ref">📖 Logo Modernism — Müller &nbsp;·&nbsp; Logo Design Love — Airey &nbsp;·&nbsp; Identity Designed — Airey</div>
+        <h2>Voice &amp; Copy</h2>
+        <p>The consumer isn't a moron, she's your wife. Write to one person. Lead with the benefit, not the feature.</p>
+        <div class="book-ref">📖 <a href="https://www.booktopia.com.au/ogilvy-on-advertising-david-ogilvy/book/9781853756153.html" target="_blank" rel="noopener">Ogilvy on Advertising — David Ogilvy</a> &nbsp;·&nbsp; <a href="https://www.booktopia.com.au/brand-bible-debbie-millman/book/9781592537266.html" target="_blank" rel="noopener">Brand Bible — Millman</a></div>
       </div>
       <div class="gen-area">
         <div class="gen-bar">
           <div class="gen-bar-info">
-            <div class="gen-bar-title">Generate Logo Concept</div>
-            <div class="gen-bar-sub">SVG output — scalable from favicon to billboard</div>
+            <div class="gen-bar-title">Generate Voice &amp; Copy</div>
+            <div class="gen-bar-sub">Taglines · tone rules · headline formulas · dos &amp; don'ts</div>
           </div>
-          <div style="display:flex;gap:6px">
-            <button class="btn btn-out btn-sm" id="btn-regen-logo" style="display:none" onclick="runLogo()">↺ Regenerate</button>
-            <button class="btn btn-am" id="btn-logo" onclick="runLogo()">Generate Logo</button>
-          </div>
+          <button class="btn btn-am" id="btn-voice" onclick="runVoice()">Generate Voice</button>
         </div>
-        <div class="gen-body" id="out-logo"><div class="gen-placeholder">Logo will appear here.</div></div>
+        <div class="gen-body" id="out-voice"><div class="gen-placeholder">Voice and messaging will appear here.</div></div>
       </div>
     </div>
 
@@ -616,7 +856,25 @@ select option{background:var(--s2)}
       <div class="sp-head">
         <h2>Color System</h2>
         <p>Color is relative, not absolute. Every color is changed by what surrounds it — choose the system, not just the swatches.</p>
-        <div class="book-ref">📖 Interaction of Color — Josef Albers</div>
+        <div class="book-ref">📖 <a href="https://www.booktopia.com.au/interaction-of-color-josef-albers/book/9780300179354.html" target="_blank" rel="noopener">Interaction of Color — Josef Albers</a></div>
+      </div>
+      <div class="card" style="margin-bottom:16px;padding:18px 20px">
+        <div class="section-lbl" style="margin-bottom:10px">Start with a Base Color</div>
+        <p style="font-size:0.875rem;color:var(--tx2);line-height:1.7;margin-bottom:14px">Choose a color you're drawn to, or leave it to the AI. Albers taught that no color exists alone — the AI will build a complete system of relationships around your choice.</p>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="color" id="base-color" value="#2A6BC4" style="width:48px;height:40px;border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;padding:2px;background:var(--s2)"/>
+            <input id="base-color-hex" value="#2A6BC4" placeholder="#hex" style="width:90px;font-family:var(--ff-m);font-size:0.875rem;padding:8px 10px" oninput="syncColorPicker(this.value)"/>
+          </div>
+          <div class="toggle-row" style="padding:0">
+            <div class="toggle" id="tg-basecolor" onclick="toggleBaseColor()"></div>
+            <div class="toggle-label" id="tl-basecolor" onclick="toggleBaseColor()">Use this as my base color</div>
+          </div>
+        </div>
+        <div id="color-guidance" style="margin-top:12px">
+          <button class="btn btn-out btn-sm" onclick="runColorGuidance()">Help me choose a color →</button>
+          <div id="out-color-guidance"></div>
+        </div>
       </div>
       <div class="gen-area">
         <div class="gen-bar">
@@ -635,7 +893,7 @@ select option{background:var(--s2)}
       <div class="sp-head">
         <h2>Typography &amp; Grid</h2>
         <p>The grid is the invisible structure everything sits on. Typography is personality made visible before a word is read.</p>
-        <div class="book-ref">📖 Grid Systems — Müller-Brockmann &nbsp;·&nbsp; Refactoring UI — Wathan &amp; Schoger</div>
+        <div class="book-ref">📖 <a href="https://www.booktopia.com.au/grid-systems-in-graphic-design-josef-mulller-brockmann/book/9783721201451.html" target="_blank" rel="noopener">Grid Systems — Müller-Brockmann</a> &nbsp;·&nbsp; <a href="https://refactoringui.com/" target="_blank" rel="noopener">Refactoring UI — Wathan &amp; Schoger</a></div>
       </div>
       <div class="gen-area">
         <div class="gen-bar">
@@ -649,12 +907,78 @@ select option{background:var(--s2)}
       </div>
     </div>
 
-    <!-- ══ STEP 7: UI TOKENS ══ -->
+    <!-- ══ STEP 7: LOGO ══ -->
     <div class="sp" id="step-7">
+      <div class="sp-head">
+        <h2>Logo Concept Brief</h2>
+        <p>A logo brief that a designer can execute from — concept direction, mark style, construction notes, and usage rules. Includes a rough concept sketch to illustrate the idea.</p>
+        <div class="book-ref">📖 <a href="https://www.booktopia.com.au/logo-modernism-jens-muller/book/9783836545303.html" target="_blank" rel="noopener">Logo Modernism — Müller</a> &nbsp;·&nbsp; <a href="https://www.booktopia.com.au/logo-design-love-david-airey/book/9780321985200.html" target="_blank" rel="noopener">Logo Design Love — Airey</a> &nbsp;·&nbsp; <a href="https://www.booktopia.com.au/identity-designed-david-airey/book/9781631595943.html" target="_blank" rel="noopener">Identity Designed — Airey</a></div>
+      </div>
+      <div class="card" style="margin-bottom:16px;padding:18px 20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div class="toggle" id="tg-haslogo" onclick="toggleHasLogo()"></div>
+          <div>
+            <div class="toggle-label" id="tl-haslogo" onclick="toggleHasLogo()" style="font-weight:700">I already have a logo</div>
+            <div style="font-size:0.75rem;color:var(--tx3)">Upload your SVG to include it in the brand guide</div>
+          </div>
+        </div>
+        <div id="logo-upload-area" style="display:none">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+            <button class="btn btn-out btn-sm" onclick="document.getElementById('logo-file').click()">↑ Upload Logo</button>
+            <span style="color:var(--tx3);font-size:0.75rem">SVG or PNG</span>
+            <span style="color:var(--tx3);font-size:0.75rem">·</span>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('logo-paste-area').style.display='block'">Paste SVG Code</button>
+            <input type="file" id="logo-file" accept=".svg,.png,.jpg,.jpeg,.webp" style="display:none" onchange="handleLogoUpload(event)"/>
+          </div>
+          <textarea id="logo-paste-area" style="display:none;font-family:var(--ff-m);font-size:0.75rem" rows="4" placeholder="Paste your SVG code here..." oninput="document.getElementById('logo-paste-actions').style.display=this.value.trim()?'flex':'none'"></textarea>
+          <div style="display:none;gap:6px;margin-top:8px" id="logo-paste-actions">
+            <button class="btn btn-am btn-sm" onclick="applyPastedLogo()">Apply Logo</button>
+          </div>
+          <div id="logo-upload-preview"></div>
+        </div>
+      </div>
+
+      <div id="logo-brief-section">
+        <div class="card" style="margin-bottom:16px;padding:14px 18px">
+          <div class="section-lbl" style="margin-bottom:6px">From Brief to Logo</div>
+          <p style="font-size:0.875rem;color:var(--tx2);line-height:1.7;margin-bottom:10px">Export the brief below, then paste into an AI logo generator for vector output. For the best result, take the AI output + this brief to a professional designer for final polish.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:0.75rem">
+            <span style="color:var(--tx3);padding:4px 0">Free SVG generators:</span>
+            <a href="https://www.recraft.ai/generate/logos" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="font-size:0.75rem;padding:4px 10px">Recraft</a>
+            <a href="https://logodiffusion.com/" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="font-size:0.75rem;padding:4px 10px">Logo Diffusion</a>
+            <a href="https://svgmaker.io/" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="font-size:0.75rem;padding:4px 10px">SVGMaker</a>
+            <a href="https://www.sologo.ai/" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="font-size:0.75rem;padding:4px 10px">Sologo AI</a>
+            <a href="https://vectr.com/" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="font-size:0.75rem;padding:4px 10px">Vectr</a>
+          </div>
+        </div>
+        <div class="fg full" style="margin-bottom:14px">
+        <div class="fld">
+          <label>Design Notes <span style="color:var(--tx3);font-weight:400">(optional — steer the creative direction)</span></label>
+          <textarea id="logo-notes" rows="2" placeholder="e.g. Brand name is one word: CurrentFlow · Prefer a monogram · Should feel premium not playful · Reference flowing water or energy..."></textarea>
+        </div>
+      </div>
+      <div class="gen-area">
+        <div class="gen-bar">
+          <div class="gen-bar-info">
+            <div class="gen-bar-title">Generate Logo Brief</div>
+            <div class="gen-bar-sub">Concept direction · mark style · construction notes · rough sketch</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-out btn-sm" id="btn-regen-logo" style="display:none" onclick="runLogoBrief()">↺ Regenerate</button>
+            <button class="btn btn-am" id="btn-logo" onclick="runLogoBrief()">Generate Brief</button>
+          </div>
+        </div>
+        <div class="gen-body" id="out-logo"><div class="gen-placeholder">Logo concept brief will appear here.</div></div>
+      </div>
+      </div><!-- /logo-brief-section -->
+    </div>
+
+    <!-- ══ STEP 8: UI TOKENS ══ -->
+    <div class="sp" id="step-8">
       <div class="sp-head">
         <h2>UI Design Tokens</h2>
         <p>Translates the brand into a developer-ready token set — CSS variables, spacing scale, shadows, interactive states, and motion principles.</p>
-        <div class="book-ref">📖 Refactoring UI — Wathan &amp; Schoger &nbsp;·&nbsp; Designing Interface Animation — Val Head</div>
+        <div class="book-ref">📖 <a href="https://refactoringui.com/" target="_blank" rel="noopener">Refactoring UI — Wathan &amp; Schoger</a> &nbsp;·&nbsp; <a href="https://www.booktopia.com.au/designing-interface-animation-val-head/book/9781933820323.html" target="_blank" rel="noopener">Designing Interface Animation — Val Head</a></div>
       </div>
       <div class="gen-area">
         <div class="gen-bar">
@@ -665,25 +989,6 @@ select option{background:var(--s2)}
           <button class="btn btn-am" id="btn-tokens" onclick="runTokens()">Generate Tokens</button>
         </div>
         <div class="gen-body" id="out-tokens"><div class="gen-placeholder">UI token set will appear here.</div></div>
-      </div>
-    </div>
-
-    <!-- ══ STEP 8: VOICE + COPY ══ -->
-    <div class="sp" id="step-8">
-      <div class="sp-head">
-        <h2>Voice &amp; Copy</h2>
-        <p>The consumer isn't a moron, she's your wife. Write to one person. Lead with the benefit, not the feature.</p>
-        <div class="book-ref">📖 Ogilvy on Advertising — David Ogilvy &nbsp;·&nbsp; Brand Bible — Millman</div>
-      </div>
-      <div class="gen-area">
-        <div class="gen-bar">
-          <div class="gen-bar-info">
-            <div class="gen-bar-title">Generate Voice &amp; Copy</div>
-            <div class="gen-bar-sub">Taglines · tone rules · headline formulas · dos &amp; don'ts</div>
-          </div>
-          <button class="btn btn-am" id="btn-voice" onclick="runVoice()">Generate Voice</button>
-        </div>
-        <div class="gen-body" id="out-voice"><div class="gen-placeholder">Voice and messaging will appear here.</div></div>
       </div>
     </div>
 
@@ -759,12 +1064,14 @@ select option{background:var(--s2)}
         <h2>Brand Guide</h2>
         <p>The complete identity document. Build it, then use Print to export as PDF.</p>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:20px">
+      <div style="display:flex;gap:8px;margin-bottom:20px;position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0">
         <button class="btn btn-am" onclick="buildGuide()">⟳ Build Brand Guide</button>
-        <button class="btn btn-out" onclick="window.print()">⎙ Export PDF</button>
+        <button class="btn btn-out" onclick="buildGuide()">↺ Rebuild</button>
+        <button class="btn btn-am" onclick="exportPdf()">↓ Download PDF</button>
+        <button class="btn btn-ghost" onclick="window.print()">⎙ Print</button>
       </div>
       <div id="guide-out">
-        <div style="padding:48px;text-align:center;color:var(--tx3);font-size:13px;">
+        <div style="padding:48px;text-align:center;color:var(--tx3);font-size:1rem;">
           Complete the steps above and click "Build Brand Guide" to compile your identity document.
         </div>
       </div>
@@ -775,7 +1082,7 @@ select option{background:var(--s2)}
       <div class="sp-head">
         <h2>Brand Architecture</h2>
         <p>When a parent brand has multiple products, sub-brands, or services — this defines how they relate, what equity they share, and where they stay separate.</p>
-        <div class="book-ref">📖 Brand Portfolio Strategy — David Aaker</div>
+        <div class="book-ref">📖 <a href="https://www.booktopia.com.au/brand-portfolio-strategy-david-a-aaker/book/9781982146528.html" target="_blank" rel="noopener">Brand Portfolio Strategy — David Aaker</a></div>
       </div>
       <div class="fg full">
         <div class="fld">
@@ -810,6 +1117,7 @@ select option{background:var(--s2)}
 
 <div id="toast"></div>
 
+
 <script>
 // ═══════════════════════════════
 // STEP DEFINITIONS
@@ -818,11 +1126,11 @@ const STEPS = [
   {n:1, label:'Brand Brief', book:''},
   {n:2, label:'Name Analysis', book:'Watkins'},
   {n:3, label:'Strategy', book:'Neumeier · Millman'},
-  {n:4, label:'Logo Design', book:'Müller · Airey'},
+  {n:4, label:'Voice & Copy', book:'Ogilvy · Millman'},
   {n:5, label:'Color System', book:'Albers'},
   {n:6, label:'Typography & Grid', book:'Müller-Brockmann'},
-  {n:7, label:'UI Tokens', book:'Refactoring UI · Head'},
-  {n:8, label:'Voice & Copy', book:'Ogilvy · Millman'},
+  {n:7, label:'Logo Brief', book:'Müller · Airey'},
+  {n:8, label:'UI Tokens', book:'Refactoring UI · Head'},
   {n:9, label:'Assets', book:''},
   {n:10, label:'Brand Guide', book:''},
   {n:11, label:'Brand Architecture', book:'Aaker', optional:true},
@@ -840,6 +1148,7 @@ const S = {
   strategy: null,
   logo: null,
   logoSvg: null,
+  logoPng: null,
   logoRationale: null,
   colors: null,
   typography: null,
@@ -1049,20 +1358,108 @@ Brand equity considerations:
 // ═══════════════════════════════
 // API
 // ═══════════════════════════════
+let _proxyInfo=null;
+let _currentProvider='anthropic';
+let _currentModel='';
+
+const MODEL_OPTIONS={
+  anthropic:[
+    {id:'claude-haiku-4-5-20251001',label:'Haiku 4.5',cost:'cheap'},
+    {id:'claude-sonnet-4-20250514',label:'Sonnet 4',cost:'mid'},
+    {id:'claude-opus-4-20250514',label:'Opus 4',cost:'pricey'}
+  ],
+  openai:[
+    {id:'gpt-4.1-nano',label:'4.1 Nano',cost:'cheap'},
+    {id:'gpt-4.1-mini',label:'4.1 Mini',cost:'mid'},
+    {id:'gpt-4o-mini',label:'4o Mini',cost:'mid'},
+    {id:'gpt-4o',label:'4o',cost:'pricey'},
+    {id:'gpt-4.1',label:'4.1',cost:'pricey'}
+  ],
+  gemini:[
+    {id:'gemini-2.0-flash',label:'2.0 Flash',cost:'cheap'},
+    {id:'gemini-2.5-flash',label:'2.5 Flash',cost:'mid'},
+    {id:'gemini-2.5-pro',label:'2.5 Pro',cost:'pricey'}
+  ]
+};
+
+function updateModelSelector(){
+  const sel=document.getElementById('model-sel');
+  const models=MODEL_OPTIONS[_currentProvider]||[];
+  sel.innerHTML=models.map(m=>`<option value="${m.id}">${m.label} (${m.cost})</option>`).join('');
+  // Restore saved model or pick default (middle option)
+  const saved=sessionStorage.getItem('bs_model_'+_currentProvider);
+  if(saved&&models.find(m=>m.id===saved)){sel.value=saved;_currentModel=saved}
+  else{const def=models.length>1?models[1]:models[0];if(def){sel.value=def.id;_currentModel=def.id}}
+}
+
+function setProvider(p){
+  _currentProvider=p;
+  sessionStorage.setItem('bs_provider',p);
+  updateModelSelector();
+}
+
+function setModel(m){_currentModel=m;sessionStorage.setItem('bs_model_'+_currentProvider,m)}
+
+async function checkProxy(){
+  if(_proxyInfo!==null)return _proxyInfo;
+  try{
+    const r=await fetch('/api/health');
+    if(r.ok){
+      _proxyInfo=await r.json();
+      if(_proxyInfo.default&&!sessionStorage.getItem('bs_provider')){
+        _currentProvider=_proxyInfo.default;
+        document.getElementById('provider-sel').value=_currentProvider;
+      }
+      if(_proxyInfo.providers){
+        const sel=document.getElementById('provider-sel');
+        const labels={anthropic:'Claude',openai:'ChatGPT',gemini:'Gemini'};
+        for(const opt of sel.options){
+          const avail=_proxyInfo.providers[opt.value];
+          opt.textContent=labels[opt.value]||opt.value;
+          if(avail)opt.textContent+=' ✓';
+        }
+      }
+      updateModelSelector();
+      return _proxyInfo;
+    }
+  }catch{}
+  _proxyInfo={proxy:false};
+  updateModelSelector();
+  return _proxyInfo;
+}
+
 async function claude(messages, sys=SYS_BASE, maxTok=2500){
-  const r = await fetch('https://api.anthropic.com/v1/messages',{
+  const info=await checkProxy();
+  if(!info.proxy){
+    throw new Error('Server not running. Start the server with: npm start');
+  }
+  const body={max_tokens:maxTok,system:sys,messages};
+  const headers={'Content-Type':'application/json','x-provider':_currentProvider};
+  if(_currentModel)headers['x-model']=_currentModel;
+  const r=await fetch('/api/messages',{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTok,system:sys,messages})
+    headers,
+    body:JSON.stringify(body)
   });
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`API ${r.status}`)}
+  if(!r.ok){
+    const e=await r.json().catch(()=>({}));
+    throw new Error(e.error?.message||`API ${r.status}`);
+  }
   const d=await r.json();
   return d.content.map(b=>b.text||'').join('');
 }
 
 function xJson(t){
-  const m=t.match(/```json\s*([\s\S]*?)\s*```/)||t.match(/(^\s*\{[\s\S]*\}\s*$)/m);
+  // Try ```json blocks first
+  const m=t.match(/```json\s*([\s\S]*?)\s*```/);
   if(m){try{return JSON.parse(m[1])}catch{}}
+  // Try ``` blocks without language tag
+  const m2=t.match(/```\s*([\s\S]*?)\s*```/);
+  if(m2){try{return JSON.parse(m2[1])}catch{}}
+  // Try to find a JSON object anywhere in the text
+  const m3=t.match(/\{[\s\S]*\}/);
+  if(m3){try{return JSON.parse(m3[0])}catch{}}
+  // Try the whole string
   try{return JSON.parse(t)}catch{}
   return null;
 }
@@ -1130,15 +1527,15 @@ function renderNaming(d){
     const cls=c.score<=1?'pass':c.score<=2?'warn':'fail';
     return`<div class="crit ${cls}"><div class="crit-name">${c.criterion} — ${c.score}/5</div><div class="crit-text">${c.note}</div></div>`;
   }).join('');
-  const altItems=d.alternatives?d.alternatives.map(a=>`<div style="padding:10px 14px;background:var(--s3);border-radius:var(--r);margin-bottom:6px;"><span style="font-weight:700;color:var(--tx)">${a.name}</span><span style="color:var(--tx2);font-size:12px;margin-left:10px;">${a.rationale}</span></div>`).join(''):'';
+  const altItems=d.alternatives?d.alternatives.map(a=>`<div style="padding:10px 14px;background:var(--s3);border-radius:var(--r);margin-bottom:6px;"><span style="font-weight:700;color:var(--tx)">${a.name}</span><span style="color:var(--tx2);font-size:0.875rem;margin-left:10px;">${a.rationale}</span></div>`).join(''):'';
 
   document.getElementById('out-naming').innerHTML=`
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding:14px 16px;background:var(--s2);border-radius:var(--r);">
-      <div style="font-family:var(--ff-d);font-size:28px;color:var(--tx)">"${S.brief.name}"</div>
+      <div style="font-family:var(--ff-d);font-size:1.875rem;color:var(--tx)">"${S.brief.name}"</div>
       <div style="flex:1"></div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:${overall};background:rgba(0,0,0,0.2);padding:4px 12px;border-radius:20px;">${d.overall}</div>
+      <div style="font-size:0.875rem;font-weight:700;letter-spacing:0.08em;color:${overall};background:rgba(0,0,0,0.2);padding:4px 12px;border-radius:20px;">${d.overall}</div>
     </div>
-    <p style="font-size:13.5px;color:var(--tx);line-height:1.7;margin-bottom:16px;">${d.verdict}</p>
+    <p style="font-size:1rem;color:var(--tx);line-height:1.7;margin-bottom:16px;">${d.verdict}</p>
     <div class="two-col" style="margin-bottom:16px">
       <div>
         <div class="section-lbl">SMILE Score — ${d.smile_total}/25</div>
@@ -1191,9 +1588,9 @@ Return JSON:
 function renderStrategy(d){
   const toneItems=d.tone_pairs.map(p=>`
     <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);">
-      <span style="flex:1;font-weight:600;color:var(--grn);font-size:13px;">${p.we_are}</span>
-      <span style="color:var(--tx3);font-size:11px;font-family:var(--ff-m)">not</span>
-      <span style="flex:1;color:var(--red);font-size:13px;text-decoration:line-through;opacity:0.7">${p.not}</span>
+      <span style="flex:1;font-weight:600;color:var(--grn);font-size:1rem;">${p.we_are}</span>
+      <span style="color:var(--tx3);font-size:0.875rem;font-family:var(--ff-m)">not</span>
+      <span style="flex:1;color:var(--red);font-size:1rem;text-decoration:line-through;opacity:0.7">${p.not}</span>
     </div>`).join('');
 
   document.getElementById('out-strategy').innerHTML=`
@@ -1201,15 +1598,15 @@ function renderStrategy(d){
     <div class="two-col" style="margin-bottom:16px">
       <div>
         <div class="section-lbl">Point of Difference</div>
-        <p style="font-size:13.5px;color:var(--tx);line-height:1.7">${d.difference}</p>
+        <p style="font-size:1rem;color:var(--tx);line-height:1.7">${d.difference}</p>
         <div class="section-lbl" style="margin-top:14px">Brand Truth</div>
-        <p style="font-size:13.5px;color:var(--tx);line-height:1.7">${d.brand_truth}</p>
+        <p style="font-size:1rem;color:var(--tx);line-height:1.7">${d.brand_truth}</p>
       </div>
       <div>
         <div class="section-lbl">Brand Promise</div>
-        <p style="font-size:13.5px;color:var(--tx);line-height:1.7">${d.brand_promise}</p>
+        <p style="font-size:1rem;color:var(--tx);line-height:1.7">${d.brand_promise}</p>
         <div class="section-lbl" style="margin-top:14px">Brand as a Person</div>
-        <p style="font-size:13.5px;color:var(--tx);line-height:1.7;font-style:italic">${d.personality_as_person}</p>
+        <p style="font-size:1rem;color:var(--tx);line-height:1.7;font-style:italic">${d.personality_as_person}</p>
       </div>
     </div>
     <div class="two-col">
@@ -1227,72 +1624,288 @@ function renderStrategy(d){
   `;
 }
 
-async function runLogo(){
-  const b=S.brief;
-  const strat=S.strategy;
-  setLoading('btn-logo','out-logo','Designing logo...');
+function toggleHasLogo(){
+  const on=document.getElementById('tg-haslogo').classList.toggle('on');
+  document.getElementById('tl-haslogo').classList.toggle('on',on);
+  document.getElementById('logo-upload-area').style.display=on?'block':'none';
+  document.getElementById('logo-brief-section').style.display=on?'none':'block';
+}
+
+function handleLogoUpload(ev){
+  const file=ev.target.files[0];if(!file)return;
+  const isSvg=file.name.toLowerCase().endsWith('.svg');
+  if(isSvg){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const svg=xSvg(e.target.result);
+      if(!svg){toast('Could not parse SVG');return}
+      S.logoSvg=svg;S.logoPng=null;S.logo=null;
+      S.logoRationale={concept:'Uploaded logo',decisions:['User-provided SVG file']};
+      showLogoUploadPreview(svg,file.name,'svg');
+      done(7);
+    };
+    reader.readAsText(file);
+  }else{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const dataUrl=e.target.result;
+      S.logoPng=dataUrl;S.logoSvg=null;S.logo=null;
+      S.logoRationale={concept:'Uploaded logo',decisions:['User-provided image file']};
+      showLogoUploadPreview(dataUrl,file.name,'img');
+      done(7);
+    };
+    reader.readAsDataURL(file);
+  }
+  ev.target.value='';
+}
+
+function applyPastedLogo(){
+  const code=document.getElementById('logo-paste-area').value.trim();
+  const svg=xSvg(code);
+  if(!svg){toast('Could not find valid SVG in pasted code');return}
+  S.logoSvg=svg;S.logoPng=null;S.logo=null;
+  S.logoRationale={concept:'Uploaded logo',decisions:['User-provided SVG code']};
+  showLogoUploadPreview(svg,'Pasted SVG');
+  document.getElementById('logo-paste-area').value='';
+  done(7);
+}
+
+function showLogoUploadPreview(content,source,type){
+  const render=type==='svg'?content:`<img src="${content}" style="max-width:100%;height:auto;object-fit:contain"/>`;
+  const actions=type==='svg'?`
+    <button class="btn btn-out btn-sm" onclick="dlSvg()">↓ Download SVG</button>
+    <button class="btn btn-ghost btn-sm" onclick="copySvg()">⎘ Copy SVG</button>`:`
+    <a href="${content}" download="${(S.brief.name||'logo').toLowerCase().replace(/\\s+/g,'-')}-logo.png" class="btn btn-out btn-sm">↓ Download</a>`;
+  document.getElementById('logo-upload-preview').innerHTML=`
+    <div style="margin-top:14px">
+      <div class="section-lbl">Logo Preview — ${source}</div>
+      <div class="logo-previews">
+        <div class="logo-prev logo-dark"><div class="logo-prev-canvas">${render}</div><div class="logo-prev-label">Dark</div></div>
+        <div class="logo-prev logo-light"><div class="logo-prev-canvas">${render}</div><div class="logo-prev-label">Light</div></div>
+      </div>
+      ${type!=='svg'?`<div class="alert alert-info" style="font-size:0.75rem;margin-top:8px">For best results, convert to SVG for scalable output using a free converter like <a href="https://svgtrace.com/png-to-svg" target="_blank" rel="noopener" style="color:var(--am)">SvgTrace</a>, <a href="https://picsvg.com/" target="_blank" rel="noopener" style="color:var(--am)">PicSVG</a>, or <a href="https://png2svg.com/" target="_blank" rel="noopener" style="color:var(--am)">PNG2SVG</a></div>`:''}
+      <div style="display:flex;gap:6px;margin-top:8px">${actions}</div>
+    </div>`;
+  toast('Logo uploaded — it will appear in the brand guide');
+}
+
+async function runLogoBrief(){
+  const b=S.brief;const strat=S.strategy;
+  const notes=(document.getElementById('logo-notes')?.value||'').trim();
+  const personalityStr=strat?strat.personality.join(', '):b.personality;
+  const colRef=S.colors?`Brand colors: Primary=${S.colors.palette[0]?.hex} (${S.colors.palette[0]?.name}), Secondary=${S.colors.palette[1]?.hex}, Accent=${S.colors.palette[2]?.hex}`:'No color system established yet.';
+  const typeRef=S.typography?`Typography: Display=${S.typography.fonts[0]?.name}, Body=${S.typography.fonts[2]?.name}`:'No typography established yet.';
+
+  setLoading('btn-logo','out-logo','Writing logo concept brief...');
   try{
-    const personalityStr=strat?strat.personality.join(', '):b.personality;
-    const svgRaw=await claude([{role:'user',content:`Design a professional SVG logo for "${b.name}" (${b.industry}).
-Brand personality: ${personalityStr}
-Visual direction: ${b.vdir}
-Positioning: ${strat?.positioning||b.desc}
-Avoid: ${b.avoid||'nothing specific'}
+    const raw=await claude([{role:'user',content:`Create a comprehensive logo concept brief for "${b.name}" (${b.industry}).
 
-CRITICAL REQUIREMENTS:
-- Full lockup: viewBox="0 0 400 120"
-- Icon/mark on the LEFT, brand name wordmark on the RIGHT
-- Icon must be a clean geometric shape, abstract symbol, or strong letterform
-- Wordmark uses <text> elements with font-family (not outlined paths)
-- Maximum 3 colors — must work in mono
-- No gradients, no drop shadows, no complex fills
-- Strong at small sizes — the icon should read clearly at 20px
+BRAND CONTEXT:
+- Personality: ${personalityStr}
+- Visual direction: ${b.vdir}
+- Positioning: ${strat?.positioning||b.desc}
+- Audience: ${b.audience}
+- Competitors: ${b.competitors||'not specified'}
+- Avoid: ${b.avoid||'nothing specific'}
+- ${colRef}
+- ${typeRef}
+${notes?`\nDESIGNER NOTES: ${notes}`:''}
 
-Return ONLY the SVG code. Nothing else. Start with <svg and end with </svg>`}],SYS_LOGO,1200);
+Create a detailed logo brief that a professional designer could execute from. Apply principles from Logo Design Love (simplicity, memorability, timelessness, versatility) and Logo Modernism (geometric reduction, functionalist approach).
 
-    const svg=xSvg(svgRaw);
-    if(!svg)throw new Error('Could not extract SVG');
+Return JSON:
+{
+  "concept_name": "A short name for this concept direction",
+  "concept_statement": "2-3 sentences describing the core idea behind the logo — what it represents, why it suits the brand, what feeling it should evoke",
+  "mark_type": "Wordmark|Lettermark|Pictorial|Abstract|Combination|Emblem",
+  "mark_description": "Detailed description of the icon/mark — what shapes, what it depicts or abstracts, how it's constructed geometrically",
+  "wordmark_notes": "How the brand name should be typeset — font style (serif/sans/slab), weight, letter-spacing, any custom modifications to letterforms",
+  "construction_notes": [
+    "Specific geometric or grid-based construction note",
+    "Proportional relationship note (e.g. icon height = cap height)",
+    "Spacing and alignment rule",
+    "How the mark simplifies at small sizes"
+  ],
+  "color_usage": "How brand colors should be applied to the logo — which color for the mark, which for the wordmark, how the mono version works",
+  "versions": [
+    {"name":"Full lockup","description":"Icon + wordmark, horizontal arrangement","primary_use":"Website headers, documents, presentations"},
+    {"name":"Stacked","description":"Icon above wordmark","primary_use":"Social profiles, square formats"},
+    {"name":"Icon only","description":"Mark without wordmark","primary_use":"Favicons, app icons, small spaces"},
+    {"name":"Wordmark only","description":"Text without icon","primary_use":"Email signatures, tight horizontal spaces"}
+  ],
+  "clear_space": "Minimum clear space rule (e.g. 'Height of the icon letter on all sides')",
+  "min_size": "Minimum reproduction size (digital and print)",
+  "dont_rules": ["Don't stretch or distort","Don't change the colors","Don't add effects","Don't place on busy backgrounds","Don't rearrange elements"],
+  "designer_references": "2-3 existing logos that share a similar approach or quality level — to use as reference points, NOT to copy",
+  "rough_svg": "A rough SVG concept sketch illustrating the idea (viewBox='0 0 400 120', basic shapes only — this is a sketch, not a final logo)"
+}`}],SYS_LOGO,2500);
 
-    // Rationale
-    const rRaw=await claude([{role:'user',content:`For the logo you designed for "${b.name}" (${b.industry}) with personality "${personalityStr}", explain:
-1. The core visual concept and why it suits the brand (2 sentences)
-2. Three specific design decisions made
-
-Return JSON: {"concept":"...","decisions":["...","...","..."]}`}],SYS_LOGO,600);
-    const rat=xJson(rRaw);
-
-    S.logoSvg=svg;
-    S.logoRationale=rat;
-    renderLogo(svg,rat);
+    const d=xJson(raw);
+    if(!d)throw new Error('Parse failed');
+    S.logo=d;
+    S.logoSvg=xSvg(d.rough_svg||'')||null;
+    S.logoRationale={concept:d.concept_statement,decisions:d.construction_notes||[]};
+    renderLogoBrief(d);
     document.getElementById('btn-regen-logo').style.display='inline-flex';
-    done(4);
+    done(7);
   }catch(e){showErr('out-logo',e.message)}
   unload('btn-logo');
 }
 
-function renderLogo(svg,rat){
+function renderLogoBrief(d){
+  const svg=xSvg(d.rough_svg||'')||null;
+  const versionsHtml=(d.versions||[]).map(v=>`
+    <div style="padding:10px 14px;background:var(--s3);border-radius:var(--r);margin-bottom:6px">
+      <div style="font-weight:600;color:var(--tx);margin-bottom:2px">${v.name}</div>
+      <div style="font-size:0.875rem;color:var(--tx2)">${v.description}</div>
+      <div style="font-size:0.75rem;color:var(--tx3);margin-top:2px">Use: ${v.primary_use}</div>
+    </div>`).join('');
+
+  const constructionHtml=(d.construction_notes||[]).map(n=>`<li class="kv-item">${n}</li>`).join('');
+  const dontHtml=(d.dont_rules||[]).map(n=>`<li class="kv-item" style="--am:var(--red)">${n}</li>`).join('');
+
   document.getElementById('out-logo').innerHTML=`
-    <div class="logo-previews">
-      <div class="logo-prev logo-dark">
-        <div class="logo-prev-canvas">${svg}</div>
-        <div class="logo-prev-label">Dark background</div>
-      </div>
-      <div class="logo-prev logo-light">
-        <div class="logo-prev-canvas">${svg}</div>
-        <div class="logo-prev-label">Light background</div>
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--s2);border-radius:var(--r);margin-bottom:16px">
+      <div>
+        <div style="font-family:var(--ff-d);font-size:1.5rem;color:var(--tx);margin-bottom:4px">${d.concept_name||''}</div>
+        <div style="font-size:0.75rem;color:var(--am);font-family:var(--ff-m)">${d.mark_type||''}</div>
       </div>
     </div>
-    ${rat?`
-    <div class="card" style="margin-bottom:10px">
-      <div class="section-lbl">Design Rationale</div>
-      <p style="font-size:13.5px;color:var(--tx);line-height:1.7;margin-bottom:10px">${rat.concept}</p>
-      <ul class="kv-list">${rat.decisions.map(d=>`<li class="kv-item">${d}</li>`).join('')}</ul>
+
+    <div class="quote-block" style="margin-bottom:16px">${d.concept_statement||''}</div>
+
+    ${svg?`
+    <div style="margin-bottom:16px">
+      <div class="section-lbl">Rough Concept Sketch</div>
+      <div class="alert alert-info" style="margin-bottom:8px;font-size:0.75rem">This is a rough AI sketch to illustrate the concept — not a finished logo. Hand this brief to a designer for professional execution.</div>
+      <div class="logo-previews">
+        <div class="logo-prev logo-dark"><div class="logo-prev-canvas">${svg}</div><div class="logo-prev-label">Dark</div></div>
+        <div class="logo-prev logo-light"><div class="logo-prev-canvas">${svg}</div><div class="logo-prev-label">Light</div></div>
+      </div>
     </div>`:''}
-    <div style="display:flex;gap:6px;flex-wrap:wrap">
-      <button class="btn btn-out btn-sm" onclick="dlSvg()">↓ Download SVG</button>
-      <button class="btn btn-ghost btn-sm" onclick="copySvg()">⎘ Copy SVG Code</button>
+
+    <div class="two-col" style="margin-bottom:16px">
+      <div>
+        <div class="section-lbl">Mark Description</div>
+        <p style="font-size:0.875rem;color:var(--tx);line-height:1.7;margin-bottom:14px">${d.mark_description||''}</p>
+        <div class="section-lbl">Wordmark Notes</div>
+        <p style="font-size:0.875rem;color:var(--tx);line-height:1.7">${d.wordmark_notes||''}</p>
+      </div>
+      <div>
+        <div class="section-lbl">Construction Notes</div>
+        <ul class="kv-list">${constructionHtml}</ul>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:16px">
+      <div>
+        <div class="section-lbl">Logo Versions</div>
+        ${versionsHtml}
+      </div>
+      <div>
+        <div class="section-lbl">Color Usage</div>
+        <p style="font-size:0.875rem;color:var(--tx);line-height:1.7;margin-bottom:14px">${d.color_usage||''}</p>
+        <div class="section-lbl">Usage Rules</div>
+        <div style="display:flex;gap:12px;margin-bottom:14px">
+          <div style="flex:1">
+            <div style="font-size:0.75rem;color:var(--tx3);margin-bottom:4px;font-family:var(--ff-m)">Clear space</div>
+            <div style="font-size:0.875rem;color:var(--tx)">${d.clear_space||''}</div>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:0.75rem;color:var(--tx3);margin-bottom:4px;font-family:var(--ff-m)">Min size</div>
+            <div style="font-size:0.875rem;color:var(--tx)">${d.min_size||''}</div>
+          </div>
+        </div>
+        <div class="section-lbl">Don'ts</div>
+        <ul class="kv-list">${dontHtml}</ul>
+      </div>
+    </div>
+
+    ${d.designer_references?`
+    <div class="card">
+      <div class="section-lbl">Designer References</div>
+      <p style="font-size:0.875rem;color:var(--tx2);line-height:1.7">${d.designer_references}</p>
+    </div>`:''}
+
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn btn-am btn-sm" onclick="exportLogoPrompt()">↓ Export Image Gen Prompt</button>
+      <button class="btn btn-out btn-sm" onclick="copyLogoPrompt()">⎘ Copy Prompt</button>
+      ${svg?`<button class="btn btn-ghost btn-sm" onclick="dlSvg()">↓ Sketch SVG</button>
+      <button class="btn btn-ghost btn-sm" onclick="copySvg()">⎘ Copy SVG</button>`:''}
     </div>
   `;
+}
+
+// For project restore
+function renderLogo(svg,rat){
+  if(S.logo){renderLogoBrief(S.logo);return}
+  document.getElementById('out-logo').innerHTML=`
+    <div class="logo-previews">
+      <div class="logo-prev logo-dark"><div class="logo-prev-canvas">${svg}</div><div class="logo-prev-label">Dark</div></div>
+      <div class="logo-prev logo-light"><div class="logo-prev-canvas">${svg}</div><div class="logo-prev-label">Light</div></div>
+    </div>
+    ${rat?`<div class="card"><div class="section-lbl">Rationale</div><p style="font-size:1rem;color:var(--tx);line-height:1.7">${rat.concept||''}</p></div>`:''}
+    <div style="display:flex;gap:6px"><button class="btn btn-out btn-sm" onclick="dlSvg()">↓ SVG</button><button class="btn btn-ghost btn-sm" onclick="copySvg()">⎘ Copy</button></div>
+  `;
+}
+
+let _baseColorEnabled=false;
+
+function syncColorPicker(hex){
+  if(/^#[0-9a-fA-F]{6}$/.test(hex))document.getElementById('base-color').value=hex;
+}
+// Sync color picker → hex input (runs after DOM is ready since script is at bottom)
+setTimeout(()=>{
+  const picker=document.getElementById('base-color');
+  if(picker)picker.addEventListener('input',e=>{document.getElementById('base-color-hex').value=e.target.value});
+},0);
+
+function toggleBaseColor(){
+  _baseColorEnabled=!_baseColorEnabled;
+  document.getElementById('tg-basecolor').classList.toggle('on',_baseColorEnabled);
+  document.getElementById('tl-basecolor').classList.toggle('on',_baseColorEnabled);
+}
+
+async function runColorGuidance(){
+  const b=S.brief;const strat=S.strategy;
+  const el=document.getElementById('out-color-guidance');
+  el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;color:var(--tx2);font-size:0.875rem;margin-top:10px">Analysing your brand for color... <div class="ld"><span></span><span></span><span></span></div></div>`;
+  try{
+    const raw=await claude([{role:'user',content:`Based on this brand, suggest 4 base color options with reasoning.
+Brand: ${b.name} (${b.industry})
+Description: ${b.desc}
+Personality: ${strat?strat.personality.join(', '):b.personality}
+Visual direction: ${b.vdir}
+Audience: ${b.audience}
+Avoid: ${b.avoid||'nothing specific'}
+
+Apply Albers' Interaction of Color principles. Consider:
+- What emotions should the brand evoke?
+- What colors does the industry typically use — and should this brand follow or deliberately break from that?
+- What simultaneous contrast effects should be considered?
+
+Return JSON:
+{"suggestions":[
+  {"hex":"#XXXXXX","name":"Color Name","reasoning":"Why this works for this brand — 1-2 sentences"},
+  {"hex":"#XXXXXX","name":"Color Name","reasoning":"..."},
+  {"hex":"#XXXXXX","name":"Color Name","reasoning":"..."},
+  {"hex":"#XXXXXX","name":"Color Name","reasoning":"..."}
+]}`}],SYS_COLOR,800);
+    const d=xJson(raw);
+    if(!d||!d.suggestions)throw new Error('Could not parse suggestions');
+    el.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">${d.suggestions.map(s=>`
+      <div style="cursor:pointer;background:var(--s3);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px;flex:1;min-width:140px;transition:border-color 0.15s" onclick="document.getElementById('base-color').value='${s.hex}';document.getElementById('base-color-hex').value='${s.hex}';if(!_baseColorEnabled)toggleBaseColor();" onmouseover="this.style.borderColor='var(--am)'" onmouseout="this.style.borderColor='var(--bd)'">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:28px;height:28px;border-radius:4px;background:${s.hex};border:1px solid rgba(255,255,255,0.08);flex-shrink:0"></div>
+          <div>
+            <div style="font-size:0.875rem;font-weight:600;color:var(--tx)">${s.name}</div>
+            <div style="font-family:var(--ff-m);font-size:0.75rem;color:var(--tx3)">${s.hex}</div>
+          </div>
+        </div>
+        <div style="font-size:0.75rem;color:var(--tx2);line-height:1.5">${s.reasoning}</div>
+      </div>`).join('')}</div>
+      <div style="font-size:0.75rem;color:var(--tx3);margin-top:8px;font-family:var(--ff-m)">Click a suggestion to use it as your base color</div>`;
+  }catch(e){el.innerHTML=`<div class="alert alert-err" style="margin-top:10px">${e.message}</div>`}
 }
 
 async function runColor(){
@@ -1300,10 +1913,13 @@ async function runColor(){
   const strat=S.strategy;
   setLoading('btn-color','out-color','Building color system...');
   try{
+    const useBase=document.getElementById('tg-basecolor')?.classList.contains('on');
+    const baseHex=useBase?document.getElementById('base-color-hex')?.value.trim():'';
+    const baseNote=baseHex?`\n\nBASE COLOR: The user has chosen ${baseHex} as their primary/anchor color. Build the entire system around this color — use it as the Primary, then derive Secondary, Accent, Dark, and Light colors that create strong Albers-style relationships with it.`:'';
     const raw=await claude([{role:'user',content:`Create a professional color system for "${b.name}" (${b.industry}).
 Personality: ${strat?strat.personality.join(', '):b.personality}
 Visual direction: ${b.vdir}
-Avoid: ${b.avoid}
+Avoid: ${b.avoid}${baseNote}
 
 Apply Albers' principles — define not just the colors but how they interact, which combinations to use and avoid, and the reasoning behind each relationship.
 
@@ -1345,7 +1961,7 @@ function renderColor(d){
     <div class="color-row">
       <div class="swatch" style="background:${c.hex}"></div>
       <div class="color-info">
-        <div class="color-name">${c.name} <span style="color:var(--tx3);font-weight:400;font-size:11px">— ${c.role}</span></div>
+        <div class="color-name">${c.name} <span style="color:var(--tx3);font-weight:400;font-size:0.875rem">— ${c.role}</span></div>
         <div class="color-codes" onclick="cp('${c.hex}')" title="Click to copy">${c.hex} · rgb(${c.rgb}) · cmyk(${c.cmyk})</div>
         <div class="color-role">${c.usage}</div>
       </div>
@@ -1354,15 +1970,15 @@ function renderColor(d){
   const semRows=d.semantic.map(s=>`
     <div style="display:flex;align-items:center;gap:10px;padding:6px 0">
       <div style="width:28px;height:28px;border-radius:4px;background:${s.hex};border:1px solid rgba(255,255,255,0.08)"></div>
-      <span style="font-size:12px;color:var(--tx2)">${s.role} — <span style="font-family:var(--ff-m);color:var(--tx3)">${s.hex}</span></span>
+      <span style="font-size:0.875rem;color:var(--tx2)">${s.role} — <span style="font-family:var(--ff-m);color:var(--tx3)">${s.hex}</span></span>
     </div>`).join('');
 
   const interRows=d.interactions.map(i=>`
     <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:${i.works?'rgba(91,158,122,0.08)':'rgba(217,95,95,0.08)'};border-radius:var(--r);margin-bottom:5px;border-left:2px solid ${i.works?'var(--grn)':'var(--red)'}">
-      <span style="font-size:10px;flex-shrink:0;margin-top:2px">${i.works?'✓':'✗'}</span>
+      <span style="font-size:0.75rem;flex-shrink:0;margin-top:2px">${i.works?'✓':'✗'}</span>
       <div>
-        <div style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:2px">${i.combination}${i.contrast_ratio?` — ${i.contrast_ratio}`:''}</div>
-        <div style="font-size:11px;color:var(--tx2);line-height:1.5">${i.note}</div>
+        <div style="font-size:0.875rem;font-weight:600;color:var(--tx);margin-bottom:2px">${i.combination}${i.contrast_ratio?` — ${i.contrast_ratio}`:''}</div>
+        <div style="font-size:0.875rem;color:var(--tx2);line-height:1.5">${i.note}</div>
       </div>
     </div>`).join('');
 
@@ -1451,9 +2067,9 @@ function renderType(d){
 
   const scaleRows=d.scale.map(s=>`
     <div style="display:flex;align-items:baseline;gap:16px;padding:8px 0;border-bottom:1px solid var(--bd)">
-      <span style="font-family:var(--ff-m);font-size:9px;color:var(--tx3);width:60px;flex-shrink:0">${s.name}</span>
-      <span style="font-family:var(--ff-m);font-size:10px;color:var(--am);width:40px;flex-shrink:0">${s.size}</span>
-      <span style="font-size:11px;color:var(--tx3)">${s.usage}</span>
+      <span style="font-family:var(--ff-m);font-size:0.75rem;color:var(--tx3);width:60px;flex-shrink:0">${s.name}</span>
+      <span style="font-family:var(--ff-m);font-size:0.75rem;color:var(--am);width:40px;flex-shrink:0">${s.size}</span>
+      <span style="font-size:0.875rem;color:var(--tx3)">${s.usage}</span>
     </div>`).join('');
 
   const spacingChips=d.grid.spacing_scale.map(v=>`<div class="token-chip">${v}px</div>`).join('');
@@ -1468,7 +2084,7 @@ function renderType(d){
       </div>
       <div>
         <div class="section-lbl">Grid System</div>
-        <div style="font-size:12.5px;color:var(--tx);line-height:1.8">
+        <div style="font-size:0.875rem;color:var(--tx);line-height:1.8">
           <div>Base unit: <strong>${d.grid.base_unit}</strong></div>
           <div>Columns: <strong>${d.grid.columns_desktop}</strong> desktop · <strong>${d.grid.columns_tablet}</strong> tablet · <strong>${d.grid.columns_mobile}</strong> mobile</div>
           <div>Gutter: <strong>${d.grid.gutter}</strong></div>
@@ -1478,7 +2094,7 @@ function renderType(d){
         </div>
         <div class="section-lbl" style="margin-top:12px">Spacing Scale</div>
         <div class="token-grid">${spacingChips}</div>
-        <div style="margin-top:12px;font-size:12px;color:var(--tx2);line-height:1.6;font-style:italic">${d.grid.grid_rationale}</div>
+        <div style="margin-top:12px;font-size:0.875rem;color:var(--tx2);line-height:1.6;font-style:italic">${d.grid.grid_rationale||''}</div>
       </div>
     </div>
   `;
@@ -1524,7 +2140,7 @@ Return JSON:
     if(!d)throw new Error('Parse failed');
     S.tokens=d;
     renderTokens(d);
-    done(7);
+    done(8);
   }catch(e){showErr('out-tokens',e.message)}
   unload('btn-tokens');
 }
@@ -1547,19 +2163,17 @@ function renderTokens(d){
       <div>
         <div class="section-lbl">Shadow Scale</div>
         <div class="shadow-demo">${shadowDemos}</div>
-        <div style="margin-top:12px">
-          <div class="section-lbl">Motion Principles</div>
-          ${motionItems}
-        </div>
       </div>
       <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div class="section-lbl" style="margin:0">CSS Token File</div>
-          <button class="btn btn-out btn-sm" onclick="cp(document.getElementById('css-raw').textContent)">⎘ Copy</button>
-        </div>
-        <div class="code-block" id="css-raw">${cssHighlighted}</div>
+        <div class="section-lbl">Motion Principles</div>
+        ${motionItems}
       </div>
     </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="section-lbl" style="margin:0">CSS Token File</div>
+      <button class="btn btn-out btn-sm" onclick="cp(document.getElementById('css-raw').textContent)">⎘ Copy</button>
+    </div>
+    <div class="code-block" id="css-raw" style="max-height:400px;overflow-y:auto">${cssHighlighted}</div>
   `;
 }
 
@@ -1603,7 +2217,7 @@ Return JSON:
     if(!d)throw new Error('Parse failed');
     S.voice=d;
     renderVoice(d);
-    done(8);
+    done(4);
   }catch(e){showErr('out-voice',e.message)}
   unload('btn-voice');
 }
@@ -1614,20 +2228,20 @@ function renderVoice(d){
       <div class="tl-num">0${i+1}</div>
       <div>
         <div class="tl-text">"${t.text}"</div>
-        <div style="font-size:10px;color:var(--tx3);font-family:var(--ff-m);margin-top:2px">${t.style}</div>
+        <div style="font-size:0.75rem;color:var(--tx3);font-family:var(--ff-m);margin-top:2px">${t.style}</div>
       </div>
     </div>`).join('');
 
   const formulas=d.headline_formulas.map(f=>`
     <div style="margin-bottom:10px">
-      <div style="font-size:10px;font-family:var(--ff-m);color:var(--am);margin-bottom:3px">${f.formula}</div>
+      <div style="font-size:0.75rem;font-family:var(--ff-m);color:var(--am);margin-bottom:3px">${f.formula}</div>
       <div class="ogilvy-rule">${f.example}</div>
     </div>`).join('');
 
   const exCopy=d.example_copy.map(e=>`
     <div style="padding:10px 14px;background:var(--s2);border-radius:var(--r);margin-bottom:6px">
-      <div style="font-size:9px;font-family:var(--ff-m);color:var(--tx3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">${e.context}</div>
-      <div style="font-size:13.5px;color:var(--tx)">${e.copy}</div>
+      <div style="font-size:0.75rem;font-family:var(--ff-m);color:var(--tx3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">${e.context}</div>
+      <div style="font-size:1rem;color:var(--tx)">${e.copy}</div>
     </div>`).join('');
 
   document.getElementById('out-voice').innerHTML=`
@@ -1647,7 +2261,7 @@ function renderVoice(d){
       </div>
     </div>
     <div class="section-lbl">Elevator Pitch</div>
-    <div class="quote-block" style="font-family:var(--ff-b);font-style:normal;font-size:14px;line-height:1.7">${d.elevator_pitch}</div>
+    <div class="quote-block" style="font-family:var(--ff-b);font-style:normal;font-size:1rem;line-height:1.7">${d.elevator_pitch}</div>
     <div class="section-lbl" style="margin-top:14px">Example Copy</div>
     ${exCopy}
   `;
@@ -1692,17 +2306,17 @@ function renderArch(d){
     <div style="padding:12px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:6px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
         <strong style="color:var(--tx)">${s.name}</strong>
-        <span style="font-size:9px;background:var(--s3);color:var(--tx3);padding:2px 7px;border-radius:20px;font-family:var(--ff-m)">${s.role}</span>
-        <span style="font-size:9px;color:var(--tx3);font-family:var(--ff-m)">Visual: ${s.visual_connection}</span>
+        <span style="font-size:0.75rem;background:var(--s3);color:var(--tx3);padding:2px 7px;border-radius:20px;font-family:var(--ff-m)">${s.role}</span>
+        <span style="font-size:0.75rem;color:var(--tx3);font-family:var(--ff-m)">Visual: ${s.visual_connection}</span>
       </div>
-      <div style="font-size:12px;color:var(--tx2)">${s.relationship}</div>
-      <div style="font-size:11px;color:var(--tx3);margin-top:3px">${s.notes}</div>
+      <div style="font-size:0.875rem;color:var(--tx2)">${s.relationship}</div>
+      <div style="font-size:0.875rem;color:var(--tx3);margin-top:3px">${s.notes}</div>
     </div>`).join('');
 
   document.getElementById('out-arch').innerHTML=`
     <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--s2);border-radius:var(--r);margin-bottom:14px">
-      <div style="font-family:var(--ff-d);font-size:24px;color:${modelColor}">${d.recommended_model}</div>
-      <div style="font-size:13px;color:var(--tx2);flex:1">${d.rationale}</div>
+      <div style="font-family:var(--ff-d);font-size:1.5rem;color:${modelColor}">${d.recommended_model}</div>
+      <div style="font-size:1rem;color:var(--tx2);flex:1">${d.rationale}</div>
     </div>
     <div class="two-col">
       <div>
@@ -1736,37 +2350,63 @@ function buildGuide(){
       <div class="two-col" style="margin-top:16px">
         <div>
           <div class="section-lbl">Brand Promise</div>
-          <p style="font-size:14px;color:var(--tx);line-height:1.7">${S.strategy.brand_promise}</p>
+          <p style="font-size:1rem;color:var(--tx);line-height:1.7">${S.strategy.brand_promise}</p>
           <div class="section-lbl" style="margin-top:12px">Brand Truth</div>
-          <p style="font-size:14px;color:var(--tx);line-height:1.7">${S.strategy.brand_truth}</p>
+          <p style="font-size:1rem;color:var(--tx);line-height:1.7">${S.strategy.brand_truth}</p>
         </div>
         <div>
           <div class="section-lbl">Personality</div>
           <ul class="kv-list">${S.strategy.personality.map(p=>`<li class="kv-item">${p}</li>`).join('')}</ul>
           <div class="section-lbl" style="margin-top:12px">Tone</div>
-          ${S.strategy.tone_pairs.map(t=>`<div style="font-size:13px;padding:4px 0;border-bottom:1px solid var(--bd);color:var(--tx)"><span style="color:var(--grn)">${t.we_are}</span> <span style="color:var(--tx3);font-size:11px">not</span> <span style="color:var(--red);text-decoration:line-through;opacity:0.6">${t.not}</span></div>`).join('')}
+          ${S.strategy.tone_pairs.map(t=>`<div style="font-size:1rem;padding:4px 0;border-bottom:1px solid var(--bd);color:var(--tx)"><span style="color:var(--grn)">${t.we_are}</span> <span style="color:var(--tx3);font-size:0.875rem">not</span> <span style="color:var(--red);text-decoration:line-through;opacity:0.6">${t.not}</span></div>`).join('')}
         </div>
       </div>
     </div>`:'';
 
-  const logoSection=S.logoSvg?`
+  const lb=S.logo;
+  const logoRender=S.logoSvg||( S.logoPng?`<img src="${S.logoPng}" style="max-width:100%;height:auto;object-fit:contain"/>`:null);
+  const logoSection=(lb||logoRender)?`
     <div class="guide-section">
-      <div class="guide-section-title">03 — Logo System</div>
-      ${S.logoRationale?`<p style="font-size:14px;color:var(--tx2);line-height:1.7;margin-bottom:18px">${S.logoRationale.concept}</p>`:''}
+      <div class="guide-section-title">03 — Logo Concept</div>
+      ${lb?`
+      <div class="guide-h3">${lb.concept_name||''} <span style="font-size:0.875rem;color:var(--tx3);font-weight:400">— ${lb.mark_type||''}</span></div>
+      <p style="font-size:1rem;color:var(--tx2);line-height:1.7;margin-bottom:18px">${lb.concept_statement||''}</p>
+      `:`${S.logoRationale?`<p style="font-size:1rem;color:var(--tx2);line-height:1.7;margin-bottom:18px">${S.logoRationale.concept||''}</p>`:''}`}
+      ${logoRender?`
       <div class="logo-previews" style="margin-bottom:16px">
-        <div class="logo-prev logo-dark"><div class="logo-prev-canvas">${S.logoSvg}</div><div class="logo-prev-label">Dark background</div></div>
-        <div class="logo-prev logo-light"><div class="logo-prev-canvas">${S.logoSvg}</div><div class="logo-prev-label">Light background</div></div>
+        <div class="logo-prev logo-dark"><div class="logo-prev-canvas">${logoRender}</div><div class="logo-prev-label">Dark</div></div>
+        <div class="logo-prev logo-light"><div class="logo-prev-canvas">${logoRender}</div><div class="logo-prev-label">Light</div></div>
       </div>
+      <div class="alert alert-info" style="font-size:0.75rem;margin-bottom:16px">Concept sketch — hand to a professional designer for final execution.</div>`:''}
+      ${lb?`
+      <div class="two-col" style="margin-bottom:16px">
+        <div>
+          <div class="section-lbl">Mark</div>
+          <p style="font-size:0.875rem;color:var(--tx);line-height:1.7;margin-bottom:12px">${lb.mark_description||''}</p>
+          <div class="section-lbl">Wordmark</div>
+          <p style="font-size:0.875rem;color:var(--tx);line-height:1.7">${lb.wordmark_notes||''}</p>
+        </div>
+        <div>
+          <div class="section-lbl">Construction</div>
+          <ul class="kv-list">${(lb.construction_notes||[]).map(n=>`<li class="kv-item">${n}</li>`).join('')}</ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-lbl">Usage Rules</div>
+        <div style="display:flex;gap:12px;margin-bottom:10px">
+          <div style="flex:1"><div style="font-size:0.75rem;color:var(--tx3);font-family:var(--ff-m)">Clear space</div><div style="font-size:0.875rem;color:var(--tx)">${lb.clear_space||''}</div></div>
+          <div style="flex:1"><div style="font-size:0.75rem;color:var(--tx3);font-family:var(--ff-m)">Min size</div><div style="font-size:0.875rem;color:var(--tx)">${lb.min_size||''}</div></div>
+        </div>
+        <ul class="kv-list">${(lb.dont_rules||[]).map(n=>`<li class="kv-item">${n}</li>`).join('')}</ul>
+      </div>`:`
       <div class="card">
         <div class="section-lbl">Logo Usage Rules</div>
         <ul class="kv-list">
           <li class="kv-item">Maintain clear space equal to the icon height on all sides</li>
           <li class="kv-item">Never stretch, rotate, recolor, or add effects to the logo</li>
           <li class="kv-item">Minimum digital size: 120px wide — minimum print size: 30mm</li>
-          <li class="kv-item">Use full lockup as primary; icon-only in constrained spaces (favicons, avatars)</li>
-          <li class="kv-item">The logo always appears in its approved colors or solid black/white — never tints or transparencies</li>
         </ul>
-      </div>
+      </div>`}
     </div>`:'';
 
   const colorSection=S.colors?`
@@ -1789,14 +2429,14 @@ function buildGuide(){
         <div style="padding:16px 0;border-bottom:1px solid var(--bd)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
             <span class="section-lbl" style="margin:0">${f.role}</span>
-            <span style="font-family:var(--ff-m);font-size:10px;color:var(--tx3)">${f.name} · ${f.weights}</span>
+            <span style="font-family:var(--ff-m);font-size:0.75rem;color:var(--tx3)">${f.name} · ${f.weights}</span>
           </div>
           <div style="font-family:'${f.name}',serif;font-size:${f.role==='Display'?'36px':f.role==='Heading'?'24px':f.role==='Body'?'15px':'12px'};color:var(--tx);line-height:1.3">${f.sample}</div>
-          <div style="font-size:11px;color:var(--tx3);margin-top:6px">${f.usage}</div>
+          <div style="font-size:0.875rem;color:var(--tx3);margin-top:6px">${f.usage}</div>
         </div>`).join('')}
       <div style="margin-top:16px">
         <div class="section-lbl">Grid — ${S.typography.grid.base_unit} base unit · ${S.typography.grid.columns_desktop} columns · ${S.typography.grid.gutter} gutter</div>
-        <div style="font-size:12px;color:var(--tx2);line-height:1.7">${S.typography.grid.grid_rationale}</div>
+        <div style="font-size:0.875rem;color:var(--tx2);line-height:1.7">${S.typography.grid.grid_rationale||''}</div>
       </div>
     </div>`:'';
 
@@ -1804,7 +2444,7 @@ function buildGuide(){
     <div class="guide-section">
       <div class="guide-section-title">06 — Voice & Copy</div>
       <div class="section-lbl">Taglines</div>
-      ${S.voice.taglines.map(t=>`<div style="font-family:var(--ff-d);font-size:20px;font-style:italic;padding:8px 0;border-bottom:1px solid var(--bd)">"${t.text}"</div>`).join('')}
+      ${S.voice.taglines.map(t=>`<div style="font-family:var(--ff-d);font-size:1.25rem;font-style:italic;padding:8px 0;border-bottom:1px solid var(--bd)">"${t.text}"</div>`).join('')}
       <div class="two-col" style="margin-top:16px">
         <div>
           <div class="section-lbl">Do</div>
@@ -1816,7 +2456,7 @@ function buildGuide(){
         </div>
       </div>
       <div class="section-lbl" style="margin-top:14px">Elevator Pitch</div>
-      <div class="quote-block" style="font-family:var(--ff-b);font-style:normal;font-size:14px;line-height:1.7">${S.voice.elevator_pitch}</div>
+      <div class="quote-block" style="font-family:var(--ff-b);font-style:normal;font-size:1rem;line-height:1.7">${S.voice.elevator_pitch}</div>
     </div>`:'';
 
   const tokenSection=S.tokens?`
@@ -1828,22 +2468,22 @@ function buildGuide(){
         <div class="section-lbl" style="margin:0">CSS Token File</div>
         <button class="btn btn-out btn-sm" onclick="cp(S.tokens.css_root)">⎘ Copy</button>
       </div>
-      <div class="code-block" style="font-size:10px;max-height:300px;overflow-y:auto">${S.tokens.css_root.replace(/</g,'&lt;')}</div>
+      <div class="code-block" style="font-size:0.75rem;max-height:300px;overflow-y:auto">${S.tokens.css_root.replace(/</g,'&lt;')}</div>
     </div>`:'';
 
   const assetsSection=assets.length?`
     <div class="guide-section">
       <div class="guide-section-title">08 — Asset Specifications</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        ${assets.map(a=>`<div style="padding:10px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);font-size:13px;color:var(--tx)">${a}</div>`).join('')}
+        ${assets.map(a=>`<div class="card" style="padding:10px 14px;font-size:1rem;margin-bottom:0">${a}</div>`).join('')}
       </div>
     </div>`:'';
 
   const archSection=(S.arch&&S.archEnabled)?`
     <div class="guide-section">
       <div class="guide-section-title">09 — Brand Architecture</div>
-      <div style="font-size:18px;font-family:var(--ff-d);color:var(--am);margin-bottom:8px">${S.arch.recommended_model}</div>
-      <p style="font-size:14px;color:var(--tx2);line-height:1.7;margin-bottom:14px">${S.arch.rationale}</p>
+      <div style="font-size:1.25rem;font-family:var(--ff-d);color:var(--am);margin-bottom:8px">${S.arch.recommended_model}</div>
+      <p style="font-size:1rem;color:var(--tx2);line-height:1.7;margin-bottom:14px">${S.arch.rationale}</p>
       <div class="section-lbl">Visual Rules</div>
       <ul class="kv-list">${S.arch.visual_rules.map(r=>`<li class="kv-item">${r}</li>`).join('')}</ul>
     </div>`:'';
@@ -1854,14 +2494,14 @@ function buildGuide(){
         <div class="guide-eyebrow">Brand Identity Guidelines</div>
         <div class="guide-brand-name">${b.name}</div>
         <div class="guide-industry">${b.industry||''}</div>
-        <div style="margin-top:20px;font-size:11px;font-family:var(--ff-m);color:var(--tx3)">Produced with Brand Studio · ${new Date().toLocaleDateString('en-AU',{year:'numeric',month:'long'})}</div>
+        <div style="margin-top:20px;font-size:0.875rem;font-family:var(--ff-m);color:var(--tx3)">Produced with Brand Studio · ${new Date().toLocaleDateString('en-AU',{year:'numeric',month:'long'})}</div>
       </div>
-      ${S.logoSvg?`<div class="guide-cover-logo">${S.logoSvg}</div>`:''}
+      ${logoRender?`<div class="guide-cover-logo" style="${S.logoPng&&!S.logoSvg?'background:#fff;border-radius:var(--r);padding:16px':''}">${logoRender}</div>`:''}
     </div>
     ${b.desc?`
     <div class="guide-section">
       <div class="guide-section-title">01 — About ${b.name}</div>
-      <p style="font-size:15px;color:var(--tx);line-height:1.75">${b.desc}</p>
+      <p style="font-size:1.125rem;color:var(--tx);line-height:1.75">${b.desc}</p>
     </div>`:''}
     ${stratSection}
     ${logoSection}
@@ -1872,7 +2512,9 @@ function buildGuide(){
     ${assetsSection}
     ${archSection}
   `;
+  done(10);
   toast('Brand guide built');
+  document.getElementById('content').scrollTo(0,0);
 }
 
 // ═══════════════════════════════
@@ -1881,11 +2523,14 @@ function buildGuide(){
 function setLoading(btnId, outId, msg){
   const btn=document.getElementById(btnId);
   if(btn)btn.disabled=true;
-  document.getElementById(outId).innerHTML=`<div style="display:flex;align-items:center;gap:10px;color:var(--tx2);font-size:13px">${msg} <div class="ld"><span></span><span></span><span></span></div></div>`;
+  document.getElementById(outId).innerHTML=`<div style="display:flex;align-items:center;gap:10px;color:var(--tx2);font-size:1rem">${msg} <div class="ld"><span></span><span></span><span></span></div></div>`;
 }
 function unload(btnId){const btn=document.getElementById(btnId);if(btn)btn.disabled=false}
-function showErr(outId,msg){document.getElementById(outId).innerHTML=`<div class="alert alert-err">Error: ${msg}</div>`}
-function done(n){document.querySelector(`.si[data-n="${n}"]`)?.classList.add('done')}
+function showErr(outId,msg){
+  const linked=msg.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener" style="color:#E08888;text-decoration:underline">$1</a>');
+  document.getElementById(outId).innerHTML=`<div class="alert alert-err">${linked}</div>`;
+}
+function done(n){document.querySelector(`.si[data-n="${n}"]`)?.classList.add('done');if(typeof saveCurrentProject==='function')saveCurrentProject()}
 function cp(t){navigator.clipboard.writeText(t).then(()=>toast('Copied'))}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 
@@ -1898,6 +2543,87 @@ function dlSvg(){
   a.click();URL.revokeObjectURL(url);toast('SVG downloaded');
 }
 function copySvg(){if(S.logoSvg)cp(S.logoSvg)}
+
+function exportPdf(){
+  const el=document.getElementById('guide-out');
+  if(!el||el.children.length===0||el.textContent.includes('Complete the steps')){
+    toast('Build the brand guide first');return;
+  }
+  toast('Generating PDF...');
+  const name=(S.brief.name||'brand').toLowerCase().replace(/[^a-z0-9]+/g,'-');
+
+  // Temporarily apply print-friendly styles
+  el.classList.add('pdf-export');
+  // Render to canvas first, then create a single-page PDF from actual dimensions
+  html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#ffffff',scrollY:-window.scrollY}).then(canvas=>{
+    const imgData=canvas.toDataURL('image/jpeg',0.95);
+    const pxW=canvas.width;
+    const pxH=canvas.height;
+    const pdfW=210;
+    const pdfH=(pxH*pdfW)/pxW;
+    const JsPDF=window.jspdf?.jsPDF||window.jsPDF;
+    if(!JsPDF){el.classList.remove('pdf-export');toast('PDF library failed to load — try Print instead');return}
+    const pdf=new JsPDF({unit:'mm',format:[pdfW,pdfH],orientation:'portrait'});
+    pdf.addImage(imgData,'JPEG',0,0,pdfW,pdfH);
+    pdf.save(`${name}-brand-guide.pdf`);
+    el.classList.remove('pdf-export');
+    toast('PDF downloaded');
+  }).catch(err=>{
+    console.error('PDF export error:',err);
+    el.classList.remove('pdf-export');
+    toast('PDF export failed — try Print instead');
+  });
+}
+
+function buildLogoPrompt(){
+  const d=S.logo;const b=S.brief;
+  if(!d)return null;
+  const colRef=S.colors?S.colors.palette.map(c=>`${c.role}: ${c.hex} (${c.name})`).join(', '):'not yet defined';
+
+  // Short prompt optimized for image generators
+  let prompt=`# Logo Design Prompt — ${b.name}\n\n`;
+  prompt+=`## Concept\n${d.concept_statement||''}\n\n`;
+  prompt+=`## Specifications\n`;
+  prompt+=`- **Type:** ${d.mark_type||''}\n`;
+  prompt+=`- **Mark:** ${d.mark_description||''}\n`;
+  prompt+=`- **Wordmark:** ${d.wordmark_notes||''}\n`;
+  prompt+=`- **Brand colors:** ${colRef}\n`;
+  prompt+=`- **Color usage:** ${d.color_usage||''}\n\n`;
+  prompt+=`## Construction\n${(d.construction_notes||[]).map(n=>'- '+n).join('\n')}\n\n`;
+  prompt+=`## Reference logos\n${d.designer_references||''}\n\n`;
+
+  // Flat prompt for pasting directly
+  prompt+=`---\n\n## Ready-to-paste prompt\n\n`;
+  prompt+=`Professional logo design for "${b.name}", a ${b.industry} brand. `;
+  prompt+=`${d.mark_type} style. `;
+  prompt+=`${d.mark_description} `;
+  prompt+=`Wordmark: ${d.wordmark_notes} `;
+  if(S.colors){
+    prompt+=`Primary color ${S.colors.palette[0]?.hex} (${S.colors.palette[0]?.name}), `;
+    prompt+=`secondary ${S.colors.palette[1]?.hex}. `;
+  }
+  prompt+=`${(d.construction_notes||[])[0]||''} `;
+  prompt+=`Clean vector style, white background, professional brand identity, minimal, scalable. `;
+  prompt+=`References: ${d.designer_references||'modern corporate identity'}`;
+
+  return prompt;
+}
+
+function exportLogoPrompt(){
+  const prompt=buildLogoPrompt();
+  if(!prompt){toast('Generate a logo brief first');return}
+  const name=(S.brief.name||'brand').toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  const blob=new Blob([prompt],{type:'text/markdown'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`${name}-logo-prompt.md`;a.click();
+  URL.revokeObjectURL(url);toast('Prompt exported');
+}
+
+function copyLogoPrompt(){
+  const prompt=buildLogoPrompt();
+  if(!prompt){toast('Generate a logo brief first');return}
+  cp(prompt);
+}
 
 function loadFonts(names){
   names=names.filter(Boolean);
@@ -1939,11 +2665,14 @@ function nextStep(){
     S.brief=brief();
     document.getElementById('proj-name').textContent=S.brief.name||'New Brand';
     if(!S.brief.name){toast('Enter a brand name first');return}
+    done(1);
   }
+  if(S.step===9){done(9)}
   const next=S.step===10&&S.archEnabled?11:S.step+1;
   if(next>11)return;
   if(next===11&&!S.archEnabled)return;
   goToStep(next);
+  if(typeof saveCurrentProject==='function')saveCurrentProject();
 }
 
 function prevStep(){
@@ -1963,13 +2692,38 @@ function updateFoot(){
 // ═══════════════════════════════
 // INIT
 // ═══════════════════════════════
+const BOOK_URLS={
+  'Watkins':'https://www.amazon.com/Hello-My-Name-Awesome-Create/dp/1626564728',
+  'Neumeier':'https://www.booktopia.com.au/brand-gap-the-marty-neumeier/book/9780321348104.html',
+  'Millman':'https://www.booktopia.com.au/brand-bible-debbie-millman/book/9781592537266.html',
+  'Müller':'https://www.booktopia.com.au/logo-modernism-jens-muller/book/9783836545303.html',
+  'Airey':'https://www.booktopia.com.au/logo-design-love-david-airey/book/9780321985200.html',
+  'Albers':'https://www.booktopia.com.au/interaction-of-color-josef-albers/book/9780300179354.html',
+  'Müller-Brockmann':'https://www.booktopia.com.au/grid-systems-in-graphic-design-josef-mulller-brockmann/book/9783721201451.html',
+  'Refactoring UI':'https://refactoringui.com/',
+  'Head':'https://www.booktopia.com.au/designing-interface-animation-val-head/book/9781933820323.html',
+  'Ogilvy':'https://www.booktopia.com.au/ogilvy-on-advertising-david-ogilvy/book/9781853756153.html',
+  'Aaker':'https://www.booktopia.com.au/brand-portfolio-strategy-david-a-aaker/book/9781982146528.html'
+};
+
+function linkifyBook(bookStr){
+  if(!bookStr)return'';
+  return bookStr.replace(/([^·]+)/g,(part)=>{
+    const name=part.trim();
+    if(!name)return part;
+    const url=BOOK_URLS[name];
+    if(url)return` <a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none">${name}</a> `;
+    return part;
+  }).replace(/\s+·\s+/g,' · ').trim();
+}
+
 function initSidebar(){
   document.getElementById('sb-steps').innerHTML=STEPS.map(s=>`
     <div class="si${s.n===1?' active':''}${s.optional?' optional':''}" data-n="${s.n}" onclick="goToStep(${s.n})">
       <div class="si-num">${s.n}</div>
       <div>
         <div class="si-label">${s.label}</div>
-        ${s.book?`<div class="si-book">${s.book}</div>`:''}
+        ${s.book?`<div class="si-book">${linkifyBook(s.book)}</div>`:''}
       </div>
     </div>`).join('');
 }
@@ -1987,6 +2741,8 @@ function initTagInput(wrapId,inputId,hiddenId){
     t.querySelector('button').onclick=()=>{tags.splice(tags.indexOf(v),1);t.remove();hid.value=tags.join(', ')};
     wrap.insertBefore(t,inp);hid.value=tags.join(', ');inp.value='';
   }
+  wrap._addTag=add;
+  wrap._clearTags=()=>{tags.length=0;wrap.querySelectorAll('.tag').forEach(t=>t.remove());hid.value=''};
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===','){e.preventDefault();add(inp.value)}});
   inp.addEventListener('blur',()=>{if(inp.value.trim())add(inp.value)});
   wrap.addEventListener('click',()=>inp.focus());
@@ -2011,21 +2767,242 @@ function initAssets(){
   });
 }
 
-function resetAll(){
-  if(!confirm('Reset everything and start over?'))return;
-  Object.assign(S,{step:1,brief:{},naming:null,strategy:null,logo:null,logoSvg:null,logoRationale:null,colors:null,typography:null,grid:null,tokens:null,voice:null,arch:null});
+function resetAll(skipConfirm){
+  if(!skipConfirm&&!confirm('Reset everything and start over?'))return;
+  Object.assign(S,{step:1,brief:{},naming:null,strategy:null,logo:null,logoSvg:null,logoPng:null,logoRationale:null,colors:null,typography:null,grid:null,tokens:null,voice:null,arch:null});
   ['naming','strategy','logo','color','type','tokens','voice','arch'].forEach(id=>{
     const el=document.getElementById(`out-${id}`);
     if(el)el.innerHTML='<div class="gen-placeholder">Content will appear here.</div>';
   });
-  document.getElementById('guide-out').innerHTML='<div style="padding:48px;text-align:center;color:var(--tx3);font-size:13px;">Complete the steps above and click "Build Brand Guide" to compile your identity document.</div>';
+  document.getElementById('guide-out').innerHTML='<div style="padding:48px;text-align:center;color:var(--tx3);font-size:1rem;">Complete the steps above and click "Build Brand Guide" to compile your identity document.</div>';
   document.querySelectorAll('.si').forEach(el=>el.classList.remove('done'));
-  document.getElementById('btn-regen-logo').style.display='none';
+  void 0;
   document.getElementById('proj-name').textContent='New Brand';
+  // Clear form fields
+  ['b-name','b-industry','b-desc','b-audience','b-avoid'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  document.getElementById('b-vdir').value='';
+  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('sel'));
+  restoreTagInput('tw-personality','b-personality','');
+  restoreTagInput('tw-competitors','b-competitors','');
+  restoreTagInput('tw-subbrand','b-subbrands','');
+  if(S.archEnabled){S.archEnabled=false;restoreArchToggle()}
   goToStep(1);
 }
 
-// Boot
+// ═══════════════════════════════
+// PROJECT MANAGEMENT
+// ═══════════════════════════════
+let currentProjectId=null;
+
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+
+function getProjectIndex(){
+  try{return JSON.parse(localStorage.getItem('bs_project_index')||'[]')}catch{return[]}
+}
+function updateProjectIndex(idx){localStorage.setItem('bs_project_index',JSON.stringify(idx))}
+
+function serializeProject(){
+  S.brief=brief();
+  const formInputs={};
+  ['b-name','b-industry','b-desc','b-audience','b-personality','b-competitors','b-avoid','b-vdir','b-subbrands'].forEach(id=>{
+    const el=document.getElementById(id);if(el)formInputs[id]=el.value;
+  });
+  const doneSteps=[];
+  document.querySelectorAll('.si.done').forEach(el=>{const n=parseInt(el.dataset.n);if(n)doneSteps.push(n)});
+  const assets=[];
+  document.querySelectorAll('.a-check.on').forEach(el=>assets.push(el.dataset.asset));
+  return{
+    state:JSON.parse(JSON.stringify(S)),
+    formInputs,
+    doneSteps,
+    assets,
+    name:S.brief.name||'New Brand',
+    updatedAt:Date.now()
+  };
+}
+
+function restoreTagInput(wrapId,hiddenId,csv){
+  const wrap=document.getElementById(wrapId);
+  if(!wrap||!wrap._clearTags)return;
+  wrap._clearTags();
+  if(!csv)return;
+  csv.split(',').map(s=>s.trim()).filter(Boolean).forEach(v=>wrap._addTag(v));
+}
+
+function restoreStyleCard(vdir){
+  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('sel'));
+  if(!vdir)return;
+  const match=document.querySelector(`.sc[data-v="${vdir}"]`);
+  if(match)match.classList.add('sel');
+}
+
+function restoreArchToggle(){
+  document.getElementById('tg-arch').classList.toggle('on',S.archEnabled);
+  document.getElementById('tl-arch').classList.toggle('on',S.archEnabled);
+  const si=document.querySelector('.si[data-n="11"]');
+  if(si)si.classList.toggle('optional',!S.archEnabled);
+  S.maxSteps=S.archEnabled?11:10;
+}
+
+function restoreOutputs(){
+  if(S.naming)renderNaming(S.naming);
+  if(S.strategy)renderStrategy(S.strategy);
+  if(S.logoSvg){renderLogo(S.logoSvg,S.logoRationale)}
+  else if(S.logoPng){showLogoUploadPreview(S.logoPng,'Saved logo','img');document.getElementById('tg-haslogo')?.classList.add('on');document.getElementById('tl-haslogo')?.classList.add('on');const ua=document.getElementById('logo-upload-area');if(ua)ua.style.display='block';const bs=document.getElementById('logo-brief-section');if(bs)bs.style.display='none'}
+  if(S.colors)renderColor(S.colors);
+  if(S.typography){renderType(S.typography);loadFonts(S.typography.fonts.map(f=>f.name))}
+  if(S.tokens)renderTokens(S.tokens);
+  if(S.voice)renderVoice(S.voice);
+  if(S.arch)renderArch(S.arch);
+}
+
+function deserializeProject(proj){
+  Object.assign(S,proj.state);
+  ['b-name','b-industry','b-desc','b-audience','b-avoid'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value=proj.formInputs[id]||'';
+  });
+  document.getElementById('b-personality').value=proj.formInputs['b-personality']||'';
+  document.getElementById('b-competitors').value=proj.formInputs['b-competitors']||'';
+  document.getElementById('b-vdir').value=proj.formInputs['b-vdir']||'';
+  document.getElementById('b-subbrands').value=proj.formInputs['b-subbrands']||'';
+  restoreTagInput('tw-personality','b-personality',proj.formInputs['b-personality']);
+  restoreTagInput('tw-competitors','b-competitors',proj.formInputs['b-competitors']);
+  restoreTagInput('tw-subbrand','b-subbrands',proj.formInputs['b-subbrands']);
+  restoreStyleCard(proj.formInputs['b-vdir']);
+  restoreArchToggle();
+  document.querySelectorAll('.si').forEach(el=>el.classList.remove('done'));
+  (proj.doneSteps||[]).forEach(n=>document.querySelector(`.si[data-n="${n}"]`)?.classList.add('done'));
+  // Restore asset checkboxes
+  document.querySelectorAll('.a-check').forEach(el=>{
+    const isOn=(proj.assets||[]).includes(el.dataset.asset);
+    el.classList.toggle('on',isOn);
+    el.querySelector('.a-box').textContent=isOn?'✓':'';
+  });
+  restoreOutputs();
+  document.getElementById('proj-name').textContent=S.brief.name||'New Brand';
+  goToStep(S.step);
+  updateFoot();
+}
+
+function saveCurrentProject(){
+  if(!currentProjectId)currentProjectId=genId();
+  const proj=serializeProject();
+  try{localStorage.setItem('bs_project_'+currentProjectId,JSON.stringify(proj))}catch{toast('Storage full — export projects as JSON');return}
+  localStorage.setItem('bs_current',currentProjectId);
+  const idx=getProjectIndex();
+  const existing=idx.findIndex(e=>e.id===currentProjectId);
+  const entry={id:currentProjectId,name:proj.name,updatedAt:proj.updatedAt};
+  if(existing>=0)idx[existing]=entry;else idx.push(entry);
+  updateProjectIndex(idx);
+}
+
+function loadProject(id,silent){
+  if(currentProjectId&&currentProjectId!==id)saveCurrentProject();
+  const raw=localStorage.getItem('bs_project_'+id);
+  if(!raw){if(!silent)toast('Project not found');return}
+  try{
+    const proj=JSON.parse(raw);
+    // Clear outputs before restoring
+    ['naming','strategy','logo','color','type','tokens','voice','arch'].forEach(oid=>{
+      const el=document.getElementById('out-'+oid);
+      if(el)el.innerHTML='<div class="gen-placeholder">Content will appear here.</div>';
+    });
+    void 0;
+    deserializeProject(proj);
+    currentProjectId=id;
+    localStorage.setItem('bs_current',id);
+    if(!silent)toast('Loaded: '+proj.name);
+  }catch{if(!silent)toast('Failed to load project')}
+  closeProjectMenu();
+}
+
+function newProject(){
+  if(currentProjectId)saveCurrentProject();
+  resetAll(true);
+  currentProjectId=genId();
+  localStorage.setItem('bs_current',currentProjectId);
+  toast('New project started');
+  closeProjectMenu();
+}
+
+function deleteProject(id,ev){
+  ev.stopPropagation();
+  const idx=getProjectIndex();
+  const entry=idx.find(e=>e.id===id);
+  if(!confirm('Delete "'+(entry?.name||'project')+'"?'))return;
+  localStorage.removeItem('bs_project_'+id);
+  updateProjectIndex(idx.filter(e=>e.id!==id));
+  if(currentProjectId===id){currentProjectId=null;localStorage.removeItem('bs_current');resetAll(true)}
+  renderProjectList();
+}
+
+function exportProject(){
+  saveCurrentProject();
+  const proj=serializeProject();
+  const name=(proj.name||'brand').toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  const blob=new Blob([JSON.stringify(proj,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`${name}-brand-studio.json`;a.click();
+  URL.revokeObjectURL(url);
+  toast('Project exported');
+  closeProjectMenu();
+}
+
+function handleImport(ev){
+  const file=ev.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const proj=JSON.parse(e.target.result);
+      if(!proj.state||!proj.formInputs)throw new Error('Invalid format');
+      if(currentProjectId)saveCurrentProject();
+      const id=genId();
+      proj.updatedAt=Date.now();
+      localStorage.setItem('bs_project_'+id,JSON.stringify(proj));
+      const idx=getProjectIndex();
+      idx.push({id,name:proj.name||'Imported',updatedAt:proj.updatedAt});
+      updateProjectIndex(idx);
+      loadProject(id);
+      toast('Imported: '+(proj.name||'project'));
+    }catch{toast('Invalid project file')}
+  };
+  reader.readAsText(file);
+  ev.target.value='';
+  closeProjectMenu();
+}
+
+function toggleProjectMenu(){
+  const menu=document.getElementById('proj-menu');
+  const isOpen=menu.classList.contains('open');
+  if(isOpen){closeProjectMenu()}else{renderProjectList();menu.classList.add('open')}
+}
+
+function closeProjectMenu(){document.getElementById('proj-menu').classList.remove('open')}
+
+function renderProjectList(){
+  const idx=getProjectIndex().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  const list=document.getElementById('proj-list');
+  if(!idx.length){list.innerHTML='<div class="proj-empty">No saved projects yet.</div>';return}
+  list.innerHTML=idx.map(p=>{
+    const active=p.id===currentProjectId?'active':'';
+    const date=p.updatedAt?new Date(p.updatedAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'';
+    return`<div class="proj-item ${active}" onclick="loadProject('${p.id}')">
+      <div class="proj-item-name">${p.name||'Untitled'}</div>
+      <div class="proj-item-date">${date}</div>
+      <button class="proj-item-del" onclick="deleteProject('${p.id}',event)" title="Delete">×</button>
+    </div>`;
+  }).join('');
+}
+
+// Close project menu on outside click
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('proj-menu');
+  if(menu.classList.contains('open')&&!e.target.closest('.proj-menu')&&!e.target.closest('.proj-trigger'))closeProjectMenu();
+});
+
+// ═══════════════════════════════
+// BOOT
+// ═══════════════════════════════
 initSidebar();
 initTagInput('tw-personality','ti-personality','b-personality');
 initTagInput('tw-competitors','ti-competitors','b-competitors');
@@ -2033,6 +3010,20 @@ initTagInput('tw-subbrand','ti-subbrand','b-subbrands');
 initStyleCards();
 initAssets();
 updateFoot();
+
+// Restore provider preference and init model selector
+const _savedProvider=sessionStorage.getItem('bs_provider');
+if(_savedProvider){_currentProvider=_savedProvider;document.getElementById('provider-sel').value=_savedProvider}
+updateModelSelector();
+
+// Detect proxy and update provider indicators
+checkProxy();
+
+// Restore last project
+const _lastProj=localStorage.getItem('bs_current');
+if(_lastProj&&localStorage.getItem('bs_project_'+_lastProj)){
+  loadProject(_lastProj,true);
+}
 </script>
 </body>
 </html>

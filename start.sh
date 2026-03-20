@@ -29,11 +29,15 @@ if [ ! -f ".env" ]; then
     read -p "  Anthropic API key (https://console.anthropic.com/settings/keys): " ANTHROPIC_KEY
     read -p "  OpenAI API key (https://platform.openai.com/api-keys): " OPENAI_KEY
     read -p "  Gemini API key (https://aistudio.google.com/apikey - free): " GEMINI_KEY
+    read -p "  DeepSeek API key (https://platform.deepseek.com/api_keys - very cheap): " DEEPSEEK_KEY
+    read -p "  Groq API key (https://console.groq.com/keys - free): " GROQ_KEY
 
     cat > .env <<EOL
 ANTHROPIC_API_KEY=${ANTHROPIC_KEY}
 OPENAI_API_KEY=${OPENAI_KEY}
 GEMINI_API_KEY=${GEMINI_KEY}
+DEEPSEEK_API_KEY=${DEEPSEEK_KEY}
+GROQ_API_KEY=${GROQ_KEY}
 PORT=3000
 EOL
 

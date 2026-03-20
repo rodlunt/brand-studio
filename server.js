@@ -7,20 +7,33 @@ const PORT = process.env.PORT || 3000;
 const KEYS = {
   anthropic: process.env.ANTHROPIC_API_KEY || '',
   openai: process.env.OPENAI_API_KEY || '',
-  gemini: process.env.GEMINI_API_KEY || ''
+  gemini: process.env.GEMINI_API_KEY || '',
+  deepseek: process.env.DEEPSEEK_API_KEY || '',
+  groq: process.env.GROQ_API_KEY || ''
 };
 
 // Available models per provider — client sends the model ID
 const ALLOWED_MODELS = {
   anthropic: ['claude-sonnet-4-20250514','claude-haiku-4-5-20251001','claude-opus-4-20250514'],
   openai: ['gpt-4o','gpt-4o-mini','gpt-4.1','gpt-4.1-mini','gpt-4.1-nano'],
-  gemini: ['gemini-2.5-flash','gemini-2.5-pro','gemini-2.0-flash']
+  gemini: ['gemini-2.5-flash','gemini-2.5-pro','gemini-2.0-flash'],
+  deepseek: ['deepseek-chat','deepseek-reasoner'],
+  groq: ['llama-3.3-70b-versatile','llama-3.1-8b-instant','meta-llama/llama-4-scout-17b-16e-instruct','qwen/qwen3-32b']
 };
 
 const BILLING_URLS = {
   anthropic: 'https://console.anthropic.com/settings/billing',
   openai: 'https://platform.openai.com/settings/organization/billing/overview',
-  gemini: 'https://aistudio.google.com/apikey'
+  gemini: 'https://aistudio.google.com/apikey',
+  deepseek: 'https://platform.deepseek.com/top_up',
+  groq: 'https://console.groq.com/settings/billing'
+};
+
+// OpenAI-compatible providers — reuse the same calling logic
+const OPENAI_COMPAT = {
+  openai:   { url: 'https://api.openai.com/v1/chat/completions',      defaultModel: 'gpt-4o' },
+  deepseek: { url: 'https://api.deepseek.com/v1/chat/completions',    defaultModel: 'deepseek-chat' },
+  groq:     { url: 'https://api.groq.com/openai/v1/chat/completions', defaultModel: 'llama-3.3-70b-versatile' }
 };
 
 app.use(express.json({ limit: '1mb' }));
@@ -33,7 +46,9 @@ app.get('/api/health', (_req, res) => {
     providers: {
       anthropic: !!KEYS.anthropic,
       openai: !!KEYS.openai,
-      gemini: !!KEYS.gemini
+      gemini: !!KEYS.gemini,
+      deepseek: !!KEYS.deepseek,
+      groq: !!KEYS.groq
     },
     default: process.env.DEFAULT_PROVIDER || 'anthropic'
   });
@@ -59,8 +74,8 @@ app.post('/api/messages', async (req, res) => {
     const model = requestedModel;
     if (provider === 'anthropic') {
       result = await callAnthropic(key, req.body, model);
-    } else if (provider === 'openai') {
-      result = await callOpenAI(key, req.body, model);
+    } else if (OPENAI_COMPAT[provider]) {
+      result = await callOpenAICompat(key, req.body, model, OPENAI_COMPAT[provider]);
     } else if (provider === 'gemini') {
       result = await callGemini(key, req.body, model);
     } else {
@@ -93,21 +108,21 @@ async function callAnthropic(key, body, model) {
   return { content: data.content };
 }
 
-// ── OpenAI ──
-async function callOpenAI(key, body, model) {
+// ── OpenAI-compatible (OpenAI, DeepSeek, Groq) ──
+async function callOpenAICompat(key, body, model, config) {
   const messages = [];
   if (body.system) messages.push({ role: 'system', content: body.system });
   for (const m of body.messages) {
     messages.push({ role: m.role, content: m.content });
   }
 
-  const r = await fetch('https://api.openai.com/v1/chat/completions', {
+  const r = await fetch(config.url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
-    body: JSON.stringify({ model: model || 'gpt-4o', max_tokens: body.max_tokens || 2500, messages })
+    body: JSON.stringify({ model: model || config.defaultModel, max_tokens: body.max_tokens || 2500, messages })
   });
   const data = await r.json();
-  if (!r.ok) throw { status: r.status, message: data.error?.message || `OpenAI API ${r.status}` };
+  if (!r.ok) throw { status: r.status, message: data.error?.message || `API ${r.status}` };
   return { content: [{ type: 'text', text: data.choices[0].message.content }] };
 }
 

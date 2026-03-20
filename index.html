@@ -730,6 +730,8 @@ select option{background:var(--s2)}
         <option value="anthropic">Claude</option>
         <option value="openai">ChatGPT</option>
         <option value="gemini">Gemini</option>
+        <option value="deepseek">DeepSeek</option>
+        <option value="groq">Groq</option>
       </select>
       <select id="model-sel" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--ff-m);font-size:0.875rem;padding:5px 26px 5px 8px;cursor:pointer;outline:none" onchange="setModel(this.value)" title="Model"></select>
       <button class="btn btn-out btn-sm" onclick="saveCurrentProject();toast('Project saved')">💾 Save</button>
@@ -1379,6 +1381,16 @@ const MODEL_OPTIONS={
     {id:'gemini-2.0-flash',label:'2.0 Flash',cost:'cheap'},
     {id:'gemini-2.5-flash',label:'2.5 Flash',cost:'mid'},
     {id:'gemini-2.5-pro',label:'2.5 Pro',cost:'pricey'}
+  ],
+  deepseek:[
+    {id:'deepseek-chat',label:'V3 Chat',cost:'cheap'},
+    {id:'deepseek-reasoner',label:'R1 Reasoner',cost:'mid'}
+  ],
+  groq:[
+    {id:'llama-3.1-8b-instant',label:'Llama 3.1 8B',cost:'free'},
+    {id:'llama-3.3-70b-versatile',label:'Llama 3.3 70B',cost:'free'},
+    {id:'meta-llama/llama-4-scout-17b-16e-instruct',label:'Llama 4 Scout',cost:'free'},
+    {id:'qwen/qwen3-32b',label:'Qwen3 32B',cost:'free'}
   ]
 };
 
@@ -1412,7 +1424,7 @@ async function checkProxy(){
       }
       if(_proxyInfo.providers){
         const sel=document.getElementById('provider-sel');
-        const labels={anthropic:'Claude',openai:'ChatGPT',gemini:'Gemini'};
+        const labels={anthropic:'Claude',openai:'ChatGPT',gemini:'Gemini',deepseek:'DeepSeek',groq:'Groq'};
         for(const opt of sel.options){
           const avail=_proxyInfo.providers[opt.value];
           opt.textContent=labels[opt.value]||opt.value;

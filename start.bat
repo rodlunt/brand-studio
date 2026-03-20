@@ -33,11 +33,15 @@ if not exist .env (
     set /p ANTHROPIC_KEY="  Anthropic API key (https://console.anthropic.com/settings/keys): "
     set /p OPENAI_KEY="  OpenAI API key (https://platform.openai.com/api-keys): "
     set /p GEMINI_KEY="  Gemini API key (https://aistudio.google.com/apikey - free): "
+    set /p DEEPSEEK_KEY="  DeepSeek API key (https://platform.deepseek.com/api_keys - very cheap): "
+    set /p GROQ_KEY="  Groq API key (https://console.groq.com/keys - free): "
 
     (
         echo ANTHROPIC_API_KEY=%ANTHROPIC_KEY%
         echo OPENAI_API_KEY=%OPENAI_KEY%
         echo GEMINI_API_KEY=%GEMINI_KEY%
+        echo DEEPSEEK_API_KEY=%DEEPSEEK_KEY%
+        echo GROQ_API_KEY=%GROQ_KEY%
         echo PORT=3000
     ) > .env
 

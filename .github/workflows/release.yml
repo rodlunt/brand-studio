@@ -39,7 +39,7 @@ jobs:
         run: node build-portable.js
 
       - name: Build executable
-        run: npx pkg brand-studio-portable.js --target ${{ matrix.target }} --output ${{ matrix.artifact }} --compress GZip
+        run: npx pkg brand-studio.cmd --target ${{ matrix.target }} --output ${{ matrix.artifact }} --compress GZip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

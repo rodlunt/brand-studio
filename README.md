@@ -1,6 +1,6 @@
 # Brand Studio
 
-AI-powered brand identity tool — strategy, logo brief, color, typography, UI tokens & copy. 12-book knowledge base. Multi-provider (Claude, ChatGPT, Gemini).
+AI-powered brand identity tool — strategy, logo brief, color, typography, UI tokens & copy. 12-book knowledge base. 5 AI providers (Claude, ChatGPT, Gemini, DeepSeek, Groq).
 
 ---
 
@@ -106,6 +106,11 @@ Switch between 5 providers from the toolbar. Choose model tier per provider. API
 - Full system: primary, secondary, accent, dark, light + semantic colors
 - Albers interaction analysis with contrast ratios
 
+### In-App Settings
+- Click **⚙** in the toolbar to add/change API keys
+- Keys write directly to `.env` — active immediately, no restart needed
+- Shows which providers are configured
+
 ### PDF Export
 - Single-page continuous PDF (no page breaks)
 - Light theme for print — white backgrounds, ink-friendly
@@ -117,13 +122,18 @@ Switch between 5 providers from the toolbar. Choose model tier per provider. API
 
 ```
 brand-studio/
-├── index.html          # The full application
-├── server.js           # Express proxy server (multi-provider)
-├── package.json        # Dependencies & start script
-├── favicon.svg         # Yellow dot + white B
-├── .env.example        # Template — copy to .env
-├── .env                # Your API keys (gitignored)
-├── .gitignore
+├── index.html              # The full application
+├── server.js               # Express proxy server (multi-provider)
+├── build-portable.js       # Generates standalone single-file builds
+├── package.json            # Dependencies & scripts
+├── favicon.svg             # Yellow dot + white B
+├── start.bat               # Windows launcher (interactive setup)
+├── start.sh                # Mac/Linux launcher
+├── .env.example            # Template — copy to .env
+├── .env                    # Your API keys (gitignored)
+├── .github/workflows/
+│   ├── deploy.yml          # GitHub Pages deployment
+│   └── release.yml         # Builds executables on version tags
 └── README.md
 ```
 
@@ -162,7 +172,7 @@ PORT=3000
 
 ## Design Decisions
 
-- **Single HTML file** — no framework, no build step. The server is optional (for secure API key handling)
+- **Single HTML file** — no framework, no build step. Server handles secure API key proxying
 - **Book knowledge baked into prompts** — no uploads needed, principles are distilled into system prompts
 - **Refactoring UI type scale** — 9 sizes on a hand-picked scale, all in `rem` units controlled by one `html { font-size }` value
 - **Atkinson Hyperlegible** — UI font optimised for readability (Braille Institute)
@@ -170,18 +180,19 @@ PORT=3000
 
 ---
 
-## Freeware
+## Open Source Freeware
 
-This is a free tool. Self-host it, add your own API key, use it for your projects. The API costs are yours (or use Gemini's free tier to start).
+This is a free, open-source tool. Self-host it, add your own API key, use it for your projects. The API costs are yours (or use Groq/Gemini's free tier to start).
 
 ---
 
 ## Built With
 
-- Claude / ChatGPT / Gemini — all generation steps
+- Claude / ChatGPT / Gemini / DeepSeek / Groq — AI generation
 - Express.js — API proxy server
 - html2canvas + jsPDF — PDF export
-- Atkinson Hyperlegible — UI font
+- @yao-pkg/pkg — standalone executable builds
+- Atkinson Hyperlegible — UI font (Braille Institute)
 - Fraunces — display font
 - JetBrains Mono — code/label font
 - Google Fonts API — brand typography loading

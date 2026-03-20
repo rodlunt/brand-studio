@@ -2,6 +2,23 @@
 
 AI-powered brand identity tool. Strategy, logo brief, color, typography, UI tokens and copy grounded in a 12-book knowledge base. Supports 5 AI providers: Claude, ChatGPT, Gemini, DeepSeek, and Groq.
 
+![Brand Brief](docs/01-brief-filled.png)
+
+<details>
+<summary>More screenshots</summary>
+
+| | |
+|---|---|
+| ![Name Analysis](docs/02-name-analysis.png) | ![Strategy](docs/03-strategy.png) |
+| ![Voice & Copy](docs/04-voice-copy.png) | ![Color Guidance](docs/05-color-guidance.png) |
+| ![Color System](docs/06-color-system.png) | ![Typography](docs/07-typography.png) |
+| ![Logo Brief](docs/08-logo-brief.png) | ![UI Tokens](docs/10-ui-tokens.png) |
+| ![Brand Guide](docs/12-brand-guide-cover.png) | ![Settings](docs/15-settings.png) |
+
+[Download example PDF](docs/flowright-plumbing-brand-guide.pdf)
+
+</details>
+
 ---
 
 ## Download

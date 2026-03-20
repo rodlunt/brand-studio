@@ -11,13 +11,19 @@ const path = require('path');
 const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 const favicon = fs.readFileSync(path.join(__dirname, 'favicon.svg'), 'utf8');
 
-const portable = `#!/usr/bin/env node
-/**
+// Windows .cmd polyglot header — batch runs node on itself, Node sees it as a no-op + comment
+const cmdHeader = '0<0// 2>nul & @echo off & node "%~f0" %* & exit /b\r\n';
+
+// Linux/Mac shell script header
+const shHeader = '#!/usr/bin/env node\n';
+
+const coreCode = `/**
  * Brand Studio — Portable Single-File Edition
  * AI-powered brand identity tool. Zero dependencies.
  *
- * Usage:
- *   node brand-studio-portable.js
+ * Windows: Double-click brand-studio.cmd
+ * Mac/Linux: ./brand-studio (chmod +x first)
+ * Or: node brand-studio.cmd
  *
  * First run will prompt for an API key.
  * Keys are saved to .env next to this file.
@@ -237,7 +243,16 @@ else if (process.platform === 'darwin') exec('open "' + url + '"');
 else exec('xdg-open "' + url + '" 2>/dev/null || true');
 `;
 
-fs.writeFileSync(path.join(__dirname, 'brand-studio-portable.js'), portable);
-const sizeMB = (Buffer.byteLength(portable) / 1024 / 1024).toFixed(2);
-console.log(`\n  Built brand-studio-portable.js (${sizeMB} MB)\n`);
-console.log('  To run: node brand-studio-portable.js\n');
+// Build Windows version (.cmd — double-click to run)
+const cmdFile = cmdHeader + coreCode;
+fs.writeFileSync(path.join(__dirname, 'brand-studio.cmd'), cmdFile);
+
+// Build Linux/Mac version (executable script)
+const shFile = shHeader + coreCode;
+fs.writeFileSync(path.join(__dirname, 'brand-studio'), shFile, { mode: 0o755 });
+
+const sizeMB = (Buffer.byteLength(cmdFile) / 1024 / 1024).toFixed(2);
+console.log(`\n  Built:`);
+console.log(`    brand-studio.cmd  (Windows — double-click to run)`);
+console.log(`    brand-studio      (Linux/Mac — ./brand-studio)`);
+console.log(`    Size: ${sizeMB} MB each\n`);

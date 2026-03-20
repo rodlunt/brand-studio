@@ -4,6 +4,8 @@ node_modules/
 
 # Build artifacts
 brand-studio-portable.js
+brand-studio.cmd
+brand-studio
 
 # Ignore vscode AI rules
 .github\instructions\codacy.instructions.md

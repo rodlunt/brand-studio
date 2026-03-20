@@ -1,0 +1,92 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: node18-linux-x64
+            artifact: brand-studio-linux
+          - os: windows-latest
+            target: node18-win-x64
+            artifact: brand-studio-win.exe
+          - os: macos-latest
+            target: node18-macos-x64
+            artifact: brand-studio-macos
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build portable JS
+        run: node build-portable.js
+
+      - name: Build executable
+        run: npx pkg brand-studio-portable.js --target ${{ matrix.target }} --output ${{ matrix.artifact }} --compress GZip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build portable scripts
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const favicon = fs.readFileSync('favicon.svg', 'utf8');
+          console.log('Files loaded, sizes:', html.length, favicon.length);
+          "
+          node build-portable.js
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release files
+        run: |
+          mkdir -p release
+          cp artifacts/brand-studio-win.exe/brand-studio-win.exe release/
+          cp artifacts/brand-studio-linux/brand-studio-linux release/
+          cp artifacts/brand-studio-macos/brand-studio-macos release/
+          cp brand-studio.cmd release/
+          cp brand-studio release/brand-studio.sh
+          chmod +x release/brand-studio-linux release/brand-studio-macos release/brand-studio.sh
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            release/brand-studio-win.exe
+            release/brand-studio-linux
+            release/brand-studio-macos
+            release/brand-studio.cmd
+            release/brand-studio.sh

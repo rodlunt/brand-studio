@@ -4,11 +4,27 @@ AI-powered brand identity tool — strategy, logo brief, color, typography, UI t
 
 ---
 
-## Quick Start — Regular Users
+## Download
 
-Download `brand-studio.cmd` (Windows) or `brand-studio` (Mac/Linux). Double-click it. The app opens in your browser. Click ⚙ in the toolbar to add an API key.
+Go to [**Releases**](../../releases) and download for your platform:
 
-Requires [Node.js](https://nodejs.org) installed. No other dependencies.
+| File | Platform | Prerequisites |
+|------|----------|---------------|
+| `brand-studio-win.exe` | Windows | None — double-click to run |
+| `brand-studio-macos` | macOS | None — `chmod +x` then double-click |
+| `brand-studio-linux` | Linux | None — `chmod +x` then `./brand-studio-linux` |
+| `brand-studio.cmd` | Windows | [Node.js](https://nodejs.org) (170KB, lightweight) |
+| `brand-studio.sh` | Mac/Linux | [Node.js](https://nodejs.org) (170KB, lightweight) |
+
+The `.exe` / binary versions include Node.js bundled (~50MB). The `.cmd` / `.sh` versions are tiny but need Node.js installed.
+
+Open the app, click **⚙** in the toolbar, paste an API key from any provider:
+
+- **Groq** — https://console.groq.com/keys (free, fastest)
+- **Gemini** — https://aistudio.google.com/apikey (free tier)
+- **DeepSeek** — https://platform.deepseek.com/api_keys (very cheap)
+- **Claude** — https://console.anthropic.com/settings/keys
+- **ChatGPT** — https://platform.openai.com/api-keys
 
 ## Quick Start — Developers
 
@@ -19,26 +35,24 @@ npm install
 npm start                   # http://localhost:3000
 ```
 
-Click ⚙ in the toolbar to add API keys, or copy `.env.example` to `.env` and fill in manually.
+Click ⚙ to add API keys, or copy `.env.example` to `.env`.
 
-Get a key from any provider (you only need one):
-
-- **Groq** — https://console.groq.com/keys (free, fastest)
-- **Gemini** — https://aistudio.google.com/apikey (free tier)
-- **DeepSeek** — https://platform.deepseek.com/api_keys (very cheap)
-- **Claude** — https://console.anthropic.com/settings/keys
-- **ChatGPT** — https://platform.openai.com/api-keys
-
-## Building the Portable Version
+## Building Releases
 
 ```bash
+# Portable scripts (170KB, needs Node.js)
 node build-portable.js
+
+# Standalone executables (~50MB, no dependencies)
+npm run build:exe
 ```
 
-Generates two single-file builds (~170KB each, zero dependencies):
+Releases are built automatically by GitHub Actions when you push a version tag:
 
-- `brand-studio.cmd` — Windows, double-click to run
-- `brand-studio` — Linux/Mac, `chmod +x brand-studio && ./brand-studio`
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
 
 ---
 

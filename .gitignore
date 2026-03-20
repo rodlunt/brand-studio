@@ -6,6 +6,7 @@ node_modules/
 brand-studio-portable.js
 brand-studio.cmd
 brand-studio
+dist/
 
 # Ignore vscode AI rules
 .github\instructions\codacy.instructions.md

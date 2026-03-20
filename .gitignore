@@ -8,6 +8,7 @@ brand-studio-portable.js
 brand-studio.cmd
 brand-studio
 dist/
+screenshots/
 
 # Ignore vscode AI rules
 .github\instructions\codacy.instructions.md

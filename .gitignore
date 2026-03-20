@@ -1,6 +1,7 @@
 # Environment
 .env
 node_modules/
+.claude/
 
 # Build artifacts
 brand-studio-portable.js

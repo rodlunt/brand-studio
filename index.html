@@ -1776,13 +1776,16 @@ Return JSON:
   "min_size": "Minimum reproduction size (digital and print)",
   "dont_rules": ["Don't stretch or distort","Don't change the colors","Don't add effects","Don't place on busy backgrounds","Don't rearrange elements"],
   "designer_references": "2-3 existing logos that share a similar approach or quality level — to use as reference points, NOT to copy",
-  "rough_svg": "A rough SVG concept sketch illustrating the idea (viewBox='0 0 400 120', basic shapes only — this is a sketch, not a final logo)"
+  "rough_svg": "<svg viewBox='0 0 400 120' xmlns='http://www.w3.org/2000/svg'>...actual SVG elements here...</svg> — MUST be valid SVG code with real shapes and text, not a description. Use basic geometric shapes and text elements to sketch the concept."
 }`}],SYS_LOGO,2500);
 
     const d=xJson(raw);
     if(!d)throw new Error('Parse failed');
     S.logo=d;
-    S.logoSvg=xSvg(d.rough_svg||'')||null;
+    // Extract SVG from rough_svg — may be escaped or wrapped
+    let rawSvg=d.rough_svg||'';
+    if(rawSvg&&!rawSvg.includes('<svg')){rawSvg=rawSvg.replace(/\\n/g,'\n').replace(/\\"/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>')}
+    S.logoSvg=xSvg(rawSvg)||null;
     S.logoRationale={concept:d.concept_statement,decisions:d.construction_notes||[]};
     renderLogoBrief(d);
     document.getElementById('btn-regen-logo').style.display='inline-flex';
@@ -2535,7 +2538,7 @@ function buildGuide(){
         <div class="guide-industry">${b.industry||''}</div>
         <div style="margin-top:20px;font-size:0.875rem;font-family:var(--ff-m);color:var(--tx3)">Produced with Brand Studio · ${new Date().toLocaleDateString('en-AU',{year:'numeric',month:'long'})}</div>
       </div>
-      ${logoRender?`<div class="guide-cover-logo" style="${S.logoPng&&!S.logoSvg?'background:#fff;border-radius:var(--r);padding:16px':''}">${logoRender}</div>`:''}
+      ${logoRender?`<div class="guide-cover-logo" style="${S.logoPng&&!S.logoSvg?'background:#fff;border-radius:var(--r);padding:16px':''}">${logoRender}</div>`:lb?`<div class="guide-cover-logo" style="display:flex;align-items:center;justify-content:center;padding:20px;background:var(--s2);border-radius:var(--rl);border:1px solid var(--bd)"><div style="font-family:var(--ff-d);font-size:2.25rem;color:var(--tx);text-align:center">${b.name}</div></div>`:''}
     </div>
     ${b.desc?`
     <div class="guide-section">

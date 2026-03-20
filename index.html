@@ -2538,7 +2538,7 @@ function buildGuide(){
         <div class="guide-industry">${b.industry||''}</div>
         <div style="margin-top:20px;font-size:0.875rem;font-family:var(--ff-m);color:var(--tx3)">Produced with Brand Studio · ${new Date().toLocaleDateString('en-AU',{year:'numeric',month:'long'})}</div>
       </div>
-      ${logoRender?`<div class="guide-cover-logo" style="${S.logoPng&&!S.logoSvg?'background:#fff;border-radius:var(--r);padding:16px':''}">${logoRender}</div>`:lb?`<div class="guide-cover-logo" style="display:flex;align-items:center;justify-content:center;padding:20px;background:var(--s2);border-radius:var(--rl);border:1px solid var(--bd)"><div style="font-family:var(--ff-d);font-size:2.25rem;color:var(--tx);text-align:center">${b.name}</div></div>`:''}
+      ${(S.logoPng||(!S.logo&&S.logoSvg))?`<div class="guide-cover-logo" style="${S.logoPng?'background:#fff;border-radius:var(--r);padding:16px':''}">${logoRender}</div>`:''}
     </div>
     ${b.desc?`
     <div class="guide-section">

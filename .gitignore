@@ -2,5 +2,8 @@
 .env
 node_modules/
 
+# Build artifacts
+brand-studio-portable.js
+
 # Ignore vscode AI rules
 .github\instructions\codacy.instructions.md

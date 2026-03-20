@@ -4,23 +4,41 @@ AI-powered brand identity tool — strategy, logo brief, color, typography, UI t
 
 ---
 
-## Quick Start
+## Quick Start — Regular Users
+
+Download `brand-studio.cmd` (Windows) or `brand-studio` (Mac/Linux). Double-click it. The app opens in your browser. Click ⚙ in the toolbar to add an API key.
+
+Requires [Node.js](https://nodejs.org) installed. No other dependencies.
+
+## Quick Start — Developers
 
 ```bash
 git clone <repo-url>
 cd brand-studio
-cp .env.example .env        # add your API key(s)
 npm install
 npm start                   # http://localhost:3000
 ```
 
-You need at least one API key in `.env`. Get one from:
+Click ⚙ in the toolbar to add API keys, or copy `.env.example` to `.env` and fill in manually.
 
-- **Claude** — https://console.anthropic.com/settings/keys
-- **ChatGPT** — https://platform.openai.com/api-keys
+Get a key from any provider (you only need one):
+
+- **Groq** — https://console.groq.com/keys (free, fastest)
 - **Gemini** — https://aistudio.google.com/apikey (free tier)
 - **DeepSeek** — https://platform.deepseek.com/api_keys (very cheap)
-- **Groq** — https://console.groq.com/keys (free tier, fastest)
+- **Claude** — https://console.anthropic.com/settings/keys
+- **ChatGPT** — https://platform.openai.com/api-keys
+
+## Building the Portable Version
+
+```bash
+node build-portable.js
+```
+
+Generates two single-file builds (~170KB each, zero dependencies):
+
+- `brand-studio.cmd` — Windows, double-click to run
+- `brand-studio` — Linux/Mac, `chmod +x brand-studio && ./brand-studio`
 
 ---
 
